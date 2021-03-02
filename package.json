@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "rollup -c",
-    "install": "rollup -c"
+    "serve": "vue-cli-service serve"
   },
   "dependencies": {
     "@rollup/plugin-buble": "^0.21.3",
