@@ -36,7 +36,7 @@ export default {
 			let path = "";
 			if (idx > 0) path = crumbs.slice(1, idx + 1).join("/") + "/";
 
-			return "/app/browser/" + path;
+			return this.$store.state.files.browserRoot + path;
 		},
 		displayDivider(idx) {
 			const length = this.crumbs.length;

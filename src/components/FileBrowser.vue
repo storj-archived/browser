@@ -451,7 +451,7 @@ export default {
 		if(!this.routePath) {
 			try {
 				await this.$router.push({
-					path: `/app/browser/${this.path}`
+					path: `${this.$store.state.files.browserRoot}${this.path}`
 				});
 			} catch(err) {
 				await this.list("");

@@ -7,6 +7,7 @@ export default {
 		s3: null,
 		path: "",
 		bucket: "",
+		browserRoot: "/",
 		files: [],
 		uploading: [],
 		preventRefresh: false,
@@ -19,7 +20,8 @@ export default {
 			accessKey,
 			secretKey,
 			bucket,
-			endpoint = "https://gateway.tardigradeshare.io"
+			endpoint = "https://gateway.tardigradeshare.io",
+			browserRoot
 		}) {
 			const s3Config = {
 				accessKeyId: accessKey,
@@ -31,6 +33,7 @@ export default {
 
 			state.s3 = new AWS.S3(s3Config);
 			state.bucket = bucket;
+			state.browserRoot = browserRoot;
 		},
 
 		updateFiles(state, {
