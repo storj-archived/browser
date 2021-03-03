@@ -2,7 +2,7 @@ import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import css from "rollup-plugin-css-only";
-import vue from "rollup-plugin-vue";
+import vue from 'rollup-plugin-vue2';
 
 import packageJson from "./package.json";
 
