@@ -1,4 +1,4 @@
-<style>
+<style lang="css">
 .table td,
 .table th {
 	padding: 16px 16px 16px 0 !important;

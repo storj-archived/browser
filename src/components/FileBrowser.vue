@@ -1,4 +1,4 @@
-<style scoped>
+<style scoped lang="css">
 * {
 	font-family: sans-serif;
 }

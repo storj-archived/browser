@@ -1,4 +1,4 @@
-<style scoped>
+<style scoped lang="css">
 .path {
 	font-size: 15px;
 	color: gray;
