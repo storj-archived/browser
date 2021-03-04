@@ -1,4 +1,4 @@
-<style lang="css">
+<style>
 .table td,
 .table th {
 	padding: 16px 16px 16px 0 !important;
@@ -209,7 +209,7 @@ export default {
 			return this.$store.state.openedDropdown === this.file.Key;
 		},
 		link() {
-			return this.$store.state.files.browserRoot + this.$store.state.files.path + this.file.Key + "/";
+			return "/app/browser/" + this.$store.state.files.path + this.file.Key + "/";
 		}
 	},
 

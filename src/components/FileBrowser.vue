@@ -1,7 +1,6 @@
-<style scoped lang="css">
-* {
-	font-family: sans-serif;
-}
+<style scoped>
+
+@import "../../public/bootstrap.min.css";
 
 .file-browser {
 	min-height: 500px;
