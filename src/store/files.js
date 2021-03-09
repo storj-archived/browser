@@ -10,10 +10,11 @@ export default {
 		browserRoot: "/",
 		files: [],
 		uploading: [],
+		deleting: [],
 		preventRefresh: false,
 		selectedFile: null,
+		selectedFiles: [],
 		shiftSelectedFiles: [],
-		filesToBeDeleted: [],
 	},
 	mutations: {
 		init(state, {
@@ -48,21 +49,41 @@ export default {
 			state.preventRefresh = flag;
 		},
 
-		setSelectedFile(state, file) {
-			state.selectedFile = file;
-			state.shiftSelectedFiles = [];
+		setSelectedFile(state, { file, command }) {
+			const files = [...state.selectedFiles, ...state.shiftSelectedFiles];
+
+			if (command && files.includes(file)) {
+				state.selectedFiles = state.selectedFiles.filter((fileSelected) => fileSelected !== file);
+
+				state.shiftSelectedFiles = state.shiftSelectedFiles.filter((fileSelected) => fileSelected !== file);
+			} else if (command && state.selectedFile) {
+				const filesSelected = [
+					...state.selectedFiles,
+					...[state.selectedFile].filter((fileSelected) => !state.selectedFiles.includes(fileSelected))];
+
+				state.selectedFiles = [
+					...filesSelected,
+					...state.shiftSelectedFiles.filter((file) => !filesSelected.includes(file))
+				];
+
+				state.selectedFile = file;
+			} else {
+				state.selectedFile = file;
+				state.shiftSelectedFiles = [];
+				state.selectedFiles = [];
+			}
 		},
 
 		setFilesToBeDeleted(state, files) {
-			state.filesToBeDeleted = [...state.filesToBeDeleted, ...files];
+			state.deleting = [...state.deleting, ...files];
 		},
 
 		removeFileToBeDeleted(state, file) {
-			state.filesToBeDeleted = state.filesToBeDeleted.filter((singleFile) => singleFile.Key !== file.Key);
+			state.deleting = state.deleting.filter((singleFile) => singleFile.Key !== file.Key);
 		},
 
 		removeAllFilesToBeDeleted(state) {
-			state.filesToBeDeleted = [];
+			state.deleting = [];
 		},
 
 		removeAllSelectedFiles(state) {
@@ -88,7 +109,10 @@ export default {
 
 			if (anchorIdx > shiftIdx) [anchorIdx, shiftIdx] = [shiftIdx, anchorIdx];
 
-			state.shiftSelectedFiles = state.files.slice(anchorIdx, shiftIdx + 1);
+			state.shiftSelectedFiles = state.files.slice(
+				anchorIdx,
+				shiftIdx + 1
+			).filter((file) => !state.selectedFiles.includes(file) && file !== state.selectedFile);
 		},
 
 		sortFiles(state, { heading, order }) {
@@ -328,7 +352,7 @@ export default {
 		},
 
 		async deleteSelected({ dispatch, commit }) {
-			const filesToDelete = [state.selectedFile, ...state.shiftSelectedFiles];
+			const filesToDelete = [state.selectedFile, ...state.selectedFiles, ...state.shiftSelectedFiles];
 
 			commit("setPreventRefresh", true);
 			commit("setFilesToBeDeleted", filesToDelete);
@@ -339,6 +363,7 @@ export default {
 				);
 			}));
 
+			commit("setSelectedFile", { file: null, command: false });
 			commit("setPreventRefresh", false);
 		},
 
@@ -355,8 +380,8 @@ export default {
 			commit("setPreventRefresh", flag);
 		},
 
-		updateSelectedFile({ commit }, file) {
-			commit("setSelectedFile", file);
+		updateSelectedFile({ commit }, { file, command }) {
+			commit("setSelectedFile", { file, command });
 		},
 
 		addToShiftSelectedFiles({ commit }, file) {

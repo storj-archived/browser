@@ -57,7 +57,7 @@ export default {
 			}
 
 			if (this.$store.state.files.selectedFile) {
-				this.$store.dispatch("files/updateSelectedFile", null);
+				this.$store.dispatch("files/updateSelectedFile", { file: null, command: false });
 			}
 		},
 	},
