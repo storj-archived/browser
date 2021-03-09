@@ -259,20 +259,20 @@ export default {
 			//dispatch('updatePreventRefresh', false);
 		},
 
-		async createFolder({
-			state,
-			dispatch,
-			rootState
-		}, name) {
-			await state.s3.putObject({
-				Bucket: state.bucket,
-				Key: state.path + name + "/.vortex_placeholder"
-			}).promise();
+		// async createFolder({
+		// 	state,
+		// 	dispatch,
+		// 	rootState
+		// }, name) {
+		// 	await state.s3.putObject({
+		// 		Bucket: state.bucket,
+		// 		Key: state.path + name + "/.vortex_placeholder"
+		// 	}).promise();
+		//
+		// 	dispatch("list");
+		// },
 
-			dispatch("list");
-		},
-
-		async delete({ commit, dispatch }, { path, file, folder }) {
+		async delete({ commit, dispatch, state }, { path, file, folder }) {
 			await state.s3.deleteObject({
 				Bucket: state.bucket,
 				Key: path + file.Key
@@ -284,50 +284,50 @@ export default {
 			}
 		},
 
-		async deleteFolder({ commit, dispatch, rootState }, { file, path }) {
-			async function recurse(filePath) {
-				const {
-					Contents,
-					CommonPrefixes
-				} = await state.s3.listObjects({
-					Bucket: state.bucket,
-					Delimiter: "/",
-					Prefix: filePath,
-				}).promise();
+		// async deleteFolder({ commit, dispatch, rootState }, { file, path }) {
+		// 	async function recurse(filePath) {
+		// 		const {
+		// 			Contents,
+		// 			CommonPrefixes
+		// 		} = await state.s3.listObjects({
+		// 			Bucket: state.bucket,
+		// 			Delimiter: "/",
+		// 			Prefix: filePath,
+		// 		}).promise();
+		//
+		// 		async function thread() {
+		// 			while (Contents.length) {
+		// 				const file = Contents.pop();
+		//
+		// 				await dispatch("delete", {
+		// 					path: "",
+		// 					file,
+		// 					folder: true
+		// 				});
+		// 			}
+		// 		}
+		//
+		// 		await Promise.all([
+		// 			thread(),
+		// 			thread(),
+		// 			thread()
+		// 		]);
+		//
+		// 		for (const {
+		// 			Prefix
+		// 		} of CommonPrefixes) {
+		// 			await recurse(Prefix);
+		// 		}
+		// 	}
+		//
+		// 	await recurse(path.length > 0 ? path + file.Key : file.Key + "/");
+		//
+		// 	commit("removeFileToBeDeleted", file);
+		// 	await dispatch("list");
+		// 	dispatch("updatePreventRefresh", false);
+		// },
 
-				async function thread() {
-					while (Contents.length) {
-						const file = Contents.pop();
-
-						await dispatch("delete", {
-							path: "",
-							file,
-							folder: true
-						});
-					}
-				}
-
-				await Promise.all([
-					thread(),
-					thread(),
-					thread()
-				]);
-
-				for (const {
-					Prefix
-				} of CommonPrefixes) {
-					await recurse(Prefix);
-				}
-			}
-
-			await recurse(path.length > 0 ? path + file.Key : file.Key + "/");
-
-			commit("removeFileToBeDeleted", file);
-			await dispatch("list");
-			dispatch("updatePreventRefresh", false);
-		},
-
-		async deleteSelected({ dispatch, commit }) {
+		async deleteSelected({ dispatch, commit, state }) {
 			const filesToDelete = [state.selectedFile, ...state.shiftSelectedFiles];
 
 			commit("setPreventRefresh", true);
