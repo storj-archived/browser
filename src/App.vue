@@ -20,13 +20,20 @@ export default {
 	},
 
     created() {
-        this.$store.commit('files/init', {
+        this.$store.commit('init', {
             endpoint: "gateway.tardigradeshare.io",
-            accessKey: "jufchh3lcferhlwiclxywrsgcwna",
-            secretKey: "j27kvusnhmrhz5tdmliue4tqzujgx664deva6aj5kzdum37dbtxo4",
-            bucket: "us2a-1",
+            accessKey: "jw3pcekz3rxxanntmishi3vt7yda",
+            secretKey: "jy7ecpcdw7cs4dy3blnfsyfagbx5eyfhin5seglrzxpcjcuvh7b3k",
             browserRoot: "/"
         });
     },
 };
 </script>
+
+<style>
+html,
+body,
+#app {
+    height: 100%;
+}
+</style>
