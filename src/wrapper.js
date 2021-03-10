@@ -1,5 +1,3 @@
-import FileBrowser from "./components/FileBrowser.vue";
-import files from "./store/files.js";
+import BrowserApp from "./main"
 
-export { FileBrowser, files };
-
+export { BrowserApp }

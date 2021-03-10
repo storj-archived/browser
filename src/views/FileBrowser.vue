@@ -8,6 +8,7 @@ tbody {
 
 .background {
     background-color: #f5f6fa;
+    height: 100%;
 }
 
 .table-heading {
@@ -30,7 +31,7 @@ tbody {
 	color: #93a1ae;
 	border: 2px dashed #bec4cd;
 	border-radius: 10px;
-	padding: 80px 20px;
+	padding: 120px 20px;
 	background: #fafafb;
 }
 
@@ -38,7 +39,7 @@ tbody {
 	color: #444;
 }
 
-.div-responsive {
+.mh {
 	min-height: 400px;
 }
 
@@ -60,19 +61,34 @@ tbody {
     width: 15%;
 }
 
+.title {
+    font-family: Inter, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 26px;
+    color: #232B34;
+}
+
 </style>
 
 <template>
 <div class="row background">
 	<div class="col-sm-12">
 		<div class="card card-top-flat border-0 py-4 px-5 background">
-			<div class="div-responsive" v-cloak @drop.prevent="upload" @dragover.prevent>
+			<div class="mh" v-cloak @drop.prevent="upload" @dragover.prevent>
 
-				<div class="row mb-4 mx-0 justify-content-end">
+				<div class="row mb-4 mx-0 justify-content-between">
 
 <!--					<div class="col-sm-12 col-md-4 col-xl-8 mb-3">-->
 <!--						<bread-crumbs></bread-crumbs>-->
 <!--					</div>-->
+                    <div class="col-sm-12 col-md-4 col-xl-8 mb-3">
+                        <p class="title">
+                            <router-link class="title" to="/buckets">Buckets </router-link>
+                            > {{bucketName}}
+                        </p>
+                    </div>
 
 					<div>
 						<input ref="fileInput" type="file" hidden multiple v-on:change="upload">
@@ -234,13 +250,13 @@ tbody {
 <!--							</tr>-->
 
 
-<!--							<file-entry v-for="file in files.filter(f => f.type === 'folder')" v-bind:path="path" v-bind:file="file" v-on:download="download(file)" v-on:go="go" v-bind:key="file.Key"></file-entry>-->
+							<file-entry v-for="file in files.filter(f => f.type === 'folder')" v-bind:path="path" v-bind:file="file" v-on:download="download(file)" v-on:go="go" v-bind:key="file.Key"></file-entry>
 							<file-entry v-for="file in files.filter(f => f.type === 'file')" v-bind:path="path" v-bind:file="file" v-on:download="download(file)" v-on:delete="del(file)" v-on:go="go" v-bind:key="file.Key"></file-entry>
 						</tbody>
 					</table>
 				</div>
 
-				<div v-if="!files.length || (files.length === 1 && files[0].Key === '.vortex_placeholder')" class="upload-help">
+				<div v-if="!files.length && !isLoading" class="upload-help">
 					<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M16.8616 1.02072L16.8554 1.01398L5.40027 13.3834L7.94585 16.1322L16.2 7.2192V26.2817H19.8V7.64972L27.6554 16.1321L30.201 13.3833L17.8069 0L16.8616 1.02072Z" fill="#93A1AF" />
 						<path d="M36 32.1127H0V36H36V32.1127Z" fill="#93A1AF" />
@@ -255,13 +271,14 @@ tbody {
 </template>
 
 <script>
-import FileEntry from "./FileEntry.vue";
+import FileEntry from "../components/FileEntry.vue";
 // import BreadCrumbs from "./BreadCrumbs.vue";
 
 export default {
 	data: () => ({
 		// createFolderInput: "",
 		// createFolderInputShow: false,
+        isLoading: true,
 		nameHover: false,
 		sizeHover: false,
 		dateHover: false,
@@ -286,7 +303,10 @@ export default {
 		},
 		routePath() {
 			return this.$route.params.pathMatch;
-		}
+		},
+		bucketName() {
+		    return this.$store.state.files.bucket;
+        }
 	},
 	watch: {
 		async routePath() {
@@ -295,14 +315,23 @@ export default {
 	},
 
 	beforeMount() {
+	    if (!this.$store.state.files.bucket) {
+	        this.$router.push('/buckets')
+        }
+
 		window.addEventListener("beforeunload", this.preventNav);
 		this.$once("hook:beforeDestroy", () => {
 			window.removeEventListener("beforeunload", this.preventNav);
 		});
 	},
 
-    mounted() {
-	    console.log(this.files)
+    async mounted() {
+	    try {
+            await this.list("");
+            this.isLoading = false;
+        } catch (e) {
+            console.log(e.message)
+        }
     },
 
 	beforeRouteLeave(to, from, next) {
@@ -439,17 +468,17 @@ export default {
 			}
 		},
 	},
-	async created() {
-		if(!this.routePath) {
-			try {
-				await this.$router.push({
-					path: `${this.$store.state.files.browserRoot}${this.path}`
-				});
-			} catch(err) {
-				await this.list("");
-			}
-		}
-	},
+	// async created() {
+	// 	if(!this.routePath) {
+	// 		try {
+	// 			await this.$router.push({
+	// 				path: `${this.$store.state.files.browserRoot}${this.path}`
+	// 			});
+	// 		} catch(err) {
+	// 			await this.list("");
+	// 		}
+	// 	}
+	// },
 	components: {
 		FileEntry,
 		// BreadCrumbs

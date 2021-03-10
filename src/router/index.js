@@ -1,17 +1,23 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import FileBrowser from '../components/FileBrowser.vue';
+import Dashboard from "../views/Dashboard.vue";
+import FileBrowser from '../views/FileBrowser.vue';
+import Buckets from '../views/Buckets.vue';
 
 Vue.use(VueRouter)
 
 const routes = [
     {
         path: "/",
-        component: FileBrowser,
+        component: Dashboard,
         children: [
             {
-                path: "*",
+                path: "/buckets",
+                component: Buckets
+            },
+            {
+                path: "/files",
                 component: FileBrowser
             }
         ]
