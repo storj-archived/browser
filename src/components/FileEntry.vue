@@ -209,7 +209,7 @@ export default {
 			return this.$store.state.openedDropdown === this.file.Key;
 		},
 		link() {
-			return "/app/browser/" + this.$store.state.files.path + this.file.Key + "/";
+			return this.$store.state.files.browserRoot + this.$store.state.files.path + this.file.Key + "/";
 		}
 	},
 
