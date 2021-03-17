@@ -1,6 +1,6 @@
 <style scoped>
 
-@import "../../public/bootstrap.min.css";
+@import "../scoped-bootstrap.css";
 
 .file-browser {
 	min-height: 500px;

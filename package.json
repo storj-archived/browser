@@ -6,7 +6,7 @@
   "module": "dist/index.esm.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "install": "rollup -c"
+    "install": "npx vue-cli-service build --target lib --name browser src/wrapper.js"
   },
   "dependencies": {
     "@rollup/plugin-buble": "^0.21.3",
