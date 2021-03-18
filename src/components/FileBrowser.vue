@@ -291,20 +291,6 @@ export default {
 			await this.goToRoutePath();
 		}
 	},
-	updated() {
-		if (!this.s3) {
-			const s3Config = {
-				accessKeyId: this.$store.state.stargateAccessKey,
-				secretAccessKey: this.$store.state.stargateSecretKey,
-				endpoint: this.$store.state.stargateEndpoint,
-				s3ForcePathStyle: true,
-				signatureVersion: "v4"
-			};
-
-			this.s3 = new AWS.S3(s3Config);
-		}
-	},
-
 	beforeMount() {
 		window.addEventListener("beforeunload", this.preventNav);
 		this.$once("hook:beforeDestroy", () => {
@@ -354,23 +340,7 @@ export default {
 		},
 
 		async download(file) {
-			const url = this.$store.state.files.s3.getSignedUrl("getObject", {
-				Bucket: this.$store.state.stargateBucket,
-				Key: this.path + file.Key
-			});
-
-			const downloadURL = function(data, fileName) {
-				var a;
-				a = document.createElement("a");
-				a.href = data;
-				a.download = fileName;
-				document.body.appendChild(a);
-				a.style = "display: none";
-				a.click();
-				a.remove();
-			};
-
-			downloadURL(url, file.Key);
+			await this.$store.dispatch("files/download", file);
 		},
 
 		async list(path) {

@@ -239,9 +239,7 @@ export default {
 			}
 		},
 		async share(event) {
-			console.log("I've been clicked!");
 			event.stopPropagation();
-			this.$emit("share");
 
 			const url = this.$store.state.files.getSharedLink(this.path + this.file.Key);
 

@@ -348,6 +348,26 @@ export default {
 			commit("setPreventRefresh", false);
 		},
 
+		async download({ state }, file) {
+			const url = state.files.s3.getSignedUrl("getObject", {
+				Bucket: state.stargateBucket,
+				Key: state.path + file.Key
+			});
+
+			const downloadURL = function(data, fileName) {
+				var a;
+				a = document.createElement("a");
+				a.href = data;
+				a.download = fileName;
+				document.body.appendChild(a);
+				a.style = "display: none";
+				a.click();
+				a.remove();
+			};
+
+			downloadURL(url, file.Key);
+		},
+
 		sortAllFiles({ commit }, { heading, order }) {
 			commit("setSelectedFile", null);
 			if (heading === "name") commit("sortFiles", { heading: "Key", order });
