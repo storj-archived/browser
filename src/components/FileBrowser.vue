@@ -54,7 +54,7 @@ tbody {
 </style>
 
 <template>
-<div class="row">
+<div>
 	<div class="col-sm-12">
 		<div class="card card-top-flat border-0 p-4 p-lg-5">
 			<div class="div-responsive" v-cloak @drop.prevent="upload" @dragover.prevent>
