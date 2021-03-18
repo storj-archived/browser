@@ -230,6 +230,8 @@ tbody {
 								<td span="3">
 									<button v-on:click="createFolder" v-bind:disabled="!createFolderEnabled" class="btn btn-primary">Save Folder</button>
 								</td>
+								<td span="3">
+								</td>
 							</tr>
 
 
