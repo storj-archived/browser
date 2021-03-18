@@ -212,7 +212,7 @@ tbody {
 								</td>
 							</tr>
 
-				
+
 							<tr v-if="path.length > 0">
 								<router-link to="../">
 									<td>
@@ -311,17 +311,17 @@ export default {
 	methods: {
 		deleteSelectedDropdown(event) {
 			event.stopPropagation();
-			this.$store.dispatch("openDropdown", "FileBrowser");
+			this.$store.dispatch("files/openDropdown", "FileBrowser");
 		},
 		confirmDeleteSelection() {
 			this.$store.dispatch("files/deleteSelected");
-			this.$store.dispatch("openDropdown", null);
+			this.$store.dispatch("files/openDropdown", null);
 		},
 		cancelDeleteSelection() {
-			this.$store.dispatch("openDropdown", null);
+			this.$store.dispatch("files/openDropdown", null);
 		},
 		displayDropdown() {
-			return this.$store.state.openedDropdown === "FileBrowser";
+			return this.$store.state.files.openedDropdown === "FileBrowser";
 		},
 		areThereFilesToDelete() {
 			return !!this.$store.state.files.selectedFile;
@@ -351,19 +351,19 @@ export default {
 		},
 
 		async go(path) {
-			await this.$store.dispatch("openDropdown", null);
+			await this.$store.dispatch("files/openDropdown", null);
 			await this.list(this.path + path);
 		},
 
 		async goToRoutePath() {
 			if(typeof this.routePath === "string") {
-				await this.$store.dispatch("openDropdown", null);
+				await this.$store.dispatch("files/openDropdown", null);
 				await this.list(this.routePath);
 			}
 		},
 
 		async back() {
-			await this.$store.dispatch("openDropdown", null);
+			await this.$store.dispatch("files/openDropdown", null);
 			await this.$store.dispatch("files/back");
 		},
 
