@@ -1,5 +1,5 @@
 <template>
-<div id="app" v-on:click="handleOpenDropdownClicks">
+<div id="app">
 
 	<div class="alert alert-warning text-center rounded-0" role="alert">
 		Welcome! Please be aware that this is an alpha development version. Data and accounts will be deleted every few days.
@@ -51,17 +51,6 @@ import AppFooter from './components/AppFooter';
 
 export default {
 	methods: {
-		handleOpenDropdownClicks() {
-			if (this.$store.state.openedDropdown) {
-				this.$store.dispatch("openDropdown", null);
-			}
-
-			if (this.$store.state.files.selectedFile) {
-				this.$store.dispatch("files/updateSelectedFile", null);
-			}
-		},
-	},
-
     created() {
         this.$store.commit('files/init', {
             endpoint: "gateway.tardigradeshare.io",
