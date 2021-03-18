@@ -213,13 +213,12 @@ tbody {
 								</td>
 							</tr>
 
-
 							<tr v-if="path.length > 0">
-								<router-link to="../">
-									<td class="px-3">
-										<a href="javascript:null">..</a>
-									</td>
-								</router-link>
+								<td class="px-3">
+									<router-link to="../">
+											<a href="javascript:null">..</a>
+									</router-link>
+								</td>
 							</tr>
 
 							<tr v-if="createFolderInputShow === true">
