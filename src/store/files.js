@@ -14,7 +14,8 @@ export default {
 		selectedFile: null,
 		shiftSelectedFiles: [],
 		filesToBeDeleted: [],
-		getSharedLink: null
+		getSharedLink: null,
+		getObjectLocations: null
 	},
 	mutations: {
 		init(state, {
@@ -23,7 +24,8 @@ export default {
 			bucket,
 			endpoint = "https://gateway.tardigradeshare.io",
 			browserRoot,
-			getSharedLink = () => "javascript:null"
+			getSharedLink = () => "javascript:null",
+			getObjectLocations = () => [{"Latitude":45.5248,"Longitude":-122.6789}]
 		}) {
 			const s3Config = {
 				accessKeyId: accessKey,
@@ -37,6 +39,7 @@ export default {
 			state.bucket = bucket;
 			state.browserRoot = browserRoot;
 			state.getSharedLink = getSharedLink;
+			state.getObjectLocations = getObjectLocations;
 		},
 
 		updateFiles(state, {
