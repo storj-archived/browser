@@ -243,11 +243,7 @@ export default {
 			event.stopPropagation();
 			this.$emit("share");
 
-			const url = this.$store.state.s3.getSignedUrl("getObject", {
-				Bucket: this.$store.state.stargateBucket,
-				Key: this.path + this.file.Key,
-				Expires: 60 * 60 * 24
-			});
+			const url = this.$store.state.files.getSharedLink(this.path + this.file.Key);
 
 			await navigator.clipboard.writeText(url);
 			this.shareText = "URL Copied!";
