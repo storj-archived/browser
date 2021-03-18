@@ -216,7 +216,7 @@ tbody {
 
 							<tr v-if="path.length > 0">
 								<router-link to="../">
-									<td>
+									<td class="px-3">
 										<a href="javascript:null">..</a>
 									</td>
 								</router-link>
