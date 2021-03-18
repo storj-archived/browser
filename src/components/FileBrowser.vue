@@ -44,6 +44,7 @@ tbody {
 .dropdown-arrow {
 	cursor: pointer;
 	color: #768394;
+	position: absolute;
 }
 
 .table-heading {
