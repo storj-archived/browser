@@ -206,7 +206,7 @@ export default {
 			return this.file.LastModified.toLocaleString().split(",")[0];
 		},
 		dropdownOpen() {
-			return this.$store.state.openedDropdown === this.file.Key;
+			return this.$store.state.files.openedDropdown === this.file.Key;
 		},
 		link() {
 			return this.$store.state.files.browserRoot + this.$store.state.files.path + this.file.Key + "/";
@@ -228,8 +228,8 @@ export default {
 		selectFile(event) {
 			event.stopPropagation();
 
-			if (this.$store.state.openedDropdown) {
-				this.$store.dispatch("openDropdown", null);
+			if (this.$store.state.files.openedDropdown) {
+				this.$store.dispatch("files/openDropdown", null);
 			}
 
 			if (event.shiftKey) {
@@ -247,17 +247,17 @@ export default {
 			this.shareText = "URL Copied!";
 
 			setTimeout(() => {
-				this.$store.dispatch("openDropdown", null);
+				this.$store.dispatch("files/openDropdown", null);
 				this.shareText = "Copy Link";
 			}, 700);
 		},
 		toggleDropdown(event) {
 			event.stopPropagation();
 
-			if (this.$store.state.openedDropdown === this.file.Key) {
-				this.$store.dispatch("openDropdown", null);
+			if (this.$store.state.files.openedDropdown === this.file.Key) {
+				this.$store.dispatch("files/openDropdown", null);
 			} else {
-				this.$store.dispatch("openDropdown", this.file.Key);
+				this.$store.dispatch("files/openDropdown", this.file.Key);
 			}
 
 			this.deleteConfirmation = false;
@@ -265,7 +265,7 @@ export default {
 		download(event) {
 			event.stopPropagation();
 			this.$emit("download");
-			this.$store.dispatch("openDropdown", null);
+			this.$store.dispatch("files/openDropdown", null);
 			this.deleteConfirmation = false;
 		},
 		confirmDeletion(event) {
@@ -274,7 +274,7 @@ export default {
 		},
 		async finalDelete(event) {
 			event.stopPropagation();
-			this.$store.dispatch("openDropdown", null);
+			this.$store.dispatch("files/openDropdown", null);
 			this.$store.dispatch("files/updatePreventRefresh", true);
 			this.$store.dispatch("files/addFileToBeDeleted", this.file);
 
@@ -296,7 +296,7 @@ export default {
 		},
 		cancelDeletion(event) {
 			event.stopPropagation();
-			this.$store.dispatch("openDropdown", null);
+			this.$store.dispatch("files/openDropdown", null);
 			this.deleteConfirmation = false;
 		}
 	}

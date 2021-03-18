@@ -15,7 +15,8 @@ export default {
 		shiftSelectedFiles: [],
 		filesToBeDeleted: [],
 		getSharedLink: null,
-		getObjectLocations: null
+		getObjectLocations: null,
+		openedDropdown: null
 	},
 	mutations: {
 		init(state, {
@@ -134,6 +135,10 @@ export default {
 
 		finishUpload(state, Key) {
 			state.uploading = state.uploading.filter(file => file.Key !== Key);
+		},
+
+		setOpenedDropdown(state, id) {
+			state.openedDropdown = id;
 		}
 	},
 	actions: {
@@ -231,7 +236,6 @@ export default {
 						fileName = fileName.replace(/([^.]*)(.*)/, `$1 (${count})$2`);
 					}
 				}
-				//
 
 				const params = {
 					Bucket: state.bucket,
@@ -267,8 +271,7 @@ export default {
 
 		async createFolder({
 			state,
-			dispatch,
-			rootState
+			dispatch
 		}, name) {
 			await state.s3.putObject({
 				Bucket: state.bucket,
@@ -278,7 +281,7 @@ export default {
 			dispatch("list");
 		},
 
-		async delete({ commit, dispatch }, { path, file, folder }) {
+		async delete({ commit, dispatch, state }, { path, file, folder }) {
 			await state.s3.deleteObject({
 				Bucket: state.bucket,
 				Key: path + file.Key
@@ -290,7 +293,7 @@ export default {
 			}
 		},
 
-		async deleteFolder({ commit, dispatch, rootState }, { file, path }) {
+		async deleteFolder({ commit, dispatch, state }, { file, path }) {
 			async function recurse(filePath) {
 				const {
 					Contents,
@@ -399,6 +402,14 @@ export default {
 
 		clearAllSelectedFiles({ commit }) {
 			commit("removeAllSelectedFiles");
-		}
+		},
+
+		openDropdown({ commit, dispatch }, id) {
+			if (id !== "FileBrowser") {
+				dispatch("clearAllSelectedFiles");
+			}
+
+			commit("setOpenedDropdown", id);
+		},
 	}
 };
