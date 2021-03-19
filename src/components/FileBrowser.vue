@@ -289,25 +289,11 @@ export default {
 			return this.$route.params.pathMatch;
 		}
 	},
+
 	watch: {
 		async routePath() {
 			await this.goToRoutePath();
 		}
-	},
-	beforeMount() {
-		window.addEventListener("beforeunload", this.preventNav);
-		this.$once("hook:beforeDestroy", () => {
-			window.removeEventListener("beforeunload", this.preventNav);
-		});
-	},
-
-	beforeRouteLeave(to, from, next) {
-		if (this.$store.state.files.preventRefresh) {
-			if (window.confirm("Navigating to another page will stop files from being uploaded. Would you like to wait for the files to finish uploading?")) {
-				return;
-			}
-		}
-		next();
 	},
 
 	methods: {
@@ -327,12 +313,6 @@ export default {
 		},
 		areThereFilesToDelete() {
 			return !!this.$store.state.files.selectedFile;
-		},
-		preventNav(event) {
-			if (!this.$store.state.files.preventRefresh) return;
-			event.preventDefault();
-			// Chrome requires returnValue to be set.
-			event.returnValue = "";
 		},
 		filename(file) {
 			return file.Key.length > 25 ? file.Key.slice(0, 25) + "..." : file.Key;
@@ -358,15 +338,10 @@ export default {
 		},
 
 		async goToRoutePath() {
-			if(typeof this.routePath === "string") {
+			if (typeof this.routePath === "string") {
 				await this.$store.dispatch("files/openDropdown", null);
 				await this.list(this.routePath);
 			}
-		},
-
-		async back() {
-			await this.$store.dispatch("files/openDropdown", null);
-			await this.$store.dispatch("files/back");
 		},
 
 		async buttonUpload() {
@@ -430,6 +405,7 @@ export default {
 			}
 		}
 	},
+
 	components: {
 		FileEntry,
 		BreadCrumbs
