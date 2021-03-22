@@ -231,6 +231,11 @@ tbody {
 									<button v-on:click="createFolder" v-bind:disabled="!createFolderEnabled" class="btn btn-primary">Save Folder</button>
 								</td>
 								<td span="3">
+									<div
+										v-if="creatingFolderSpinner"
+										class="spinner-border"
+										role="status"
+									></div>
 								</td>
 							</tr>
 
@@ -263,6 +268,7 @@ export default {
 	data: () => ({
 		createFolderInput: "",
 		createFolderInputShow: false,
+		creatingFolderSpinner: false,
 		nameHover: true,
 		sizeHover: false,
 		dateHover: false,
@@ -361,11 +367,18 @@ export default {
 		},
 
 		async createFolder() {
+			this.creatingFolderSpinner = true;
+
 			if (!this.createFolderEnabled) return;
-			await this.$store.dispatch("files/createFolder", this.createFolderInput.trim());
+
+			await this.$store.dispatch(
+				"files/createFolder",
+				this.createFolderInput.trim()
+			);
 
 			this.createFolderInput = "";
 			this.createFolderInputShow = false;
+			this.creatingFolderSpinner = false;
 		},
 
 		sortTable(heading) {
