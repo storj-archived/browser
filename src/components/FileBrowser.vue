@@ -280,9 +280,13 @@ export default {
 			return this.$store.state.files.path;
 		},
 		files() {
+			console.log("files recomputed");
+
 			const files = [...this.$store.state.files.files];
 			const order = this.orderBy;
 			const heading = this.headingSorted;
+
+			console.log({ heading, order });
 
 			if (order === "asc") {
 				if (heading === "LastModified") {
@@ -300,6 +304,8 @@ export default {
 				} else {
 					files.sort((a, b) => b[heading] - a[heading]);
 				}
+
+				files.reverse();
 			}
 
 			return [...files.filter((file) => file.type === "folder"), ...files.filter((file) => file.type === "file")];
@@ -384,20 +390,10 @@ export default {
 				if (category !== heading) this[category + "Hover"] = false;
 			});
 
-			if (this.headingSorted === heading) {
-				this.orderBy = this.orderBy === "desc" ? "asc" : "desc";
-				this.$store.dispatch("files/sortAllFiles", {
-					heading,
-					order: this.orderBy
-				});
-			} else {
-				this.headingSorted = heading;
-				this.orderBy = "desc";
-				this.$store.dispatch("files/sortAllFiles", {
-					heading,
-					order: this.orderBy
-				});
-			}
+			const flip = order => order === "asc" ? "desc" : "asc";
+
+			this.headingSorted = heading;
+			this.orderBy = this.headingSorted === heading ? flip(this.orderBy) : "asc";
 		},
 
 		mouseOverHandler(heading) {
