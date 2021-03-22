@@ -263,10 +263,10 @@ export default {
 	data: () => ({
 		createFolderInput: "",
 		createFolderInputShow: false,
-		nameHover: false,
+		nameHover: true,
 		sizeHover: false,
 		dateHover: false,
-		headingSorted: null,
+		headingSorted: "name",
 		orderBy: "desc",
 		deleteConfirmation: false,
 	}),
@@ -280,35 +280,31 @@ export default {
 			return this.$store.state.files.path;
 		},
 		files() {
-			console.log("files recomputed");
-
 			const files = [...this.$store.state.files.files];
 			const order = this.orderBy;
 			const heading = this.headingSorted;
 
-			console.log({ heading, order });
-
 			if (order === "asc") {
-				if (heading === "LastModified") {
+				if (heading === "date") {
 					files.sort((a, b) => new Date(a.LastModified) - new Date(b.LastModified));
-				} else if (heading === "Key") {
+				} else if (heading === "name") {
 					files.sort((a, b) => a.Key.localeCompare(b.Key));
 				} else {
 					files.sort((a, b) => a[heading] - b[heading]);
 				}
 			} else {
-				if (heading === "LastModified") {
+				if (heading === "date") {
 					files.sort((a, b) => new Date(b.LastModified) - new Date(a.LastModified));
-				} else if (heading === "Key") {
+				} else if (heading === "name") {
 					files.sort((a, b) => b.Key.localeCompare(a.Key));
 				} else {
 					files.sort((a, b) => b[heading] - a[heading]);
 				}
-
-				files.reverse();
 			}
 
-			return [...files.filter((file) => file.type === "folder"), ...files.filter((file) => file.type === "file")];
+			const sortedFiles = [...files.filter((file) => file.type === "folder"), ...files.filter((file) => file.type === "file")];
+
+			return sortedFiles;
 		},
 		filesUploading() {
 			return this.$store.state.files.uploading;
@@ -392,8 +388,8 @@ export default {
 
 			const flip = order => order === "asc" ? "desc" : "asc";
 
-			this.headingSorted = heading;
 			this.orderBy = this.headingSorted === heading ? flip(this.orderBy) : "desc";
+			this.headingSorted = heading;
 		},
 
 		mouseOverHandler(heading) {

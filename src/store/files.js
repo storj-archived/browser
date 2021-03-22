@@ -77,25 +77,8 @@ export default {
 			state.shiftSelectedFiles = [];
 		},
 
-		setShiftSelectedFiles(state, file) {
-			if (!state.selectedFile) {
-				state.selectedFile = file;
-				return;
-			}
-
-			let anchorIdx;
-			for (let i = 0; i < state.files.length ; i++) {
-				if (state.files[i] === state.selectedFile) anchorIdx = i;
-			}
-
-			let shiftIdx;
-			for (let i = 0; i < state.files.length ; i++) {
-				if (state.files[i] === file) shiftIdx = i;
-			}
-
-			if (anchorIdx > shiftIdx) [anchorIdx, shiftIdx] = [shiftIdx, anchorIdx];
-
-			state.shiftSelectedFiles = state.files.slice(anchorIdx, shiftIdx + 1);
+		setShiftSelectedFiles(state, files) {
+			state.shiftSelectedFiles = files;
 		},
 
 		pushUpload(state, file) {
@@ -364,8 +347,8 @@ export default {
 			commit("setSelectedFile", file);
 		},
 
-		addToShiftSelectedFiles({ commit }, file) {
-			commit("setShiftSelectedFiles", file);
+		updateShiftSelectedFiles({ commit }, files) {
+			commit("setShiftSelectedFiles", files);
 		},
 
 		addFileToBeDeleted({ commit }, file) {

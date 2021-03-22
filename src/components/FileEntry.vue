@@ -234,10 +234,26 @@ export default {
 			}
 
 			if (event.shiftKey) {
-				this.$store.dispatch("files/addToShiftSelectedFiles", this.file);
+				this.setShiftSelectedFiles();
 			} else {
 				this.$store.dispatch("files/updateSelectedFile", this.file);
 			}
+		},
+		setShiftSelectedFiles() {
+			const files = this.$store.state.files.files;
+			const selectedFile = this.$store.state.files.selectedFile;
+
+			if (!selectedFile) {
+				this.$store.dispatch("files/updateSelectedFile", this.file)
+				return;
+			}
+
+			let anchorIdx = files.find((file) => file === selectedFile);
+			let shiftIdx = files.find((file) => file === this.file);
+
+			if (anchorIdx > shiftIdx) [anchorIdx, shiftIdx] = [shiftIdx, anchorIdx];
+
+			this.$store.dispatch("files/updateShiftSelectedFiles", files.slice(anchorIdx, shiftIdx + 1));
 		},
 		async share(event) {
 			event.stopPropagation();
