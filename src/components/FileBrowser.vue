@@ -280,14 +280,36 @@ export default {
 			return this.$store.state.files.path;
 		},
 		files() {
-			return this.$store.state.files.files;
+			const files = [...this.$store.state.files.files];
+			const order = this.orderBy;
+			const heading = this.headingSorted;
+
+			if (order === "asc") {
+				if (heading === "LastModified") {
+					files.sort((a, b) => new Date(a.LastModified) - new Date(b.LastModified));
+				} else if (heading === "Key") {
+					files.sort((a, b) => a.Key.localeCompare(b.Key));
+				} else {
+					files.sort((a, b) => a[heading] - b[heading]);
+				}
+			} else {
+				if (heading === "LastModified") {
+					files.sort((a, b) => new Date(b.LastModified) - new Date(a.LastModified));
+				} else if (heading === "Key") {
+					files.sort((a, b) => b.Key.localeCompare(a.Key));
+				} else {
+					files.sort((a, b) => b[heading] - a[heading]);
+				}
+			}
+
+			return [...files.filter((file) => file.type === "folder"), ...files.filter((file) => file.type === "file")];
 		},
 		filesUploading() {
 			return this.$store.state.files.uploading;
 		},
 		routePath() {
 			return this.$route.params.pathMatch;
-		}
+		},
 	},
 
 	watch: {

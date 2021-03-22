@@ -98,30 +98,6 @@ export default {
 			state.shiftSelectedFiles = state.files.slice(anchorIdx, shiftIdx + 1);
 		},
 
-		sortFiles(state, { heading, order }) {
-			const files = [...state.files];
-
-			if (order === "asc") {
-				if (heading === "LastModified") {
-					files.sort((a, b) => new Date(a.LastModified) - new Date(b.LastModified));
-				} else if (heading === "Key") {
-					files.sort((a, b) => a.Key.localeCompare(b.Key));
-				} else {
-					files.sort((a, b) => a[heading] - b[heading]);
-				}
-			} else {
-				if (heading === "LastModified") {
-					files.sort((a, b) => new Date(b.LastModified) - new Date(a.LastModified));
-				} else if (heading === "Key") {
-					files.sort((a, b) => b.Key.localeCompare(a.Key));
-				} else {
-					files.sort((a, b) => b[heading] - a[heading]);
-				}
-			}
-
-			state.files = [...files.filter((file) => file.type === "folder"), ...files.filter((file) => file.type === "file")];
-		},
-
 		pushUpload(state, file) {
 			state.uploading.push(file);
 		},
