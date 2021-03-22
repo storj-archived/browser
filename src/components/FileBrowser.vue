@@ -228,7 +228,22 @@ tbody {
 								<td span="3">
 								</td>
 								<td span="3">
-									<button v-on:click="createFolder" v-bind:disabled="!createFolderEnabled" class="btn btn-primary">Save Folder</button>
+									<button
+										v-on:click="createFolder"
+										v-bind:disabled="
+											!createFolderEnabled
+										"
+										class="btn btn-primary"
+									>
+										Save Folder
+									</button>
+									<span class="mx-1"></span>
+									<button
+										class="btn btn-light"
+										v-on:click="cancelFolderCreation"
+									>
+										Cancel
+									</button>
 								</td>
 								<td span="3">
 									<div
@@ -379,6 +394,11 @@ export default {
 			this.createFolderInput = "";
 			this.createFolderInputShow = false;
 			this.creatingFolderSpinner = false;
+		},
+
+		cancelFolderCreation() {
+			this.createFolderInput = "";
+			this.createFolderInputShow = false;
 		},
 
 		sortTable(heading) {
