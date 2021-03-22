@@ -18,14 +18,15 @@ export default {
 		getObjectLocations: null,
 		openedDropdown: null,
 		headingSorted: "name",
-		orderBy: "desc"
+		orderBy: "desc",
+		createFolderInputShow: false,
 	},
 	getters: {
 		sortedFiles(state) {
 			const files = [...state.files];
 			const order = state.orderBy;
 			const heading = state.headingSorted;
-	
+
 			if (order === "asc") {
 				if (heading === "date") {
 					files.sort((a, b) => new Date(a.LastModified) - new Date(b.LastModified));
@@ -43,9 +44,9 @@ export default {
 					files.sort((a, b) => b[heading] - a[heading]);
 				}
 			}
-	
+
 			const sortedFiles = [...files.filter((file) => file.type === "folder"), ...files.filter((file) => file.type === "file")];
-	
+
 			return sortedFiles;
 		}
 	},
@@ -134,7 +135,11 @@ export default {
 		sort(state, {headingSorted, orderBy}) {
 			state.headingSorted = headingSorted;
 			state.orderBy = orderBy;
-		}
+		},
+
+		setCreateFolderInputShow(state, value) {
+			state.createFolderInputShow = value;
+		},
 	},
 	actions: {
 		async list({
@@ -405,6 +410,10 @@ export default {
 			}
 
 			commit("setOpenedDropdown", id);
+		},
+
+		updateCreateFolderInputShow({ commit }, value) {
+			commit("setCreateFolderInputShow", value);
 		},
 	}
 };
