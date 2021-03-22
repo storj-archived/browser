@@ -280,31 +280,7 @@ export default {
 			return this.$store.state.files.path;
 		},
 		files() {
-			const files = [...this.$store.state.files.files];
-			const order = this.orderBy;
-			const heading = this.headingSorted;
-
-			if (order === "asc") {
-				if (heading === "date") {
-					files.sort((a, b) => new Date(a.LastModified) - new Date(b.LastModified));
-				} else if (heading === "name") {
-					files.sort((a, b) => a.Key.localeCompare(b.Key));
-				} else {
-					files.sort((a, b) => a[heading] - b[heading]);
-				}
-			} else {
-				if (heading === "date") {
-					files.sort((a, b) => new Date(b.LastModified) - new Date(a.LastModified));
-				} else if (heading === "name") {
-					files.sort((a, b) => b.Key.localeCompare(a.Key));
-				} else {
-					files.sort((a, b) => b[heading] - a[heading]);
-				}
-			}
-
-			const sortedFiles = [...files.filter((file) => file.type === "folder"), ...files.filter((file) => file.type === "file")];
-
-			return sortedFiles;
+			return this.$store.getters["files/sortedFiles"];
 		},
 		filesUploading() {
 			return this.$store.state.files.uploading;
@@ -313,14 +289,25 @@ export default {
 			return this.$route.params.pathMatch;
 		},
 	},
-
 	watch: {
 		async routePath() {
 			await this.goToRoutePath();
+		},
+		headingSorted() {
+			this.sort();
+		},
+		orderBy() {
+			this.sort();
 		}
 	},
-
 	methods: {
+		sort() {
+			this.$store.commit("files/sort", {
+				headingSorted: this.headingSorted,
+				orderBy: this.orderBy
+			});
+		},
+
 		deleteSelectedDropdown(event) {
 			event.stopPropagation();
 			this.$store.dispatch("files/openDropdown", "FileBrowser");

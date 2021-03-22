@@ -240,7 +240,7 @@ export default {
 			}
 		},
 		setShiftSelectedFiles() {
-			const files = this.$store.state.files.files;
+			const files = this.$store.getters["files/sortedFiles"];
 			const selectedFile = this.$store.state.files.selectedFile;
 
 			if (!selectedFile) {
@@ -248,12 +248,13 @@ export default {
 				return;
 			}
 
-			let anchorIdx = files.find((file) => file === selectedFile);
-			let shiftIdx = files.find((file) => file === this.file);
+			const anchorIdx = files.findIndex((file) => file === selectedFile);
+			const shiftIdx = files.findIndex((file) => file === this.file);
 
-			if (anchorIdx > shiftIdx) [anchorIdx, shiftIdx] = [shiftIdx, anchorIdx];
+			const start = Math.min(anchorIdx, shiftIdx);
+			const end = Math.max(anchorIdx, shiftIdx) + 1;
 
-			this.$store.dispatch("files/updateShiftSelectedFiles", files.slice(anchorIdx, shiftIdx + 1));
+			this.$store.dispatch("files/updateShiftSelectedFiles", files.slice(start, end));
 		},
 		async share(event) {
 			event.stopPropagation();
