@@ -393,7 +393,7 @@ export default {
 			const flip = order => order === "asc" ? "desc" : "asc";
 
 			this.headingSorted = heading;
-			this.orderBy = this.headingSorted === heading ? flip(this.orderBy) : "asc";
+			this.orderBy = this.headingSorted === heading ? flip(this.orderBy) : "desc";
 		},
 
 		mouseOverHandler(heading) {
