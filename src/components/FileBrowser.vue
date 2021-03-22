@@ -263,10 +263,10 @@ export default {
 	data: () => ({
 		createFolderInput: "",
 		createFolderInputShow: false,
-		nameHover: false,
+		nameHover: true,
 		sizeHover: false,
 		dateHover: false,
-		headingSorted: null,
+		headingSorted: "name",
 		orderBy: "desc",
 		deleteConfirmation: false,
 	}),
@@ -280,23 +280,34 @@ export default {
 			return this.$store.state.files.path;
 		},
 		files() {
-			return this.$store.state.files.files;
+			return this.$store.getters["files/sortedFiles"];
 		},
 		filesUploading() {
 			return this.$store.state.files.uploading;
 		},
 		routePath() {
 			return this.$route.params.pathMatch;
-		}
+		},
 	},
-
 	watch: {
 		async routePath() {
 			await this.goToRoutePath();
+		},
+		headingSorted() {
+			this.sort();
+		},
+		orderBy() {
+			this.sort();
 		}
 	},
-
 	methods: {
+		sort() {
+			this.$store.commit("files/sort", {
+				headingSorted: this.headingSorted,
+				orderBy: this.orderBy
+			});
+		},
+
 		deleteSelectedDropdown(event) {
 			event.stopPropagation();
 			this.$store.dispatch("files/openDropdown", "FileBrowser");
@@ -362,20 +373,10 @@ export default {
 				if (category !== heading) this[category + "Hover"] = false;
 			});
 
-			if (this.headingSorted === heading) {
-				this.orderBy = this.orderBy === "desc" ? "asc" : "desc";
-				this.$store.dispatch("files/sortAllFiles", {
-					heading,
-					order: this.orderBy
-				});
-			} else {
-				this.headingSorted = heading;
-				this.orderBy = "desc";
-				this.$store.dispatch("files/sortAllFiles", {
-					heading,
-					order: this.orderBy
-				});
-			}
+			const flip = order => order === "asc" ? "desc" : "asc";
+
+			this.orderBy = this.headingSorted === heading ? flip(this.orderBy) : "desc";
+			this.headingSorted = heading;
 		},
 
 		mouseOverHandler(heading) {

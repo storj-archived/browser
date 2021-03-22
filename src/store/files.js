@@ -16,7 +16,38 @@ export default {
 		filesToBeDeleted: [],
 		getSharedLink: null,
 		getObjectLocations: null,
-		openedDropdown: null
+		openedDropdown: null,
+		headingSorted: "name",
+		orderBy: "desc"
+	},
+	getters: {
+		sortedFiles(state) {
+			const files = [...state.files];
+			const order = state.orderBy;
+			const heading = state.headingSorted;
+	
+			if (order === "asc") {
+				if (heading === "date") {
+					files.sort((a, b) => new Date(a.LastModified) - new Date(b.LastModified));
+				} else if (heading === "name") {
+					files.sort((a, b) => a.Key.localeCompare(b.Key));
+				} else {
+					files.sort((a, b) => a[heading] - b[heading]);
+				}
+			} else {
+				if (heading === "date") {
+					files.sort((a, b) => new Date(b.LastModified) - new Date(a.LastModified));
+				} else if (heading === "name") {
+					files.sort((a, b) => b.Key.localeCompare(a.Key));
+				} else {
+					files.sort((a, b) => b[heading] - a[heading]);
+				}
+			}
+	
+			const sortedFiles = [...files.filter((file) => file.type === "folder"), ...files.filter((file) => file.type === "file")];
+	
+			return sortedFiles;
+		}
 	},
 	mutations: {
 		init(state, {
@@ -77,49 +108,8 @@ export default {
 			state.shiftSelectedFiles = [];
 		},
 
-		setShiftSelectedFiles(state, file) {
-			if (!state.selectedFile) {
-				state.selectedFile = file;
-				return;
-			}
-
-			let anchorIdx;
-			for (let i = 0; i < state.files.length ; i++) {
-				if (state.files[i] === state.selectedFile) anchorIdx = i;
-			}
-
-			let shiftIdx;
-			for (let i = 0; i < state.files.length ; i++) {
-				if (state.files[i] === file) shiftIdx = i;
-			}
-
-			if (anchorIdx > shiftIdx) [anchorIdx, shiftIdx] = [shiftIdx, anchorIdx];
-
-			state.shiftSelectedFiles = state.files.slice(anchorIdx, shiftIdx + 1);
-		},
-
-		sortFiles(state, { heading, order }) {
-			const files = [...state.files];
-
-			if (order === "asc") {
-				if (heading === "LastModified") {
-					files.sort((a, b) => new Date(a.LastModified) - new Date(b.LastModified));
-				} else if (heading === "Key") {
-					files.sort((a, b) => a.Key.localeCompare(b.Key));
-				} else {
-					files.sort((a, b) => a[heading] - b[heading]);
-				}
-			} else {
-				if (heading === "LastModified") {
-					files.sort((a, b) => new Date(b.LastModified) - new Date(a.LastModified));
-				} else if (heading === "Key") {
-					files.sort((a, b) => b.Key.localeCompare(a.Key));
-				} else {
-					files.sort((a, b) => b[heading] - a[heading]);
-				}
-			}
-
-			state.files = [...files.filter((file) => file.type === "folder"), ...files.filter((file) => file.type === "file")];
+		setShiftSelectedFiles(state, files) {
+			state.shiftSelectedFiles = files;
 		},
 
 		pushUpload(state, file) {
@@ -139,6 +129,11 @@ export default {
 
 		setOpenedDropdown(state, id) {
 			state.openedDropdown = id;
+		},
+
+		sort(state, {headingSorted, orderBy}) {
+			state.headingSorted = headingSorted;
+			state.orderBy = orderBy;
 		}
 	},
 	actions: {
@@ -388,8 +383,8 @@ export default {
 			commit("setSelectedFile", file);
 		},
 
-		addToShiftSelectedFiles({ commit }, file) {
-			commit("setShiftSelectedFiles", file);
+		updateShiftSelectedFiles({ commit }, files) {
+			commit("setShiftSelectedFiles", files);
 		},
 
 		addFileToBeDeleted({ commit }, file) {
