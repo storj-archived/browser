@@ -277,9 +277,11 @@ export default {
 		toggleDropdown(event) {
 			event.stopPropagation();
 
-			this.$store.state.files.openedDropdown === this.file.Key ?
-				this.$store.dispatch("files/openDropdown", null) :
+			if (this.$store.state.files.openedDropdown === this.file.Key) {
+				this.$store.dispatch("files/openDropdown", null);
+			} else {
 				this.$store.dispatch("files/openDropdown", this.file.Key);
+			}
 
 			// remove the dropdown delete confirmation
 			this.deleteConfirmation = false;
@@ -305,9 +307,11 @@ export default {
 				file: this.file
 			};
 
-			this.file.type === "file" ?
-				await this.$store.dispatch("files/delete", params) :
+			if (this.file.type === "file") {
+				await this.$store.dispatch("files/delete", params);
+			} else {
 				this.$store.dispatch("files/deleteFolder", params);
+			}
 
 			// refresh the files displayed
 			await this.$store.dispatch("files/list");
