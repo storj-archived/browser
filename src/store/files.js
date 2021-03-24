@@ -20,7 +20,7 @@ export default {
 		getObjectLocations: null,
 		openedDropdown: null,
 		headingSorted: "name",
-		orderBy: "desc",
+		orderBy: "asc",
 		createFolderInputShow: false,
 	},
 	getters: {
@@ -132,10 +132,12 @@ export default {
 		setOpenedDropdown(state, id) {
 			state.openedDropdown = id;
 		},
+		
+		sort(state, headingSorted) {
+			const flip = orderBy => orderBy === "asc" ? "desc" : "asc";
 
-		sort(state, {headingSorted, orderBy}) {
+			state.orderBy = state.headingSorted === headingSorted ? flip(state.orderBy) : "asc";
 			state.headingSorted = headingSorted;
-			state.orderBy = orderBy;
 		},
 
 		setCreateFolderInputShow(state, value) {
@@ -217,8 +219,6 @@ export default {
 			state,
 			dispatch
 		}, e) {
-			//dispatch('updatePreventRefresh', true);
-
 			const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
 
 			await Promise.all([...files].map(async file => {
@@ -265,8 +265,6 @@ export default {
 
 				commit("finishUpload", params.Key);
 			}));
-
-			//dispatch('updatePreventRefresh', false);
 		},
 
 		async createFolder({
@@ -369,13 +367,6 @@ export default {
 			};
 
 			downloadURL(url, file.Key);
-		},
-
-		sortAllFiles({ commit }, { heading, order }) {
-			commit("setSelectedFile", null);
-			if (heading === "name") commit("sortFiles", { heading: "Key", order });
-			else if (heading === "size") commit("sortFiles", { heading: "Size", order });
-			else if (heading === "date") commit("sortFiles", { heading: "LastModified", order });
 		},
 
 		updatePreventRefresh({

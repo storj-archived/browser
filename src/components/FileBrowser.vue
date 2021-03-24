@@ -6,6 +6,14 @@
 	min-height: 500px;
 }
 
+.file-browser, .file-browser .table-heading {
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+}
+
 tbody {
 	user-select: none;
 }
@@ -99,51 +107,57 @@ tbody {
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th v-on:mouseover="mouseOverHandler('name')" v-on:mouseleave="mouseLeaveHandler('name')" v-on:click="sortTable('name')" class="table-heading" scope="col">Name
-									<a class="dropdown-arrow" v-if="headingSorted === 'name' && orderBy === 'asc'">
-										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
-											<path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
-										</svg>
-									</a>
-									<a class="dropdown-arrow" v-else>
-										<svg v-if="nameHover" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-short down-arrow" viewBox="0 0 16 16">
-											<path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" />
-										</svg>
-									</a>
+								<th v-on:mouseover="mouseOverName" v-on:mouseleave="mouseLeave" v-on:click="sortByName" class="table-heading" scope="col">Name
+									<span v-if="showNameArrow">
+										<a class="dropdown-arrow" v-if="nameAsc">
+											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+												<path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
+											</svg>
+										</a>
+										<a class="dropdown-arrow" v-else>
+											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-short down-arrow" viewBox="0 0 16 16">
+												<path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" />
+											</svg>
+										</a>
+									</span>
 								</th>
-								<th v-on:mouseover="mouseOverHandler('size')" v-on:mouseleave=" mouseLeaveHandler('size')" v-on:click="sortTable('size')" class="table-heading" scope="col">Size
-									<a class="dropdown-arrow" v-if="headingSorted === 'size' && orderBy === 'asc'">
-										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
-											<path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
-										</svg>
-									</a>
-									<a class="dropdown-arrow" v-else>
-										<svg v-if="sizeHover" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-short down-arrow" viewBox="0 0 16 16">
-											<path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" />
-										</svg>
-									</a>
+								<th v-on:mouseover="mouseOverSize" v-on:mouseleave="mouseLeave" v-on:click="sortBySize" class="table-heading" scope="col">Size
+									<span v-if="showSizeArrow">
+										<a class="dropdown-arrow" v-if="sizeAsc">
+											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+												<path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
+											</svg>
+										</a>
+										<a class="dropdown-arrow" v-else>
+											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-short down-arrow" viewBox="0 0 16 16">
+												<path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" />
+											</svg>
+										</a>
+									</span>
 								</th>
-								<th v-on:mouseover="mouseOverHandler('date')" v-on:mouseleave="mouseLeaveHandler('date')" v-on:click="sortTable('date')" class="table-heading" scope="col">Upload Date
-									<a class="dropdown-arrow" v-if="headingSorted === 'date' && orderBy === 'asc'">
-										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
-											<path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
-										</svg>
-									</a>
-									<a class="dropdown-arrow" v-else>
-										<svg v-if="dateHover" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-short down-arrow" viewBox="0 0 16 16">
-											<path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" />
-										</svg>
-									</a>
+								<th v-on:mouseover="mouseOverDate" v-on:mouseleave="mouseLeave" v-on:click="sortByDate" class="table-heading" scope="col">Upload Date
+									<span v-if="showDateArrow">
+										<a class="dropdown-arrow" v-if="dateAsc">
+											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+												<path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
+											</svg>
+										</a>
+										<a class="dropdown-arrow" v-else>
+											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-short down-arrow" viewBox="0 0 16 16">
+												<path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" />
+											</svg>
+										</a>
+									</span>
 								</th>
 								<th class="table-heading" scope="col">
 									<div class="dropleft">
-										<a class="d-flex justify-content-end" v-if="areThereFilesToDelete()" v-on:click="deleteSelectedDropdown">
+										<a class="d-flex justify-content-end" v-if="areFilesToDelete" v-on:click="deleteSelectedDropdown">
 											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
 												<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
 												<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
 											</svg>
 										</a>
-										<div v-if="displayDropdown()" class="dropdown-menu shadow show">
+										<div v-if="displayDropdown" class="dropdown-menu shadow show">
 											<div>
 												<p class="deletion-confirmation px-3 pt-3">Are you sure?</p>
 												<div class="d-flex">
@@ -165,27 +179,6 @@ tbody {
 											</div>
 										</div>
 									</div>
-
-
-									<!-- <span v-else class="">
-										Are you sure?
-										<div class="">
-											<button class="btn btn-sm" v-on:click="">
-												<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="" viewBox="0 0 16 16">
-													<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-													<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-												</svg>
-												Yes
-											</button>
-											<button class="btn btn-sm" v-on:click="">
-												<svg width="16" height="16" viewBox="0 0 16 16" class="" fill="green" xmlns="http://www.w3.org/2000/svg">
-													<path fill-rule="evenodd"
-													d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-												</svg>
-												No
-											</button>
-										</div>
-									</span> -->
 								</th>
 							</tr>
 						</thead>
@@ -283,13 +276,35 @@ tbody {
 import FileEntry from "./FileEntry.vue";
 import BreadCrumbs from "./BreadCrumbs.vue";
 
+// Computed property creators 
+
+const isAsc = heading => function () {
+	return this.headingSorted === heading && this.orderBy === "asc";
+};
+
+const showArrow = heading => function () {
+	return this.headingSorted === heading || this.hover === heading;
+};
+
+const fromFilesStore = prop => function () {
+	return this.$store.state.files[prop];
+};
+
+// Method creators
+
+const mouseOver = heading => function () {
+	this.hover = heading;
+};
+
+const sortBy = heading => function () {
+	this.$store.commit("files/sort", heading);
+};
+
 export default {
 	data: () => ({
 		createFolderInput: "",
 		creatingFolderSpinner: false,
-		nameHover: true,
-		sizeHover: false,
-		dateHover: false,
+		hover: null,
 		deleteConfirmation: false,
 		fetchingFilesSpinner: false,
 	}),
@@ -305,18 +320,35 @@ export default {
 				nameIsNotOnlyPeriods &&
 				notDuplicate;
 		},
-		path() {
-			return this.$store.state.files.path;
-		},
+
 		files() {
 			return this.$store.getters["files/sortedFiles"];
 		},
-		filesUploading() {
-			return this.$store.state.files.uploading;
-		},
+
 		routePath() {
 			return this.$route.params.pathMatch;
 		},
+
+		path: fromFilesStore("path"),
+		filesUploading: fromFilesStore("uploading"),
+		headingSorted: fromFilesStore("headingSorted"),
+		orderBy: fromFilesStore("orderBy"),
+
+		nameAsc: isAsc("name"),
+		sizeAsc: isAsc("size"),
+		dateAsc: isAsc("date"),
+
+		showNameArrow: showArrow("name"),
+		showSizeArrow: showArrow("size"),
+		showDateArrow: showArrow("date"),
+
+		areFilesToDelete() {
+			return !!this.$store.state.files.selectedFile;
+		},
+
+		displayDropdown() {
+			return this.$store.state.files.openedDropdown === "FileBrowser";
+		}
 	},
 	watch: {
 		async routePath() {
@@ -324,15 +356,20 @@ export default {
 		},
 	},
 	methods: {
+		sortByName: sortBy("name"),
+		sortBySize: sortBy("size"),
+		sortByDate: sortBy("date"),
+
+		mouseOverName: mouseOver("name"),
+		mouseOverSize: mouseOver("size"),
+		mouseOverDate: mouseOver("date"),
+
 		toggleFolderCreationInput() {
  			this.$store.dispatch("files/updateCreateFolderInputShow", !this.$store.state.files.createFolderInputShow);
  		},
 
-		sort(headingSorted, orderBy) {
-			this.$store.commit("files/sort", {
-				headingSorted: headingSorted,
-				orderBy: orderBy
-			});
+		mouseLeave() {
+			this.hover = null;
 		},
 
 		deleteSelectedDropdown(event) {
@@ -347,14 +384,6 @@ export default {
 
 		cancelDeleteSelection() {
 			this.$store.dispatch("files/openDropdown", null);
-		},
-
-		displayDropdown() {
-			return this.$store.state.files.openedDropdown === "FileBrowser";
-		},
-
-		areThereFilesToDelete() {
-			return !!this.$store.state.files.selectedFile;
 		},
 
 		filename(file) {
@@ -424,35 +453,7 @@ export default {
 		cancelFolderCreation() {
 			this.createFolderInput = "";
 			this.$store.dispatch("files/updateCreateFolderInputShow", false);
-		},
-
-		sortTable(heading) {
-			// set the hover property of the headings that are not clicked to false
-			["name", "size", "date"].forEach((category) => {
-				if (category !== heading) this[category + "Hover"] = false;
-			});
-
-			const flip = order => order === "asc" ? "desc" : "asc";
-
-			// if this heading was previously clicked, flip it from asc to desc or vice-versa, if not, the default should be desc
-			this.sort(heading, this.$store.state.files.headingSorted === heading ? flip(this.$store.state.files.orderBy) : "desc");
-		},
-
-		mouseOverHandler(heading) {
-			if (this.headingSorted !== heading) {
-				if (heading === "name") this.nameHover = true;
-				if (heading === "size") this.sizeHover = true;
-				if (heading === "date") this.dateHover = true;
-			}
-		},
-
-		mouseLeaveHandler(heading) {
-			if (this.headingSorted !== heading) {
-				if (heading === "name") this.nameHover = false;
-				if (heading === "size") this.sizeHover = false;
-				if (heading === "date") this.dateHover = false;
-			}
-		},
+		}
 	},
 	async created() {
 		// display the spinner while files are being fetched
