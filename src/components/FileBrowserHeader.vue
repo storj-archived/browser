@@ -7,7 +7,7 @@ th {
 	-o-user-select: none;
 }
 
-.dropdown-arrow {
+.arrow {
 	cursor: pointer;
 	color: #768394;
 	position: absolute;
@@ -19,42 +19,42 @@ th {
         <tr>
             <th v-on:mouseover="mouseOverName" v-on:mouseleave="mouseLeave" v-on:click="sortByName" class="table-heading" scope="col">Name
                 <span v-if="showNameArrow">
-                    <a class="dropdown-arrow" v-if="nameAsc">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
-                        </svg>
-                    </a>
-                    <a class="dropdown-arrow" v-else>
+                    <a class="arrow" v-if="nameDesc">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-short down-arrow" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" />
+                        </svg>
+                    </a>
+                    <a class="arrow" v-else>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
                         </svg>
                     </a>
                 </span>
             </th>
             <th v-on:mouseover="mouseOverSize" v-on:mouseleave="mouseLeave" v-on:click="sortBySize" class="table-heading" scope="col">Size
                 <span v-if="showSizeArrow">
-                    <a class="dropdown-arrow" v-if="sizeAsc">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
-                        </svg>
-                    </a>
-                    <a class="dropdown-arrow" v-else>
+                    <a class="arrow" v-if="sizeDesc">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-short down-arrow" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" />
+                        </svg>
+                    </a>
+                    <a class="arrow" v-else>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
                         </svg>
                     </a>
                 </span>
             </th>
             <th v-on:mouseover="mouseOverDate" v-on:mouseleave="mouseLeave" v-on:click="sortByDate" class="table-heading" scope="col">Upload Date
                 <span v-if="showDateArrow">
-                    <a class="dropdown-arrow" v-if="dateAsc">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
-                        </svg>
-                    </a>
-                    <a class="dropdown-arrow" v-else>
+                    <a class="arrow" v-if="dateDesc">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-short down-arrow" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z" />
+                        </svg>
+                    </a>
+                    <a class="arrow" v-else>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up-short" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z" />
                         </svg>
                     </a>
                 </span>
@@ -97,8 +97,8 @@ th {
 <script>
 // Computed property creators
 
-const isAsc = heading => function () {
-	return this.headingSorted === heading && this.orderBy === "asc";
+const isDesc = heading => function () {
+	return this.headingSorted === heading && this.orderBy === "desc";
 };
 
 const showArrow = heading => function () {
@@ -127,9 +127,9 @@ export default {
         headingSorted: fromFilesStore("headingSorted"),
 		orderBy: fromFilesStore("orderBy"),
 
-		nameAsc: isAsc("name"),
-		sizeAsc: isAsc("size"),
-		dateAsc: isAsc("date"),
+		nameDesc: isDesc("name"),
+		sizeDesc: isDesc("size"),
+		dateDesc: isDesc("date"),
 
 		showNameArrow: showArrow("name"),
 		showSizeArrow: showArrow("size"),
