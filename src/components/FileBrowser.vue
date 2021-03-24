@@ -4,9 +4,7 @@
 
 .file-browser {
 	min-height: 500px;
-}
 
-.file-browser, .file-browser .table-heading {
 	user-select: none;
 	-moz-user-select: none;
 	-khtml-user-select: none;
@@ -212,11 +210,13 @@ export default {
 	data: () => ({
 		createFolderInput: "",
 		creatingFolderSpinner: false,
-		hover: null,
 		deleteConfirmation: false,
 		fetchingFilesSpinner: false,
 	}),
 	computed: {
+		path: fromFilesStore("path"),
+		filesUploading: fromFilesStore("uploading"),
+
 		createFolderEnabled() {
 			const charsOtherThanSpaceExist = this.createFolderInput.trim().length > 0;
 			const noForwardSlashes = this.createFolderInput.indexOf("/") === -1;
@@ -236,9 +236,6 @@ export default {
 		routePath() {
 			return this.$route.params.pathMatch;
 		},
-
-		path: fromFilesStore("path"),
-		filesUploading: fromFilesStore("uploading"),
 
 		areFilesToDelete() {
 			return !!this.$store.state.files.selectedFile;
