@@ -288,7 +288,8 @@ export default {
 		},
 		download(event) {
 			event.stopPropagation();
-			this.$emit("download");
+
+			this.$store.dispatch("files/download", file);
 			this.$store.dispatch("files/openDropdown", null);
 			this.deleteConfirmation = false;
 		},

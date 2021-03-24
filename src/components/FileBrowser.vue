@@ -164,9 +164,9 @@ tbody {
 								</td>
 							</tr>
 
+							<file-entry v-for="file in folders" v-bind:path="path" v-bind:file="file" v-bind:key="file.Key"></file-entry>
 
-							<file-entry v-for="file in files.filter(f => f.type === 'folder')" v-bind:path="path" v-bind:file="file" v-on:download="download(file)" v-on:go="go" v-bind:key="file.Key"></file-entry>
-							<file-entry v-for="file in files.filter(f => f.type === 'file')" v-bind:path="path" v-bind:file="file" v-on:download="download(file)" v-on:delete="del(file)" v-on:go="go" v-bind:key="file.Key"></file-entry>
+							<file-entry v-for="file in singleFiles" v-bind:path="path" v-bind:file="file" v-bind:key="file.Key"></file-entry>
 						</tbody>
 					</table>
 				</div>
@@ -175,7 +175,7 @@ tbody {
  					<div class="spinner-border"></div>
  				</div>
 
-				<div v-if="!files.length || (files.length === 1 && files[0].Key === '.vortex_placeholder')" class="upload-help">
+				<div v-if="displayUpload" class="upload-help">
 					<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M16.8616 1.02072L16.8554 1.01398L5.40027 13.3834L7.94585 16.1322L16.2 7.2192V26.2817H19.8V7.64972L27.6554 16.1321L30.201 13.3833L17.8069 0L16.8616 1.02072Z" fill="#93A1AF" />
 						<path d="M36 32.1127H0V36H36V32.1127Z" fill="#93A1AF" />
@@ -227,6 +227,14 @@ export default {
 			return this.$store.getters["files/sortedFiles"];
 		},
 
+		singleFiles() {
+			return this.files.filter(f => f.type === "file");
+		},
+
+		folders() {
+			return this.files.filter(f => f.type === 'folder');
+		},
+
 		routePath() {
 			return this.$route.params.pathMatch;
 		},
@@ -237,6 +245,10 @@ export default {
 
 		displayDropdown() {
 			return this.$store.state.files.openedDropdown === "FileBrowser";
+		},
+
+		displayUpload() {
+			return this.fetchingFilesSpinner === false && this.files.length === 0;
 		}
 	},
 	watch: {
@@ -270,10 +282,6 @@ export default {
 		async upload(e) {
 			await this.$store.dispatch("files/upload", e);
 			e.target.value = "";
-		},
-
-		async download(file) {
-			await this.$store.dispatch("files/download", file);
 		},
 
 		async list(path) {
