@@ -290,8 +290,6 @@ export default {
 		nameHover: true,
 		sizeHover: false,
 		dateHover: false,
-		headingSorted: "name",
-		orderBy: "desc",
 		deleteConfirmation: false,
 		fetchingFilesSpinner: false,
 	}),
@@ -324,22 +322,16 @@ export default {
 		async routePath() {
 			await this.goToRoutePath();
 		},
-		headingSorted() {
-			this.sort();
-		},
-		orderBy() {
-			this.sort();
-		}
 	},
 	methods: {
 		toggleFolderCreationInput() {
  			this.$store.dispatch("files/updateCreateFolderInputShow", !this.$store.state.files.createFolderInputShow);
  		},
 
-		sort() {
+		sort(headingSorted, orderBy) {
 			this.$store.commit("files/sort", {
-				headingSorted: this.headingSorted,
-				orderBy: this.orderBy
+				headingSorted: headingSorted,
+				orderBy: orderBy
 			});
 		},
 
@@ -443,10 +435,7 @@ export default {
 			const flip = order => order === "asc" ? "desc" : "asc";
 
 			// if this heading was previously clicked, flip it from asc to desc or vice-versa, if not, the default should be desc
-			this.orderBy = this.headingSorted === heading ? flip(this.orderBy) : "desc";
-
-			// set the headingSorted property to the heading that was clicked
-			this.headingSorted = heading;
+			this.sort(heading, this.$store.state.files.headingSorted === heading ? flip(this.$store.state.files.orderBy) : "desc");
 		},
 
 		mouseOverHandler(heading) {
