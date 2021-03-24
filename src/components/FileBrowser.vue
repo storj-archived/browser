@@ -297,9 +297,15 @@ export default {
 	}),
 	computed: {
 		createFolderEnabled() {
-			return this.createFolderInput.trim().length > 0 &&
-				this.createFolderInput.indexOf("/") === -1 && [...this.createFolderInput].filter((char) => char === ".").length !== this.createFolderInput.length &&
-				this.files.filter(file => file.Key === this.createFolderInput.trim()).length === 0;
+			const charsOtherThanSpaceExist = this.createFolderInput.trim().length > 0;
+			const noForwardSlashes = this.createFolderInput.indexOf("/") === -1;
+			const nameIsNotOnlyPeriods = [...this.createFolderInput.trim()].filter((char) => char === ".").length !== this.createFolderInput.trim().length;
+			const notDuplicate = this.files.filter(file => file.Key === this.createFolderInput.trim()).length === 0;
+
+			return charsOtherThanSpaceExist &&
+				noForwardSlashes &&
+				nameIsNotOnlyPeriods &&
+				notDuplicate;
 		},
 		path() {
 			return this.$store.state.files.path;
@@ -341,22 +347,28 @@ export default {
 			event.stopPropagation();
 			this.$store.dispatch("files/openDropdown", "FileBrowser");
 		},
+
 		confirmDeleteSelection() {
 			this.$store.dispatch("files/deleteSelected");
 			this.$store.dispatch("files/openDropdown", null);
 		},
+
 		cancelDeleteSelection() {
 			this.$store.dispatch("files/openDropdown", null);
 		},
+
 		displayDropdown() {
 			return this.$store.state.files.openedDropdown === "FileBrowser";
 		},
+
 		areThereFilesToDelete() {
 			return !!this.$store.state.files.selectedFile;
 		},
+
 		filename(file) {
 			return file.Key.length > 25 ? file.Key.slice(0, 25) + "..." : file.Key;
 		},
+
 		async upload(e) {
 			await this.$store.dispatch("files/upload", e);
 			e.target.value = "";
@@ -395,17 +407,25 @@ export default {
 		},
 
 		async createFolder() {
-			this.creatingFolderSpinner = true;
-
+			// exit function if folder name violates our naming convention
 			if (!this.createFolderEnabled) return;
 
+			// add spinner
+			this.creatingFolderSpinner = true;
+
+			// create folder
 			await this.$store.dispatch(
 				"files/createFolder",
 				this.createFolderInput.trim()
 			);
 
+			// clear folder input
 			this.createFolderInput = "";
+
+			// remove the folder creation input
 			this.$store.dispatch("files/updateCreateFolderInputShow", false);
+
+			// remove the spinner
 			this.creatingFolderSpinner = false;
 		},
 
@@ -415,13 +435,17 @@ export default {
 		},
 
 		sortTable(heading) {
+			// set the hover property of the headings that are not clicked to false
 			["name", "size", "date"].forEach((category) => {
 				if (category !== heading) this[category + "Hover"] = false;
 			});
 
 			const flip = order => order === "asc" ? "desc" : "asc";
 
+			// if this heading was previously clicked, flip it from asc to desc or vice-versa, if not, the default should be desc
 			this.orderBy = this.headingSorted === heading ? flip(this.orderBy) : "desc";
+
+			// set the headingSorted property to the heading that was clicked
 			this.headingSorted = heading;
 		},
 
@@ -442,6 +466,7 @@ export default {
 		},
 	},
 	async created() {
+		// display the spinner while files are being fetched
 		this.fetchingFilesSpinner = true;
 
 		if(!this.routePath) {
@@ -454,6 +479,7 @@ export default {
 			}
 		}
 
+		// remove the spinner after files have been fetched
 		this.fetchingFilesSpinner = false;
 	},
 

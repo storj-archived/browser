@@ -229,12 +229,16 @@ export default {
 		selectFile(event) {
 			event.stopPropagation();
 
+			// close the openDropdown
 			if (this.$store.state.files.openedDropdown) {
 				this.$store.dispatch("files/openDropdown", null);
 			}
 
+			// if shift key was held
 			if (event.shiftKey) {
 				this.setShiftSelectedFiles();
+
+			// if it was only a click
 			} else {
 				this.$store.dispatch("files/updateSelectedFile", this.file);
 			}
@@ -264,6 +268,7 @@ export default {
 			await navigator.clipboard.writeText(url);
 			this.shareText = "URL Copied!";
 
+			// time until the dropdown is closed and the text in the share portion of dropdown gets reset
 			setTimeout(() => {
 				this.$store.dispatch("files/openDropdown", null);
 				this.shareText = "Copy Link";
@@ -272,12 +277,11 @@ export default {
 		toggleDropdown(event) {
 			event.stopPropagation();
 
-			if (this.$store.state.files.openedDropdown === this.file.Key) {
-				this.$store.dispatch("files/openDropdown", null);
-			} else {
+			this.$store.state.files.openedDropdown === this.file.Key ?
+				this.$store.dispatch("files/openDropdown", null) :
 				this.$store.dispatch("files/openDropdown", this.file.Key);
-			}
 
+			// remove the dropdown delete confirmation
 			this.deleteConfirmation = false;
 		},
 		download(event) {
@@ -296,17 +300,16 @@ export default {
 			this.$store.dispatch("files/updatePreventRefresh", true);
 			this.$store.dispatch("files/addFileToBeDeleted", this.file);
 
-			if(this.file.type === "file") {
-				await this.$store.dispatch("files/delete", {
-					path: this.path, file: this.file
-				});
-			} else {
-				await this.$store.dispatch("files/deleteFolder", {
-					path: this.path,
-					file: this.file
-				});
-			}
+			const params = {
+				path: this.path,
+				file: this.file
+			};
 
+			this.file.type === "file" ?
+				await this.$store.dispatch("files/delete", params) :
+				this.$store.dispatch("files/deleteFolder", params);
+
+			// refresh the files displayed
 			await this.$store.dispatch("files/list");
 			this.$store.dispatch("files/updatePreventRefresh", false);
 			this.$store.dispatch("files/removeFileFromToBeDeleted", this.file);
