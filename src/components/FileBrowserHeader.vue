@@ -6,6 +6,12 @@ th {
 	-webkit-user-select: none;
 	-o-user-select: none;
 }
+
+.dropdown-arrow {
+	cursor: pointer;
+	color: #768394;
+	position: absolute;
+}
 </style>
 
 <template>
@@ -89,7 +95,7 @@ th {
 </template>
 
 <script>
-// Computed property creators 
+// Computed property creators
 
 const isAsc = heading => function () {
 	return this.headingSorted === heading && this.orderBy === "asc";

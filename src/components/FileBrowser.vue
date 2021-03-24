@@ -47,12 +47,6 @@ tbody {
 	min-height: 400px;
 }
 
-.dropdown-arrow {
-	cursor: pointer;
-	color: #768394;
-	position: absolute;
-}
-
 .table-heading {
 	cursor: pointer;
 }
@@ -104,7 +98,7 @@ tbody {
 				<div>
 					<table class="table table-hover">
 						<file-browser-header></file-browser-header>
-						
+
 						<tbody>
 							<tr v-for="file in filesUploading" v-bind:key="file.ETag" scope="row">
 								<td class="upload-text">
@@ -200,7 +194,7 @@ import FileBrowserHeader from "./FileBrowserHeader.vue";
 import FileEntry from "./FileEntry.vue";
 import BreadCrumbs from "./BreadCrumbs.vue";
 
-// Computed property creators 
+// Computed property creators
 
 const fromFilesStore = prop => function () {
 	return this.$store.state.files[prop];
