@@ -1,4 +1,6 @@
-import AWS from 'aws-sdk';
+import S3 from 'aws-sdk/clients/s3';
+import * as R from "ramda";
+
 const listCache = new Map();
 
 export default {
@@ -23,31 +25,30 @@ export default {
 	},
 	getters: {
 		sortedFiles(state) {
-			const files = [...state.files];
-			const order = state.orderBy;
-			const heading = state.headingSorted;
+			// default sort case
+			const sortByHeading = (a, b) => a[state.headingSorted] - b[state.headingSorted];
 
-			if (order === "asc") {
-				if (heading === "date") {
-					files.sort((a, b) => new Date(a.LastModified) - new Date(b.LastModified));
-				} else if (heading === "name") {
-					files.sort((a, b) => a.Key.localeCompare(b.Key));
-				} else {
-					files.sort((a, b) => a[heading] - b[heading]);
-				}
-			} else {
-				if (heading === "date") {
-					files.sort((a, b) => new Date(b.LastModified) - new Date(a.LastModified));
-				} else if (heading === "name") {
-					files.sort((a, b) => b.Key.localeCompare(a.Key));
-				} else {
-					files.sort((a, b) => b[heading] - a[heading]);
-				}
-			}
+			// key-specific sort cases
+			const fns = {
+				date: (a, b) => new Date(a.LastModified) - new Date(b.LastModified),
+				name: (a, b) => a.Key.localeCompare(b.Key)
+			};
 
-			const sortedFiles = [...files.filter((file) => file.type === "folder"), ...files.filter((file) => file.type === "file")];
+			console.log(state.headingSorted);
 
-			return sortedFiles;
+			// sort by appropriate function 
+			const sortedFiles = R.sort(state.headingSorted in fns ? fns[state.headingSorted] : sortByHeading, state.files);
+
+			// reverse if descending order
+			const orderedFiles = state.orderBy === "asc" ? sortedFiles: R.reverse(sortedFiles);
+
+			// display folders and then files
+			const groupedFiles = [
+				...orderedFiles.filter((file) => file.type === "folder"),
+				...orderedFiles.filter((file) => file.type === "file")
+			];
+
+			return groupedFiles;
 		}
 	},
 	mutations: {
@@ -68,7 +69,7 @@ export default {
 				signatureVersion: "v4"
 			};
 
-			state.s3 = new AWS.S3(s3Config);
+			state.s3 = new S3(s3Config);
 			state.bucket = bucket;
 			state.browserRoot = browserRoot;
 			state.getSharedLink = getSharedLink;
@@ -145,12 +146,7 @@ export default {
 		async list({
 			commit,
 			state
-		}, path) {
-
-			if (typeof path !== "string") {
-				path = state.path;
-			}
-
+		}, path = state.path) {
 			if (listCache.has(path) === true) {
 				commit("updateFiles", {
 					path,
@@ -171,21 +167,25 @@ export default {
 
 			Contents.sort((a, b) => a.LastModified < b.LastModified ? -1 : -1);
 
+			const prefixToFolder = ({Prefix}) => ({
+				Key: Prefix.slice(path.length, -1),
+				LastModified: new Date(0),
+				type: "folder",
+			});
+
+			const makeFileRelative = file => ({
+				...file,
+				Key: file.Key.slice(path.length),
+				type: "file"
+			});
+
+			const isFileVisible = file => file.Key.length > 0 &&
+				file.Key !== ".vortex_placeholder";
+
 			const files = [
-				...CommonPrefixes.map(({
-					Prefix
-				}) => ({
-					Key: Prefix.slice(path.length, -1),
-					LastModified: new Date(0),
-					type: "folder",
-				})),
-				...Contents.map(file => ({
-					...file,
-					Key: file.Key.slice(path.length),
-					type: "file"
-				}))
-					.filter(file => file.Key.length > 0)
-					.filter(file => file.Key !== ".vortex_placeholder")
+				...CommonPrefixes.map(prefixToFolder),
+				...Contents.map(makeFileRelative)
+					.filter(isFileVisible)
 			];
 
 			listCache.set(path, files);
@@ -199,17 +199,17 @@ export default {
 			state,
 			dispatch
 		}) {
-			const path = state.path;
+			const getParentDirectory = path => {
+				let i = path.length - 2;
 
-			let i = path.length - 2;
-
-			while (path[i - 1] !== "/" && i > 0) {
-				i--;
+				while (path[i - 1] !== "/" && i > 0) {
+					i--;
+				}
+	
+				return path.slice(0, i);
 			}
 
-			const newPath = path.slice(0, i);
-
-			dispatch("list", newPath);
+			dispatch("list", getParentDirectory(state.path));
 		},
 
 		async upload({
