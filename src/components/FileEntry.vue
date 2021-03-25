@@ -78,9 +78,9 @@
 
 				<span v-on:click="fileClick">
 					<router-link v-bind:to="link">
-						<a href="javascript:null" style="margin-left: 5px;">{{
-							filename
-						}}</a>
+						<a href="javascript:null" style="margin-left: 5px;">
+							{{filename}}
+						</a>
 					</router-link>
 				</span>
 			</span>
@@ -101,6 +101,8 @@
 				</svg>
 
 				{{ filename }}
+
+				<img v-bind:src="objectMapUrl">
 			</span>
 		</td>
 		<td class="w-25">
@@ -408,6 +410,9 @@ export default {
 				this.file.Key +
 				"/"
 			);
+		},
+		objectMapUrl() {
+			return this.$store.getters["files/objectMapUrl"](`${this.$store.state.files.path}${this.file.Key}`);
 		}
 	},
 

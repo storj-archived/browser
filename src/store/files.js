@@ -7,6 +7,8 @@ export default {
 	namespaced: true,
 	state: {
 		s3: null,
+		accessKey: null,
+
 		path: "",
 		bucket: "",
 		browserRoot: "/",
@@ -24,7 +26,7 @@ export default {
 		createFolderInputShow: false
 	},
 	getters: {
-		sortedFiles(state) {
+		sortedFiles: state => {
 			// default sort case
 			const sortByHeading = (a, b) =>
 				a[state.headingSorted] - b[state.headingSorted];
@@ -57,7 +59,10 @@ export default {
 			];
 
 			return groupedFiles;
-		}
+		},
+
+		objectMapUrl: state => path =>
+			`https://link.staging.tardigradeshare.io/s/${state.accessKey}/${state.bucket}/${path}?map=1`
 	},
 	mutations: {
 		init(
@@ -83,6 +88,7 @@ export default {
 			};
 
 			state.s3 = new S3(s3Config);
+			state.accessKey = accessKey;
 			state.bucket = bucket;
 			state.browserRoot = browserRoot;
 			state.getSharedLink = getSharedLink;
