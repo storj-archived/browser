@@ -38,8 +38,6 @@ export default {
 				name: (a, b) => a.Key.localeCompare(b.Key)
 			};
 
-			console.log(state.headingSorted);
-
 			// sort by appropriate function
 			const sortedFiles = R.sort(
 				state.headingSorted in fns

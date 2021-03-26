@@ -292,6 +292,7 @@ tbody {
 					</div>
 				</div>
 			</div>
+			<file-modal></file-modal>
 		</div>
 	</div>
 </template>
@@ -300,6 +301,7 @@ tbody {
 import FileBrowserHeader from "./FileBrowserHeader.vue";
 import FileEntry from "./FileEntry.vue";
 import BreadCrumbs from "./BreadCrumbs.vue";
+import FileModal from "./FileModal.vue";
 
 // Computed property creators
 
@@ -487,7 +489,8 @@ export default {
 	components: {
 		FileEntry,
 		BreadCrumbs,
-		FileBrowserHeader
+		FileBrowserHeader,
+		FileModal,
 	}
 };
 </script>

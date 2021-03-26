@@ -254,7 +254,7 @@ const sortBy = heading =>
 	};
 
 export default {
-	data: () => ({
+    data: () => ({
 		hover: null
 	}),
 	computed: {
