@@ -82,18 +82,16 @@
   cursor: pointer;
 }
 
+.modal-open {
+	display: block !important;
+}
 </style>
 
 <template>
 <div class="container demo">
-  <div class="text-center">
-		<button v-on:click="openModal" type="button" class="btn btn-demo" data-toggle="modal" data-target="#myModal2">
-			Right Sidebar Modal
-		</button>
-  </div>
 
 	<!-- Modal -->
-	<div class="modal right fade in" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+	<div class="modal right fade in show modal-open" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" v-if="isOpen">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 
@@ -115,19 +113,16 @@
 
 <script>
 export default {
-  name: "FileModal",
-  methods: {
-    openModal() {
-    // document.getElementById("backdrop").style.display = "block"
-    document.getElementById("myModal2").style.display = "block"
-    document.getElementById("myModal2").classList.add("show")
-    },
-    closeModal() {
-      // document.getElementById("backdrop").style.display = "none"
-      document.getElementById("myModal2").style.display = "none"
-      document.getElementById("myModal2").classList.remove("show")
-      // document.getElementById("copyNotification").style.display = "none"
-    },
-  }
+	name: "FileModal",
+	computed: {
+		isOpen() {
+			return this.$store.state.files.modalPath !== null;
+		}
+	},
+	methods: {
+		closeModal() {
+			this.$store.commit("files/closeModal");
+		}
+	}
 }
 </script>
