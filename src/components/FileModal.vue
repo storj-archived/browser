@@ -114,14 +114,14 @@
 
 					<div class="modal-body">
 						<p>{{ filePath }}</p>
-					</div>
 
-					<div v-if="objectMapIsLoading === true">
-						Loading!
-					</div>
+						<div v-if="true">
+							Loading!
+						</div>
 
-					<div v-if="objectMapUrl !== null">
-						Got Url {{objectMapUrl}}
+						<div v-if="objectMapUrl !== null">
+							<img v-bind:src="objectMapUrl">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -154,12 +154,19 @@ export default {
 			this.objectMapIsLoading = true;
 			this.objectMapUrl = await this.$store.state.files.getObjectMapUrl(this.filePath);
 			this.objectMapIsLoading = false;
+		},
+
+		closeModal() {
+			this.$store.commit("files/closeModal");
 		}
 	},
 	watch: {
 		filePath() {
 			this.getObjectMapUrl();
 		}
+	},
+	created() {
+		this.getObjectMapUrl();
 	}
 };
 </script>

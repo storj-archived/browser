@@ -71,7 +71,11 @@ export default {
 				endpoint = "https://gateway.tardigradeshare.io",
 				browserRoot,
 				getSharedLink = () => "javascript:null",
-				getObjectMapUrl = () => "javascript:null"
+				getObjectMapUrl = () => new Promise(resolve =>
+					setTimeout(() =>
+						resolve("https://link.staging.tardigradeshare.io/s/jvgmjntaucpfedohxn3ogdrsfcfa/homepage/TardigradeExplainerVideo.m4v?map=1", 1000)
+					)
+				)
 			}
 		) {
 			const s3Config = {
