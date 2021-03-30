@@ -425,7 +425,7 @@ export default {
 
 	methods: {
 		openModal() {
-			this.$store.commit("files/modalOpen", this.path + this.file.Key);
+			this.$store.commit("files/openModal", this.path + this.file.Key);
 		},
 
 		loadingSpinner() {
