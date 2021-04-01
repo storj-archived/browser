@@ -19,11 +19,13 @@ export default {
 		shiftSelectedFiles: [],
 		filesToBeDeleted: [],
 		getSharedLink: null,
-		getObjectLocations: null,
+		getObjectMapUrl: null,
 		openedDropdown: null,
 		headingSorted: "name",
 		orderBy: "asc",
-		createFolderInputShow: false
+		createFolderInputShow: false,
+
+		modalPath: null
 	},
 	getters: {
 		sortedFiles: state => {
@@ -57,10 +59,7 @@ export default {
 			];
 
 			return groupedFiles;
-		},
-
-		objectMapUrl: state => path =>
-			`https://link.staging.tardigradeshare.io/s/${state.accessKey}/${state.bucket}/${path}?map=1`
+		}
 	},
 	mutations: {
 		init(
@@ -72,9 +71,16 @@ export default {
 				endpoint = "https://gateway.tardigradeshare.io",
 				browserRoot,
 				getSharedLink = () => "javascript:null",
-				getObjectLocations = () => [
-					{ Latitude: 45.5248, Longitude: -122.6789 }
-				]
+				getObjectMapUrl = () =>
+					new Promise(resolve =>
+						setTimeout(
+							() =>
+								resolve(
+									"https://link.staging.tardigradeshare.io/s/jvgmjntaucpfedohxn3ogdrsfcfa/homepage/TardigradeExplainerVideo.m4v?map=1"
+								),
+							1000
+						)
+					)
 			}
 		) {
 			const s3Config = {
@@ -90,7 +96,7 @@ export default {
 			state.bucket = bucket;
 			state.browserRoot = browserRoot;
 			state.getSharedLink = getSharedLink;
-			state.getObjectLocations = getObjectLocations;
+			state.getObjectMapUrl = getObjectMapUrl;
 		},
 
 		updateFiles(state, { path, files }) {
@@ -158,6 +164,14 @@ export default {
 
 		setCreateFolderInputShow(state, value) {
 			state.createFolderInputShow = value;
+		},
+
+		openModal(state, path) {
+			state.modalPath = path;
+		},
+
+		closeModal(state) {
+			state.modalPath = null;
 		}
 	},
 	actions: {
