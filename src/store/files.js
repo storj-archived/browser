@@ -59,7 +59,17 @@ export default {
 			];
 
 			return groupedFiles;
-		}
+		},
+
+		preSignedUrl: state => url => {
+					console.log({state: { ...state }, url});
+
+					return state.s3.getSignedUrl("getObject", {
+						Bucket: state.bucket,
+						Key: url
+					})
+				}
+			
 	},
 	mutations: {
 		init(
@@ -386,7 +396,7 @@ export default {
 
 		async download({ state }, file) {
 			const url = state.files.s3.getSignedUrl("getObject", {
-				Bucket: state.stargateBucket,
+				Bucket: state.bucket,
 				Key: state.path + file.Key
 			});
 
