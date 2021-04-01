@@ -6,9 +6,12 @@
   "module": "dist/browser.esm.js",
   "scripts": {
     "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
     "install": "vue-cli-service build --target lib --name browser src/wrapper.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.10.0",
+    "@aws-sdk/lib-storage": "^3.10.0",
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",

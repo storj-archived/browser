@@ -1,4 +1,10 @@
-import S3 from "aws-sdk/clients/s3";
+import {
+	S3Client,
+	ListObjectsCommand,
+	PutObjectCommand,
+	DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
 import * as R from "ramda";
 
 const listCache = new Map();
@@ -8,7 +14,7 @@ export default {
 	state: {
 		s3: null,
 		accessKey: null,
-
+		s3: new S3Client({}),
 		path: "",
 		bucket: "",
 		browserRoot: "/",
@@ -94,15 +100,19 @@ export default {
 			}
 		) {
 			const s3Config = {
-				accessKeyId: accessKey,
-				secretAccessKey: secretKey,
+				credentials: {
+					accessKeyId: accessKey,
+					secretAccessKey: secretKey,
+				},
 				endpoint,
 				s3ForcePathStyle: true,
-				signatureVersion: "v4"
+				signatureVersion: 'v4',
+				region: 'REGION',
 			};
 
 			state.s3 = new S3(s3Config);
 			state.accessKey = accessKey;
+
 			state.bucket = bucket;
 			state.browserRoot = browserRoot;
 			state.getSharedLink = getSharedLink;
@@ -193,15 +203,16 @@ export default {
 				});
 			}
 
-			const response = await state.s3
-				.listObjects({
-					Bucket: state.bucket,
-					Delimiter: "/",
-					Prefix: path
-				})
-				.promise();
+			const response = await state.s3.send(new ListObjectsCommand({
+				Bucket: state.bucket,
+				Delimiter: "/",
+				Prefix: path,
+			}))
 
-			const { Contents, CommonPrefixes } = response;
+			let { Contents, CommonPrefixes } = response;
+
+			if (!Contents) Contents = []
+			if (!CommonPrefixes) CommonPrefixes = []
 
 			Contents.sort((a, b) =>
 				a.LastModified < b.LastModified ? -1 : -1
@@ -287,8 +298,9 @@ export default {
 						progress: 0
 					});
 
-					const upload = state.s3.upload({
-						...params
+					const upload = new Upload({
+						client: state.s3,
+						params: params,
 					});
 
 					upload.on("httpUploadProgress", progress => {
@@ -300,7 +312,7 @@ export default {
 						});
 					});
 
-					await upload.promise();
+					await upload.done();
 
 					await dispatch("list");
 
@@ -309,24 +321,23 @@ export default {
 			);
 		},
 
-		async createFolder({ state, dispatch }, name) {
-			await state.s3
-				.putObject({
-					Bucket: state.bucket,
-					Key: state.path + name + "/.vortex_placeholder"
-				})
-				.promise();
+		async createFolder({
+			state,
+			dispatch,
+		}, name) {
+			await state.s3.send(new PutObjectCommand({
+				Bucket: state.bucket,
+				Key: state.path + name + "/.vortex_placeholder",
+			}))
 
 			dispatch("list");
 		},
 
 		async delete({ commit, dispatch, state }, { path, file, folder }) {
-			await state.s3
-				.deleteObject({
-					Bucket: state.bucket,
-					Key: path + file.Key
-				})
-				.promise();
+			await state.s3.send(new DeleteObjectCommand({
+				Bucket: state.bucket,
+				Key: path + file.Key,
+			}))
 
 			if (!folder) {
 				await dispatch("list");
@@ -336,13 +347,17 @@ export default {
 
 		async deleteFolder({ commit, dispatch, state }, { file, path }) {
 			async function recurse(filePath) {
-				const { Contents, CommonPrefixes } = await state.s3
-					.listObjects({
-						Bucket: state.bucket,
-						Delimiter: "/",
-						Prefix: filePath
-					})
-					.promise();
+				let {
+					Contents,
+					CommonPrefixes,
+				} = await state.s3.send(new ListObjectsCommand({
+					Bucket: state.bucket,
+					Delimiter: "/",
+					Prefix: filePath,
+				}))
+
+				if (!Contents) CommonPrefixes = [];
+				if (!CommonPrefixes) CommonPrefixes = [];
 
 				async function thread() {
 					while (Contents.length) {
