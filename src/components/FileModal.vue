@@ -266,5 +266,8 @@ export default {
 		  this.getObjectMapUrl();
 		}
 	},
+	created() {
+		this.getObjectMapUrl();
+	}
 };
 </script>
