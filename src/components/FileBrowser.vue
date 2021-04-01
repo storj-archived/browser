@@ -292,7 +292,7 @@ tbody {
 					</div>
 				</div>
 			</div>
-			<file-modal></file-modal>
+			<file-modal v-if="this.$store.state.files.modalPath !== null"></file-modal>
 		</div>
 	</div>
 </template>

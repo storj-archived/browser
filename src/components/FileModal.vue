@@ -91,9 +91,8 @@
 }
 
 .preview {
-  height: 280px;
-  width: 100%;
-  background: lightpink;
+	height: 280px;
+	width: 100%;
 }
 
 .object-map {
@@ -145,7 +144,6 @@
 			tabindex="-1"
 			role="dialog"
 			aria-labelledby="myModalLabel2"
-			v-if="isOpen"
 		>
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -182,7 +180,11 @@
             </div>
             <p class="size">{{size}}</p>
 
-            <div class="preview"></div>
+			<img class="preview" v-if="previewIsImage" v-bind:src="preSignedUrl">
+
+			<video class="preview" controls v-if="previewIsVideo" v-bind:src="preSignedUrl">
+
+			<audio class="preview" controls v-if="previewIsAudio" v-bind:src="preSignedUrl">
 
             <button class="btn btn-primary btn-block download-margin download-btn">Download
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-download mx-1" viewBox="0 0 16 16">
@@ -221,26 +223,38 @@ export default {
 		filePath() {
 			return this.$store.state.files.modalPath;
 		},
-		isOpen() {
-			return this.$store.state.files.modalPath !== null;
-		},
-    size() {
+		size() {
 			return prettyBytes(this.$store.state.files.files.find((file) => file.Key === this.$store.state.files.modalPath).Size);
 		},
+		extension() {
+			return this.filePath.split(".").pop();
+		},
+		preSignedUrl() {
+			return this.$store.getters["files/preSignedUrl"](this.filePath);
+		},
+		previewIsImage() {
+			return ['bmp', 'svg', 'jpg', 'jpeg', 'png', 'ico', 'gif'].includes(this.extension);
+		},
+		previewIsVideo() {
+			return ['m4v', 'mp4', 'webm', 'mov', 'mkv'].includes(this.extension)
+		},
+		previewIsAudio() {
+			return ['mp3', 'wav', 'ogg'].includes(this.extension);
+		}
 	},
 	methods: {
 		async getObjectMapUrl() {
-      this.objectMapIsLoading = true;
-      const objectMapUrl = await this.$store.state.files.getObjectMapUrl(this.filePath);
+			this.objectMapIsLoading = true;
+			const objectMapUrl = await this.$store.state.files.getObjectMapUrl(this.filePath);
 
-      await new Promise(resolve => {
-        const preload = new Image();
-        preload.onload = resolve;
-        preload.src = objectMapUrl;
-      });
+			await new Promise(resolve => {
+				const preload = new Image();
+				preload.onload = resolve;
+				preload.src = objectMapUrl;
+			});
 
-      this.objectMapUrl = objectMapUrl;
-      this.objectMapIsLoading = false;
+			this.objectMapUrl = objectMapUrl;
+			this.objectMapIsLoading = false;
 		},
 
 		closeModal() {
