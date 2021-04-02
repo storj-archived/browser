@@ -508,7 +508,7 @@ export default {
 		download(event) {
 			event.stopPropagation();
 
-			this.$store.dispatch("files/download", file);
+			this.$store.dispatch("files/download", this.file);
 			this.$store.dispatch("files/openDropdown", null);
 			this.deleteConfirmation = false;
 		},
