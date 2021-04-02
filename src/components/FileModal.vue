@@ -1,5 +1,4 @@
 <style scoped>
-.modal.left .modal-dialog,
 .modal.right .modal-dialog {
 	position: fixed;
 	margin: auto;
@@ -11,28 +10,13 @@
 	transform: translate3d(0%, 0, 0);
 }
 
-.modal.left .modal-content,
 .modal.right .modal-content {
 	height: 100%;
 	overflow-y: auto;
 }
 
-.modal.left .modal-body,
 .modal.right .modal-body {
 	padding: 15px 15px 0px;
-}
-
-/*Left*/
-.modal.left.fade .modal-dialog {
-	left: -350px;
-	-webkit-transition: opacity 0.3s linear, left 0.3s ease-out;
-	-moz-transition: opacity 0.3s linear, left 0.3s ease-out;
-	-o-transition: opacity 0.3s linear, left 0.3s ease-out;
-	transition: opacity 0.3s linear, left 0.3s ease-out;
-}
-
-.modal.left.fade.in .modal-dialog {
-	left: 0;
 }
 
 /*Right*/
@@ -61,10 +45,10 @@
 
 /* ----- v CAN BE DELETED v ----- */
 
-.demo {
+/* .demo {
 	padding-top: 60px;
 	padding-bottom: 110px;
-}
+} */
 
 .btn-demo {
 	margin: 15px;
@@ -87,11 +71,17 @@
 }
 
 .file-path {
+	display: inline-block;
   font-weight: bold;
+	max-width: 80%;
+	position: relative;
+  top: 5px;
+	white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .preview {
-	height: 280px;
 	width: 100%;
 }
 
@@ -100,7 +90,6 @@
 }
 
 .storage-nodes {
-  margin: 20px 0 0 0;
   padding: 5px;
   background: rgba(0, 0, 0, 0.8);
   font-weight: lighter;
@@ -109,30 +98,19 @@
 }
 
 .size {
-  margin-top: 10px;
+	font-size: .9rem;
   font-weight: lighter;
 }
 
-.download-margin {
-  margin-top: 15px;
-}
-
-.share-margin {
-  margin-top: 20px;
-}
-
-.spinner-border {
-  margin-top: 30px;
-}
-
-.share-link {
+.share-btn {
   border: 0.1rem solid #007bff;
   border-radius: 5px;
   color: #007bff;
 }
 
 .download-btn {
-  font-weight: bold;
+  font-weight: bolder;
+	font-size: .8rem;
 }
 
 </style>
@@ -147,7 +125,7 @@
 		>
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
-					<svg
+					<!-- <svg
 						v-on:click="closeModal"
 						xmlns="http://www.w3.org/2000/svg"
 						width="2em"
@@ -159,10 +137,25 @@
 						<path
 							d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
 						/>
-					</svg>
+					</svg> -->
 
 					<div class="modal-body container">
-            <div>
+						<div>
+							<svg
+							v-on:click="closeModal"
+							xmlns="http://www.w3.org/2000/svg"
+							width="1.5em"
+							height="1.5em"
+							fill="#6e6e6e"
+							class="bi bi-x mb-3 closex"
+							viewBox="0 0 16 16"
+							>
+								<path
+									d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+								/>
+							</svg>
+						</div>
+            <div class="mb-2">
               <svg
                 width="1.5em"
                 height="1.5em"
@@ -178,39 +171,42 @@
               </svg>
               <span class="file-path">{{ filePath }}</span>
             </div>
-            <p class="size">{{size}}</p>
+            <p class="size mb-3">{{size}}</p>
 
-			<img class="preview" v-if="previewIsImage" v-bind:src="preSignedUrl">
+						<img class="preview mb-3" v-if="previewIsImage" v-bind:src="preSignedUrl">
 
-			<video class="preview" controls v-if="previewIsVideo" v-bind:src="preSignedUrl">
+						<video class="preview mb-3" controls v-if="previewIsVideo" v-bind:src="preSignedUrl"></video>
 
-			<audio class="preview" controls v-if="previewIsAudio" v-bind:src="preSignedUrl">
+						<audio class="preview mb-3" controls v-if="previewIsAudio" v-bind:src="preSignedUrl"></audio>
 
-            <button class="btn btn-primary btn-block download-margin download-btn">Download
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-download mx-1" viewBox="0 0 16 16">
-                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-              </svg>
-            </button>
+						<button class="btn btn-primary btn-lg btn-block mb-3 download-btn" download v-on:click="download">Download
+							<svg width="10" height="15" viewBox="0 0 10 15" fill="none" xmlns="http://www.w3.org/2000/svg" alt="Download" class="ml-2">
+							<path d="M4.0498 7.98517V0H6.0498V7.91442L8.49648 5.46774L9.91069 6.88196L5.01443 11.7782L0.118164 6.88196L1.53238 5.46774L4.0498 7.98517Z" fill="white"/>
+							<path d="M0 13L10 13V15L0 15V13Z" fill="white"/>
+							</svg>
+						</button>
 
-            <button class="btn btn-light btn-block share-margin"><div class="share-link">Generate Share Link</div></button>
+            <button class="btn btn-light btn-block share-margin"><div class="share-btn" v-on:click="openShareModal">Generate Share Link</div></button>
 
             <div v-if="objectMapIsLoading" class="d-flex justify-content-center text-primary">
-              <div class="spinner-border" role="status"></div>
+              <div class="spinner-border mt-3" role="status"></div>
             </div>
           </div>
 
-          <div v-if="objectMapUrl !== null">
-            <p class="storage-nodes">Nodes storing this file</p>
+          <div class="mt-3" v-if="objectMapUrl !== null">
+            <div class="storage-nodes">Nodes storing this file</div>
             <img class="object-map" v-bind:src="objectMapUrl">
           </div>
 				</div>
 			</div>
 		</div>
+		<file-share-modal v-if="this.$store.state.files.fileShareModalOpen"></file-share-modal>
 	</div>
 </template>
 
 <script>
+import FileShareModal from "./FileShareModal";
+
 import prettyBytes from "pretty-bytes";
 
 export default {
@@ -220,11 +216,14 @@ export default {
 		objectMapUrl: null
 	}),
 	computed: {
+		file() {
+			return this.$store.state.files.files.find((file) => file.Key === this.filePath.split("/").slice(-1)[0]);
+		},
 		filePath() {
 			return this.$store.state.files.modalPath;
 		},
 		size() {
-			return prettyBytes(this.$store.state.files.files.find((file) => file.Key === this.$store.state.files.modalPath).Size);
+			return prettyBytes(this.$store.state.files.files.find((file) => file.Key === this.file.Key).Size);
 		},
 		extension() {
 			return this.filePath.split(".").pop();
@@ -243,6 +242,10 @@ export default {
 		}
 	},
 	methods: {
+		openShareModal() {
+			this.$store.commit("files/openFileShareModal");
+		},
+
 		async getObjectMapUrl() {
 			this.objectMapIsLoading = true;
 			const objectMapUrl = await this.$store.state.files.getObjectMapUrl(this.filePath);
@@ -257,9 +260,13 @@ export default {
 			this.objectMapIsLoading = false;
 		},
 
+		download() {
+			this.$store.dispatch("files/download", this.file);
+		},
+
 		closeModal() {
 			this.$store.commit("files/closeModal");
-		}
+		},
 	},
 	watch: {
 		filePath() {
@@ -268,6 +275,9 @@ export default {
 	},
 	created() {
 		this.getObjectMapUrl();
+	},
+	components: {
+		FileShareModal,
 	}
 };
 </script>

@@ -25,7 +25,8 @@ export default {
 		orderBy: "asc",
 		createFolderInputShow: false,
 
-		modalPath: null
+		modalPath: null,
+		fileShareModalOpen: false
 	},
 	getters: {
 		sortedFiles: state => {
@@ -62,14 +63,11 @@ export default {
 		},
 
 		preSignedUrl: state => url => {
-					console.log({state: { ...state }, url});
-
-					return state.s3.getSignedUrl("getObject", {
-						Bucket: state.bucket,
-						Key: url
-					})
-				}
-			
+			return state.s3.getSignedUrl("getObject", {
+				Bucket: state.bucket,
+				Key: url
+			});
+		}
 	},
 	mutations: {
 		init(
@@ -80,7 +78,8 @@ export default {
 				bucket,
 				endpoint = "https://gateway.tardigradeshare.io",
 				browserRoot,
-				getSharedLink = () => "javascript:null",
+				getSharedLink = () =>
+					"javascript:nulljavascript:nulljavascript:nulljavascript:null",
 				getObjectMapUrl = () =>
 					new Promise(resolve =>
 						setTimeout(
@@ -182,6 +181,14 @@ export default {
 
 		closeModal(state) {
 			state.modalPath = null;
+		},
+
+		openFileShareModal(state) {
+			state.fileShareModalOpen = true;
+		},
+
+		closeFileShareModal(state) {
+			state.fileShareModalOpen = false;
 		}
 	},
 	actions: {
@@ -395,7 +402,7 @@ export default {
 		},
 
 		async download({ state }, file) {
-			const url = state.files.s3.getSignedUrl("getObject", {
+			const url = state.s3.getSignedUrl("getObject", {
 				Bucket: state.bucket,
 				Key: state.path + file.Key
 			});

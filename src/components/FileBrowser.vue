@@ -494,3 +494,5 @@ export default {
 	}
 };
 </script>
+,
+FileShareModal
