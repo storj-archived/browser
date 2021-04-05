@@ -91,8 +91,8 @@ export default {
     async getSharedLink() {
       this.objectLink = await this.$store.state.files.getSharedLink(this.filePath);
     },
-    copy() {
-      navigator.clipboard.writeText(this.objectLink);
+    async copy() {
+      await navigator.clipboard.writeText(this.objectLink);
       this.copyText = "Copied!";
       setTimeout(() => {
         this.copyText = "Copy Link";

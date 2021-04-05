@@ -480,7 +480,7 @@ export default {
 		async share(event) {
 			event.stopPropagation();
 
-			const url = this.$store.state.files.getSharedLink(
+			const url = await this.$store.state.files.getSharedLink(
 				this.path + this.file.Key
 			);
 
