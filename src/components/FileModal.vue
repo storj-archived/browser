@@ -106,6 +106,13 @@
 	font-size: .8rem;
 }
 
+/* .btn-copy {
+  position: absolute;
+  bottom: 5px;
+  right: 20px;
+  color: #0068DC;
+} */
+
 </style>
 
 <template>
@@ -165,7 +172,13 @@
 							</svg>
 						</button>
 
-            <button class="btn btn-light btn-block share-margin"><div class="share-btn" v-on:click="openShareModal">Generate Share Link</div></button>
+						<div v-if="objectLink" class="input-group mt-4">
+              <input class="form-control form-control-lg" type="url" id="url" v-bind:value="objectLink" aria-describedby="generateShareLink"  readonly>
+              <button v-on:click="copy" id="generateShareLink" type="button" name="copy" class="btn btn-outline-primary btn-copy">{{this.copyText}}</button>
+            </div>
+
+						<button v-else class="btn btn-light btn-block share-margin"><div class="share-btn" v-on:click="getSharedLink">Generate Share Link</div></button>
+
 
             <div v-if="objectMapIsLoading" class="d-flex justify-content-center text-primary">
               <div class="spinner-border mt-3" role="status"></div>
@@ -179,7 +192,6 @@
 				</div>
 			</div>
 		</div>
-		<file-share-modal v-if="this.$store.state.files.fileShareModalOpen"></file-share-modal>
 	</div>
 </template>
 
@@ -191,7 +203,9 @@ export default {
 	name: "FileModal",
 	data: () => ({
 		objectMapIsLoading: false,
-		objectMapUrl: null
+		objectMapUrl: null,
+		objectLink: null,
+		copyText: "Copy Link",
 	}),
 	computed: {
 		file() {
@@ -220,10 +234,6 @@ export default {
 		}
 	},
 	methods: {
-		openShareModal() {
-			this.$store.commit("files/openFileShareModal");
-		},
-
 		async getObjectMapUrl() {
 			this.objectMapIsLoading = true;
 			const objectMapUrl = await this.$store.state.files.getObjectMapUrl(this.filePath);
@@ -245,6 +255,18 @@ export default {
 		closeModal() {
 			this.$store.commit("files/closeModal");
 		},
+
+		async copy() {
+      await navigator.clipboard.writeText(this.objectLink);
+      this.copyText = "Copied!";
+      setTimeout(() => {
+        this.copyText = "Copy Link";
+      }, 2000)
+    },
+
+		async getSharedLink() {
+      this.objectLink = await this.$store.state.files.getSharedLink(this.filePath);
+    },
 	},
 	watch: {
 		filePath() {

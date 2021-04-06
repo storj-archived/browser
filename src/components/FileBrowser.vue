@@ -293,6 +293,7 @@ tbody {
 				</div>
 			</div>
 			<file-modal v-if="this.$store.state.files.modalPath !== null"></file-modal>
+			<file-share-modal v-if="this.$store.state.files.fileShareModal"></file-share-modal>
 		</div>
 	</div>
 </template>
@@ -302,6 +303,7 @@ import FileBrowserHeader from "./FileBrowserHeader.vue";
 import FileEntry from "./FileEntry.vue";
 import BreadCrumbs from "./BreadCrumbs.vue";
 import FileModal from "./FileModal.vue";
+import FileShareModal from "./FileShareModal";
 
 // Computed property creators
 
@@ -491,6 +493,7 @@ export default {
 		BreadCrumbs,
 		FileBrowserHeader,
 		FileModal,
+		FileShareModal,
 	}
 };
 </script>
