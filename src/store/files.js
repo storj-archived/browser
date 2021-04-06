@@ -26,7 +26,7 @@ export default {
 		createFolderInputShow: false,
 
 		modalPath: null,
-		fileShareModalOpen: false
+		fileShareModal: null
 	},
 	getters: {
 		sortedFiles: state => {
@@ -78,8 +78,7 @@ export default {
 				bucket,
 				endpoint = "https://gateway.tardigradeshare.io",
 				browserRoot,
-				getSharedLink = () =>
-					"javascript:nulljavascript:nulljavascript:nulljavascript:null",
+				getSharedLink = () => "javascript:null",
 				getObjectMapUrl = () =>
 					new Promise(resolve =>
 						setTimeout(
@@ -183,12 +182,12 @@ export default {
 			state.modalPath = null;
 		},
 
-		openFileShareModal(state) {
-			state.fileShareModalOpen = true;
+		setFileShareModal(state, path) {
+			state.fileShareModal = path;
 		},
 
 		closeFileShareModal(state) {
-			state.fileShareModalOpen = false;
+			state.fileShareModal = null;
 		}
 	},
 	actions: {

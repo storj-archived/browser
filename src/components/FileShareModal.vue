@@ -84,7 +84,7 @@ export default {
   }),
   computed: {
     filePath() {
-			return this.$store.state.files.modalPath;
+			return this.$store.state.files.fileShareModal;
 		},
   },
   methods: {

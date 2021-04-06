@@ -196,7 +196,7 @@
 									d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 0 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 0 0-4.243-4.243L6.586 4.672z"
 								/>
 							</svg>
-							{{ shareText }}
+							Share
 						</button>
 						<button
 							v-if="!deleteConfirmation"
@@ -388,7 +388,6 @@ import prettyBytes from "pretty-bytes";
 export default {
 	props: ["path", "file"],
 	data: () => ({
-		shareText: "Copy Link",
 		deleteConfirmation: false,
 		isSelected: false
 	}),
@@ -480,18 +479,7 @@ export default {
 		async share(event) {
 			event.stopPropagation();
 
-			const url = await this.$store.state.files.getSharedLink(
-				this.path + this.file.Key
-			);
-
-			await navigator.clipboard.writeText(url);
-			this.shareText = "URL Copied!";
-
-			// time until the dropdown is closed and the text in the share portion of dropdown gets reset
-			setTimeout(() => {
-				this.$store.dispatch("files/openDropdown", null);
-				this.shareText = "Copy Link";
-			}, 700);
+			this.$store.commit("files/setFileShareModal", this.path + this.file.Key);
 		},
 		toggleDropdown(event) {
 			event.stopPropagation();
