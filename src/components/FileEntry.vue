@@ -270,7 +270,7 @@
 				</div>
 			</div>
 
-			<div v-else>
+			<div v-else class="d-inline-flex">
 				<div class="dropleft">
 					<div
 						v-if="loadingSpinner()"
