@@ -64,7 +64,7 @@ tbody {
 					<div class="row mb-2">
 						<div class="col-sm-12 col-md-4 col-xl-8 mb-3">
 							<h2>
-								My Files
+								{{ bucketName }}
 								<!-- <span class="trash-can mx-1" v-if="areThereFilesToDelete()" v-on:click="deleteSelected">
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
 									<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -292,8 +292,12 @@ tbody {
 					</div>
 				</div>
 			</div>
-			<file-modal v-if="this.$store.state.files.modalPath !== null"></file-modal>
-			<file-share-modal v-if="this.$store.state.files.fileShareModal"></file-share-modal>
+			<file-modal
+				v-if="this.$store.state.files.modalPath !== null"
+			></file-modal>
+			<file-share-modal
+				v-if="this.$store.state.files.fileShareModal"
+			></file-share-modal>
 		</div>
 	</div>
 </template>
@@ -344,6 +348,10 @@ export default {
 				nameIsNotOnlyPeriods &&
 				notDuplicate
 			);
+		},
+
+		bucketName() {
+			return this.$store.state.files.bucket;
 		},
 
 		files() {
@@ -493,9 +501,8 @@ export default {
 		BreadCrumbs,
 		FileBrowserHeader,
 		FileModal,
-		FileShareModal,
+		FileShareModal
 	}
 };
 </script>
-,
-FileShareModal
+, FileShareModal
