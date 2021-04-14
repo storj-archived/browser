@@ -226,7 +226,7 @@ export default {
 			});
 
 			const isFileVisible = file =>
-				file.Key.length > 0 && file.Key !== ".vortex_placeholder";
+				file.Key.length > 0 && file.Key !== ".file_placeholder";
 
 			const files = [
 				...CommonPrefixes.map(prefixToFolder),
@@ -319,7 +319,7 @@ export default {
 			await state.s3
 				.putObject({
 					Bucket: state.bucket,
-					Key: state.path + name + "/.vortex_placeholder"
+					Key: state.path + name + "/.file_placeholder"
 				})
 				.promise();
 
