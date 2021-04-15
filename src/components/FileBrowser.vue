@@ -190,9 +190,13 @@ tbody {
 								</tr>
 
 								<tr v-if="path.length > 0">
-									<td class="px-3" @click="back">
+									<td class="px-3">
 										<router-link to="../">
-											<a href="javascript:null">..</a>
+											<a
+												href="javascript:null"
+												v-on:click="back"
+												>..</a
+											>
 										</router-link>
 									</td>
 								</tr>
