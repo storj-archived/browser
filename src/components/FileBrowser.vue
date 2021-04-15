@@ -52,7 +52,7 @@ tbody {
 </style>
 
 <template>
-	<div>
+	<div v-on:click="closeModalDropdown">
 		<div class="col-sm-12">
 			<div class="card card-top-flat border-0 p-4 p-lg-5">
 				<div
@@ -382,6 +382,20 @@ export default {
 		}
 	},
 	methods: {
+		closeModalDropdown() {
+			if (this.$store.state.files.modalPath) {
+				this.$store.commit("files/closeModal");
+			}
+
+			if (this.$store.state.files.fileShareModal) {
+				this.$store.commit("files/closeFileShareModal");
+			}
+
+			if (this.$store.state.files.openedDropdown) {
+				this.$store.dispatch("files/openDropdown", null);
+			}
+		},
+
 		toggleFolderCreationInput() {
 			this.$store.dispatch(
 				"files/updateCreateFolderInputShow",
