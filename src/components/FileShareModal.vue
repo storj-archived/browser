@@ -37,7 +37,7 @@
 </style>
 
 <template>
-	<div>
+	<div v-on:click="stopClickPropagation">
 		<div
 			class="modal fade show modal-open"
 			id="shareModal"
@@ -143,6 +143,11 @@ export default {
 		},
 		close() {
 			this.$store.commit("files/closeFileShareModal");
+		},
+		stopClickPropagation(e) {
+			if (e.target.id !== "shareModal") {
+				e.stopPropagation();
+			}
 		}
 	}
 };
