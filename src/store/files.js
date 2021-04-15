@@ -298,6 +298,8 @@ export default {
 						...params
 					});
 
+					upload.minPartSize = 1024 * 1024 * 60;
+
 					upload.on("httpUploadProgress", progress => {
 						commit("setProgress", {
 							Key: params.Key,
