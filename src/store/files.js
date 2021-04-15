@@ -315,10 +315,12 @@ export default {
 
 					await dispatch("list");
 
-					const uploadedFiles = state.files.filter(file => file.type === 'file');
+					const uploadedFiles = state.files.filter(
+						file => file.type === "file"
+					);
 
-					if(uploadedFiles.length === 1) {
-						const [ { Key } ] = uploadedFiles;
+					if (uploadedFiles.length === 1) {
+						const [{ Key }] = uploadedFiles;
 
 						this.$store.commit("files/openModal", state.path + Key);
 					}
