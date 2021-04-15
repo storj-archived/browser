@@ -35,12 +35,16 @@
 export default {
 	name: "BreadCrumbs",
 	computed: {
+		bucketName() {
+			return this.$store.state.files.bucket;
+		},
+
 		crumbs() {
 			let path = this.$store.state.files.path.split("/");
 			path =
 				path.length > 1
-					? ["Home", ...path.slice(0, path.length - 1)]
-					: ["Home"];
+					? [this.bucketName, ...path.slice(0, path.length - 1)]
+					: [this.bucketName];
 			return path;
 		}
 	},
