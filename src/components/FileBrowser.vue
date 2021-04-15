@@ -20,6 +20,7 @@ tbody {
 	border-top: 0;
 	border-bottom: 1px solid #dee2e6;
 	padding-left: 0;
+	cursor: pointer;
 }
 
 .path {
@@ -44,10 +45,6 @@ tbody {
 
 .div-responsive {
 	min-height: 400px;
-}
-
-.table-heading {
-	cursor: pointer;
 }
 </style>
 
@@ -193,13 +190,9 @@ tbody {
 								</tr>
 
 								<tr v-if="path.length > 0">
-									<td class="px-3">
+									<td class="px-3" @click="back">
 										<router-link to="../">
-											<a
-												href="javascript:null"
-												v-on:click="back"
-												>..</a
-											>
+											<a href="javascript:null">..</a>
 										</router-link>
 									</td>
 								</tr>
@@ -212,7 +205,7 @@ tbody {
 								>
 									<td span="3">
 										<input
-											class="form-control"
+											class="form-control ml-3"
 											type="text"
 											placeholder="Name of the folder"
 											v-model="createFolderInput"

@@ -1,4 +1,13 @@
 <style>
+a {
+	text-decoration: none !important;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
 .table td,
 .table th {
 	padding: 16px 16px 16px 0 !important;
@@ -48,6 +57,9 @@
 .deletion-confirmation {
 	font-size: 14px;
 	font-weight: bold;
+}
+.bi-trash {
+	cursor: pointer;
 }
 </style>
 
@@ -233,7 +245,7 @@
 							Delete
 						</button>
 						<div v-else>
-							<p class="deletion-confirmation px-3 pt-3">
+							<p class="deletion-confirmation mx-5 pt-3">
 								Are you sure?
 							</p>
 							<div class="d-flex">
@@ -243,8 +255,8 @@
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
+										width="15"
+										height="15"
 										fill="red"
 										class="bi bi-trash"
 										viewBox="0 0 16 16"
@@ -342,7 +354,7 @@
 							Delete
 						</button>
 						<div v-else>
-							<p class="deletion-confirmation px-3 pt-3">
+							<p class="deletion-confirmation mx-5 pt-3">
 								Are you sure?
 							</p>
 							<div class="d-flex">
@@ -352,8 +364,8 @@
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
+										width="15"
+										height="15"
 										fill="red"
 										class="bi bi-trash"
 										viewBox="0 0 16 16"

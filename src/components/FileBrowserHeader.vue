@@ -169,7 +169,7 @@ th {
 						class="dropdown-menu shadow show"
 					>
 						<div>
-							<p class="deletion-confirmation px-3 pt-3">
+							<p class="deletion-confirmation px-5 pt-3">
 								Are you sure?
 							</p>
 							<div class="d-flex">
