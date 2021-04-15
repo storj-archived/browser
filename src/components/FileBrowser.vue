@@ -292,8 +292,12 @@ tbody {
 					</div>
 				</div>
 			</div>
-			<file-modal v-if="this.$store.state.files.modalPath !== null"></file-modal>
-			<file-share-modal v-if="this.$store.state.files.fileShareModal"></file-share-modal>
+			<file-modal
+				v-if="this.$store.state.files.modalPath !== null"
+			></file-modal>
+			<file-share-modal
+				v-if="this.$store.state.files.fileShareModal"
+			></file-share-modal>
 		</div>
 	</div>
 </template>
@@ -362,14 +366,6 @@ export default {
 			return this.$route.params.pathMatch;
 		},
 
-		areFilesToDelete() {
-			return !!this.$store.state.files.selectedFile;
-		},
-
-		displayDropdown() {
-			return this.$store.state.files.openedDropdown === "FileBrowser";
-		},
-
 		displayUpload() {
 			return (
 				this.fetchingFilesSpinner === false && this.files.length === 0
@@ -387,20 +383,6 @@ export default {
 				"files/updateCreateFolderInputShow",
 				!this.$store.state.files.createFolderInputShow
 			);
-		},
-
-		deleteSelectedDropdown(event) {
-			event.stopPropagation();
-			this.$store.dispatch("files/openDropdown", "FileBrowser");
-		},
-
-		confirmDeleteSelection() {
-			this.$store.dispatch("files/deleteSelected");
-			this.$store.dispatch("files/openDropdown", null);
-		},
-
-		cancelDeleteSelection() {
-			this.$store.dispatch("files/openDropdown", null);
 		},
 
 		filename(file) {
@@ -493,9 +475,8 @@ export default {
 		BreadCrumbs,
 		FileBrowserHeader,
 		FileModal,
-		FileShareModal,
+		FileShareModal
 	}
 };
 </script>
-,
-FileShareModal
+, FileShareModal
