@@ -322,7 +322,7 @@ export default {
 					if (uploadedFiles.length === 1) {
 						const [{ Key }] = uploadedFiles;
 
-						commit("files/openModal", state.path + Key);
+						commit("openModal", state.path + Key);
 					}
 
 					commit("finishUpload", params.Key);
