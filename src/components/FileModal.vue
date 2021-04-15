@@ -115,12 +115,13 @@
 </style>
 
 <template>
-	<div class="container demo">
+	<div class="container demo" v-on:click="stopClickPropagation">
 		<div
 			class="modal right fade in show modal-open"
+			id="detail-modal"
 			tabindex="-1"
 			role="dialog"
-			aria-labelledby="myModalLabel2"
+			aria-labelledby="modalLabel"
 		>
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -271,7 +272,7 @@ export default {
 	computed: {
 		file() {
 			return this.$store.state.files.files.find(
-				(file) => file.Key === this.filePath.split("/").slice(-1)[0]
+				file => file.Key === this.filePath.split("/").slice(-1)[0]
 			);
 		},
 		filePath() {
@@ -280,7 +281,7 @@ export default {
 		size() {
 			return prettyBytes(
 				this.$store.state.files.files.find(
-					(file) => file.Key === this.file.Key
+					file => file.Key === this.file.Key
 				).Size
 			);
 		},
@@ -311,7 +312,7 @@ export default {
 				this.filePath
 			);
 
-			await new Promise((resolve) => {
+			await new Promise(resolve => {
 				const preload = new Image();
 				preload.onload = resolve;
 				preload.src = objectMapUrl;
@@ -341,6 +342,12 @@ export default {
 			this.objectLink = await this.$store.state.files.getSharedLink(
 				this.filePath
 			);
+		},
+
+		stopClickPropagation(e) {
+			if (e.target.id !== "detail-modal") {
+				e.stopPropagation();
+			}
 		}
 	},
 	watch: {
