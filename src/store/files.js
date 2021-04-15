@@ -24,6 +24,7 @@ export default {
 		headingSorted: "name",
 		orderBy: "asc",
 		createFolderInputShow: false,
+		openModalOnFirstUpload: false,
 
 		modalPath: null,
 		fileShareModal: null
@@ -78,6 +79,7 @@ export default {
 				bucket,
 				endpoint = "https://gateway.tardigradeshare.io",
 				browserRoot,
+				openModalOnFirstUpload = true,
 				getSharedLink = () => "javascript:null",
 				getObjectMapUrl = () =>
 					new Promise(resolve =>
@@ -103,6 +105,7 @@ export default {
 			state.accessKey = accessKey;
 			state.bucket = bucket;
 			state.browserRoot = browserRoot;
+			state.openModalOnFirstUpload = openModalOnFirstUpload;
 			state.getSharedLink = getSharedLink;
 			state.getObjectMapUrl = getObjectMapUrl;
 		},
@@ -309,6 +312,14 @@ export default {
 					await upload.promise();
 
 					await dispatch("list");
+
+					const uploadedFiles = state.files.filter(file => file.type === 'file');
+
+					if(uploadedFiles.length === 1) {
+						const [ { Key } ] = uploadedFiles;
+
+						this.$store.commit("files/openModal", state.path + Key);
+					}
 
 					commit("finishUpload", params.Key);
 				})
