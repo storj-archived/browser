@@ -273,7 +273,7 @@ export default {
 	computed: {
 		file() {
 			return this.$store.state.files.files.find(
-				file => file.Key === this.filePath.split("/").slice(-1)[0]
+				(file) => file.Key === this.filePath.split("/").slice(-1)[0]
 			);
 		},
 		filePath() {
@@ -282,7 +282,7 @@ export default {
 		size() {
 			return prettyBytes(
 				this.$store.state.files.files.find(
-					file => file.Key === this.file.Key
+					(file) => file.Key === this.file.Key
 				).Size
 			);
 		},
@@ -313,7 +313,7 @@ export default {
 				this.filePath
 			);
 
-			await new Promise(resolve => {
+			await new Promise((resolve) => {
 				const preload = new Image();
 				preload.onload = resolve;
 				preload.src = objectMapUrl;
