@@ -30,7 +30,7 @@ export default {
 		fileShareModal: null
 	},
 	getters: {
-		sortedFiles: state => {
+		sortedFiles: (state) => {
 			// default sort case
 			const sortByHeading = (a, b) =>
 				a[state.headingSorted] - b[state.headingSorted];
@@ -56,14 +56,14 @@ export default {
 
 			// display folders and then files
 			const groupedFiles = [
-				...orderedFiles.filter(file => file.type === "folder"),
-				...orderedFiles.filter(file => file.type === "file")
+				...orderedFiles.filter((file) => file.type === "folder"),
+				...orderedFiles.filter((file) => file.type === "file")
 			];
 
 			return groupedFiles;
 		},
 
-		preSignedUrl: state => url => {
+		preSignedUrl: (state) => (url) => {
 			return state.s3.getSignedUrl("getObject", {
 				Bucket: state.bucket,
 				Key: url
@@ -82,7 +82,7 @@ export default {
 				openModalOnFirstUpload = true,
 				getSharedLink = () => "javascript:null",
 				getObjectMapUrl = () =>
-					new Promise(resolve =>
+					new Promise((resolve) =>
 						setTimeout(
 							() =>
 								resolve(
@@ -130,7 +130,7 @@ export default {
 
 		removeFileToBeDeleted(state, file) {
 			state.filesToBeDeleted = state.filesToBeDeleted.filter(
-				singleFile => singleFile.Key !== file.Key
+				(singleFile) => singleFile.Key !== file.Key
 			);
 		},
 
@@ -152,11 +152,15 @@ export default {
 		},
 
 		setProgress(state, { Key, progress }) {
-			state.uploading.find(file => file.Key === Key).progress = progress;
+			state.uploading.find(
+				(file) => file.Key === Key
+			).progress = progress;
 		},
 
 		finishUpload(state, Key) {
-			state.uploading = state.uploading.filter(file => file.Key !== Key);
+			state.uploading = state.uploading.filter(
+				(file) => file.Key !== Key
+			);
 		},
 
 		setOpenedDropdown(state, id) {
@@ -164,7 +168,7 @@ export default {
 		},
 
 		sort(state, headingSorted) {
-			const flip = orderBy => (orderBy === "asc" ? "desc" : "asc");
+			const flip = (orderBy) => (orderBy === "asc" ? "desc" : "asc");
 
 			state.orderBy =
 				state.headingSorted === headingSorted
@@ -222,13 +226,13 @@ export default {
 				type: "folder"
 			});
 
-			const makeFileRelative = file => ({
+			const makeFileRelative = (file) => ({
 				...file,
 				Key: file.Key.slice(path.length),
 				type: "file"
 			});
 
-			const isFileVisible = file =>
+			const isFileVisible = (file) =>
 				file.Key.length > 0 && file.Key !== ".file_placeholder";
 
 			const files = [
@@ -244,7 +248,7 @@ export default {
 		},
 
 		async back({ state, dispatch }) {
-			const getParentDirectory = path => {
+			const getParentDirectory = (path) => {
 				let i = path.length - 2;
 
 				while (path[i - 1] !== "/" && i > 0) {
@@ -263,9 +267,9 @@ export default {
 				: e.target.files;
 
 			await Promise.all(
-				[...files].map(async file => {
+				[...files].map(async (file) => {
 					// Handle duplicate file names
-					const fileNames = state.files.map(file => file.Key);
+					const fileNames = state.files.map((file) => file.Key);
 					let count = 0;
 					let fileName = file.name;
 
@@ -302,7 +306,7 @@ export default {
 
 					upload.minPartSize = 1024 * 1024 * 60;
 
-					upload.on("httpUploadProgress", progress => {
+					upload.on("httpUploadProgress", (progress) => {
 						commit("setProgress", {
 							Key: params.Key,
 							progress: Math.round(
@@ -316,7 +320,7 @@ export default {
 					await dispatch("list");
 
 					const uploadedFiles = state.files.filter(
-						file => file.type === "file"
+						(file) => file.type === "file"
 					);
 
 					if (uploadedFiles.length === 1) {
@@ -401,7 +405,7 @@ export default {
 			commit("setFilesToBeDeleted", filesToDelete);
 
 			await Promise.all(
-				filesToDelete.map(async file => {
+				filesToDelete.map(async (file) => {
 					if (file.type === "file")
 						await dispatch("delete", { file, path: state.path });
 					else
@@ -421,7 +425,7 @@ export default {
 				Key: state.path + file.Key
 			});
 
-			const downloadURL = function(data, fileName) {
+			const downloadURL = function (data, fileName) {
 				var a;
 				a = document.createElement("a");
 				a.href = data;

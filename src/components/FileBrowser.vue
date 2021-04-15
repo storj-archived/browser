@@ -311,8 +311,8 @@ import FileShareModal from "./FileShareModal";
 
 // Computed property creators
 
-const fromFilesStore = prop =>
-	function() {
+const fromFilesStore = (prop) =>
+	function () {
 		return this.$store.state.files[prop];
 	};
 
@@ -334,12 +334,13 @@ export default {
 			const noForwardSlashes = this.createFolderInput.indexOf("/") === -1;
 
 			const nameIsNotOnlyPeriods =
-				[...this.createFolderInput.trim()].filter(char => char === ".")
-					.length !== this.createFolderInput.trim().length;
+				[...this.createFolderInput.trim()].filter(
+					(char) => char === "."
+				).length !== this.createFolderInput.trim().length;
 
 			const notDuplicate =
 				this.files.filter(
-					file => file.Key === this.createFolderInput.trim()
+					(file) => file.Key === this.createFolderInput.trim()
 				).length === 0;
 
 			return (
@@ -359,11 +360,11 @@ export default {
 		},
 
 		singleFiles() {
-			return this.files.filter(f => f.type === "file");
+			return this.files.filter((f) => f.type === "file");
 		},
 
 		folders() {
-			return this.files.filter(f => f.type === "folder");
+			return this.files.filter((f) => f.type === "folder");
 		},
 
 		routePath() {
