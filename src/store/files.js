@@ -24,6 +24,7 @@ export default {
 		headingSorted: "name",
 		orderBy: "asc",
 		createFolderInputShow: false,
+		openModalOnFirstUpload: false,
 
 		modalPath: null,
 		fileShareModal: null
@@ -78,6 +79,7 @@ export default {
 				bucket,
 				endpoint = "https://gateway.tardigradeshare.io",
 				browserRoot,
+				openModalOnFirstUpload = true,
 				getSharedLink = () => "javascript:null",
 				getObjectMapUrl = () =>
 					new Promise(resolve =>
@@ -103,6 +105,7 @@ export default {
 			state.accessKey = accessKey;
 			state.bucket = bucket;
 			state.browserRoot = browserRoot;
+			state.openModalOnFirstUpload = openModalOnFirstUpload;
 			state.getSharedLink = getSharedLink;
 			state.getObjectMapUrl = getObjectMapUrl;
 		},
@@ -226,7 +229,7 @@ export default {
 			});
 
 			const isFileVisible = file =>
-				file.Key.length > 0 && file.Key !== ".vortex_placeholder";
+				file.Key.length > 0 && file.Key !== ".file_placeholder";
 
 			const files = [
 				...CommonPrefixes.map(prefixToFolder),
@@ -297,6 +300,8 @@ export default {
 						...params
 					});
 
+					upload.minPartSize = 1024 * 1024 * 60;
+
 					upload.on("httpUploadProgress", progress => {
 						commit("setProgress", {
 							Key: params.Key,
@@ -310,6 +315,16 @@ export default {
 
 					await dispatch("list");
 
+					const uploadedFiles = state.files.filter(
+						file => file.type === "file"
+					);
+
+					if (uploadedFiles.length === 1) {
+						const [{ Key }] = uploadedFiles;
+
+						commit("openModal", state.path + Key);
+					}
+
 					commit("finishUpload", params.Key);
 				})
 			);
@@ -319,7 +334,7 @@ export default {
 			await state.s3
 				.putObject({
 					Bucket: state.bucket,
-					Key: state.path + name + "/.vortex_placeholder"
+					Key: state.path + name + "/.file_placeholder"
 				})
 				.promise();
 

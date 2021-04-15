@@ -64,7 +64,7 @@ tbody {
 					<div class="row mb-2">
 						<div class="col-sm-12 col-md-4 col-xl-8 mb-3">
 							<h2>
-								My Files
+								{{ bucketName }}
 								<!-- <span class="trash-can mx-1" v-if="areThereFilesToDelete()" v-on:click="deleteSelected">
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
 									<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -292,8 +292,12 @@ tbody {
 					</div>
 				</div>
 			</div>
-			<file-modal v-if="this.$store.state.files.modalPath !== null"></file-modal>
-			<file-share-modal v-if="this.$store.state.files.fileShareModal"></file-share-modal>
+			<file-modal
+				v-if="this.$store.state.files.modalPath !== null"
+			></file-modal>
+			<file-share-modal
+				v-if="this.$store.state.files.fileShareModal"
+			></file-share-modal>
 		</div>
 	</div>
 </template>
@@ -346,6 +350,10 @@ export default {
 			);
 		},
 
+		bucketName() {
+			return this.$store.state.files.bucket;
+		},
+
 		files() {
 			return this.$store.getters["files/sortedFiles"];
 		},
@@ -360,14 +368,6 @@ export default {
 
 		routePath() {
 			return this.$route.params.pathMatch;
-		},
-
-		areFilesToDelete() {
-			return !!this.$store.state.files.selectedFile;
-		},
-
-		displayDropdown() {
-			return this.$store.state.files.openedDropdown === "FileBrowser";
 		},
 
 		displayUpload() {
@@ -387,20 +387,6 @@ export default {
 				"files/updateCreateFolderInputShow",
 				!this.$store.state.files.createFolderInputShow
 			);
-		},
-
-		deleteSelectedDropdown(event) {
-			event.stopPropagation();
-			this.$store.dispatch("files/openDropdown", "FileBrowser");
-		},
-
-		confirmDeleteSelection() {
-			this.$store.dispatch("files/deleteSelected");
-			this.$store.dispatch("files/openDropdown", null);
-		},
-
-		cancelDeleteSelection() {
-			this.$store.dispatch("files/openDropdown", null);
 		},
 
 		filename(file) {
@@ -493,9 +479,8 @@ export default {
 		BreadCrumbs,
 		FileBrowserHeader,
 		FileModal,
-		FileShareModal,
+		FileShareModal
 	}
 };
 </script>
-,
-FileShareModal
+, FileShareModal

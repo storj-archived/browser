@@ -144,7 +144,7 @@ th {
 				<div class="dropleft">
 					<a
 						class="d-flex justify-content-end"
-						v-if="areFilesToDelete"
+						v-if="filesToDelete"
 						v-on:click="deleteSelectedDropdown"
 					>
 						<svg
@@ -254,7 +254,7 @@ const sortBy = heading =>
 	};
 
 export default {
-    data: () => ({
+	data: () => ({
 		hover: null
 	}),
 	computed: {
@@ -267,7 +267,15 @@ export default {
 
 		showNameArrow: showArrow("name"),
 		showSizeArrow: showArrow("size"),
-		showDateArrow: showArrow("date")
+		showDateArrow: showArrow("date"),
+
+		filesToDelete() {
+			return !!this.$store.state.files.selectedFile;
+		},
+
+		displayDropdown() {
+			return this.$store.state.files.openedDropdown === "FileBrowser";
+		}
 	},
 	methods: {
 		sortByName: sortBy("name"),
@@ -280,6 +288,20 @@ export default {
 
 		mouseLeave() {
 			this.hover = null;
+		},
+
+		deleteSelectedDropdown(event) {
+			event.stopPropagation();
+			this.$store.dispatch("files/openDropdown", "FileBrowser");
+		},
+
+		confirmDeleteSelection() {
+			this.$store.dispatch("files/deleteSelected");
+			this.$store.dispatch("files/openDropdown", null);
+		},
+
+		cancelDeleteSelection() {
+			this.$store.dispatch("files/openDropdown", null);
 		}
 	}
 };
