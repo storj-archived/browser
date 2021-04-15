@@ -108,6 +108,7 @@ export default {
 			state.openModalOnFirstUpload = openModalOnFirstUpload;
 			state.getSharedLink = getSharedLink;
 			state.getObjectMapUrl = getObjectMapUrl;
+			state.path = "";
 		},
 
 		updateFiles(state, { path, files }) {
