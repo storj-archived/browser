@@ -20,6 +20,7 @@ tbody {
 	border-top: 0;
 	border-bottom: 1px solid #dee2e6;
 	padding-left: 0;
+	cursor: pointer;
 }
 
 .path {
@@ -44,10 +45,6 @@ tbody {
 
 .div-responsive {
 	min-height: 400px;
-}
-
-.table-heading {
-	cursor: pointer;
 }
 </style>
 
@@ -212,7 +209,7 @@ tbody {
 								>
 									<td span="3">
 										<input
-											class="form-control"
+											class="form-control ml-3"
 											type="text"
 											placeholder="Name of the folder"
 											v-model="createFolderInput"
