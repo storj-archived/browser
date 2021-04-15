@@ -254,6 +254,7 @@
 				</div>
 			</div>
 		</div>
+		<div class="modal-backdrop fade show modal-open" id="backdrop2"></div>
 	</div>
 </template>
 
