@@ -392,6 +392,10 @@ export default {
 			if (this.$store.state.files.openedDropdown) {
 				this.$store.dispatch("files/openDropdown", null);
 			}
+
+			if (this.$store.state.files.selectedFile) {
+				this.$store.dispatch("files/updateSelectedFile", null);
+			}
 		},
 
 		toggleFolderCreationInput() {
