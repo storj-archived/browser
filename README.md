@@ -2,7 +2,7 @@
 
 > A Vue component for managing files on Storj, via [gateway-mt](https://github.com/storj/gateway-mt).
 
-[screenshot](./screenshot.png)
+![screenshot](./screenshot.png)
 
 ## Integration
 
