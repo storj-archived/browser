@@ -48,6 +48,8 @@ tbody {
 }
 .back-route {
 	padding-right: 100%;
+	padding-top: 20px;
+	padding-bottom: 15px;
 }
 .back-route td {
 	border-top: none;
