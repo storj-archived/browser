@@ -455,7 +455,7 @@ export default {
 
 		loadingSpinner() {
 			return !!this.$store.state.files.filesToBeDeleted.find(
-				file => file === this.file
+				(file) => file === this.file
 			);
 		},
 		fileClick(event) {
@@ -466,7 +466,7 @@ export default {
 			return (
 				this.$store.state.files.selectedFile === this.file ||
 				this.$store.state.files.shiftSelectedFiles.find(
-					file => file === this.file
+					(file) => file === this.file
 				)
 			);
 		},
@@ -496,8 +496,8 @@ export default {
 				return;
 			}
 
-			const anchorIdx = files.findIndex(file => file === selectedFile);
-			const shiftIdx = files.findIndex(file => file === this.file);
+			const anchorIdx = files.findIndex((file) => file === selectedFile);
+			const shiftIdx = files.findIndex((file) => file === this.file);
 
 			const start = Math.min(anchorIdx, shiftIdx);
 			const end = Math.max(anchorIdx, shiftIdx) + 1;
