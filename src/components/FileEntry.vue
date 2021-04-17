@@ -68,6 +68,7 @@ a {
 		scope="row"
 		v-bind:class="{ 'selected-row': isFileSelected() }"
 		v-on:click="selectFile"
+		@dblclick="folderDoubleClick"
 	>
 		<td class="w-50" data-ls-disabled>
 			<span v-if="file.type === 'folder'">
@@ -87,7 +88,6 @@ a {
 						d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"
 					/>
 				</svg>
-
 				<span v-on:click="fileClick">
 					<router-link v-bind:to="link">
 						<a href="javascript:null" style="margin-left: 5px">
@@ -447,10 +447,15 @@ export default {
 		openModal() {
 			this.$store.commit("files/openModal", this.path + this.file.Key);
 		},
+		folderDoubleClick() {
+			if (this.file.type === "folder") {
+				this.$router.push(this.link);
+			}
+		},
 
 		loadingSpinner() {
 			return !!this.$store.state.files.filesToBeDeleted.find(
-				(file) => file === this.file
+				file => file === this.file
 			);
 		},
 		fileClick(event) {
@@ -461,7 +466,7 @@ export default {
 			return (
 				this.$store.state.files.selectedFile === this.file ||
 				this.$store.state.files.shiftSelectedFiles.find(
-					(file) => file === this.file
+					file => file === this.file
 				)
 			);
 		},
@@ -491,8 +496,8 @@ export default {
 				return;
 			}
 
-			const anchorIdx = files.findIndex((file) => file === selectedFile);
-			const shiftIdx = files.findIndex((file) => file === this.file);
+			const anchorIdx = files.findIndex(file => file === selectedFile);
+			const shiftIdx = files.findIndex(file => file === this.file);
 
 			const start = Math.min(anchorIdx, shiftIdx);
 			const end = Math.max(anchorIdx, shiftIdx) + 1;
