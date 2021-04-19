@@ -46,6 +46,13 @@ tbody {
 .div-responsive {
 	min-height: 400px;
 }
+
+.folder-input:focus {
+	color: #fe5d5d;
+	box-shadow: 0 0 0 0.2rem rgba(254, 93, 93, 0.5) !important;
+	border-color: #fe5d5d !important;
+	outline: none !important;
+}
 </style>
 
 <template>
@@ -210,6 +217,12 @@ tbody {
 									<td span="3">
 										<input
 											class="form-control ml-3"
+											v-bind:class="{
+												'folder-input':
+													createFolderInput.length >
+														0 &&
+													!createFolderEnabled
+											}"
 											type="text"
 											placeholder="Name of the folder"
 											v-model="createFolderInput"
@@ -308,8 +321,8 @@ import FileShareModal from "./FileShareModal";
 
 // Computed property creators
 
-const fromFilesStore = (prop) =>
-	function () {
+const fromFilesStore = prop =>
+	function() {
 		return this.$store.state.files[prop];
 	};
 
@@ -331,13 +344,12 @@ export default {
 			const noForwardSlashes = this.createFolderInput.indexOf("/") === -1;
 
 			const nameIsNotOnlyPeriods =
-				[...this.createFolderInput.trim()].filter(
-					(char) => char === "."
-				).length !== this.createFolderInput.trim().length;
+				[...this.createFolderInput.trim()].filter(char => char === ".")
+					.length !== this.createFolderInput.trim().length;
 
 			const notDuplicate =
 				this.files.filter(
-					(file) => file.Key === this.createFolderInput.trim()
+					file => file.Key === this.createFolderInput.trim()
 				).length === 0;
 
 			return (
@@ -357,11 +369,11 @@ export default {
 		},
 
 		singleFiles() {
-			return this.files.filter((f) => f.type === "file");
+			return this.files.filter(f => f.type === "file");
 		},
 
 		folders() {
-			return this.files.filter((f) => f.type === "folder");
+			return this.files.filter(f => f.type === "folder");
 		},
 
 		routePath() {
