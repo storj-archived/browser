@@ -505,6 +505,8 @@ export default {
 		async share(event) {
 			event.stopPropagation();
 
+			this.$store.dispatch("files/openDropdown", null);
+
 			this.$store.commit(
 				"files/setFileShareModal",
 				this.path + this.file.Key
