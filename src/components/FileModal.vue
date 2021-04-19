@@ -96,14 +96,7 @@
 }
 
 .share-btn {
-	border: 0.1rem solid #007bff;
-	border-radius: 5px;
 	color: #007bff;
-}
-
-.download-btn {
-	font-weight: bolder;
-	font-size: 0.8rem;
 }
 
 /* .btn-copy {
@@ -182,7 +175,7 @@
 						></audio>
 
 						<button
-							class="btn btn-primary btn-lg btn-block mb-3 download-btn"
+							class="btn btn-primary btn-lg btn-block mb-3"
 							download
 							v-on:click="download"
 						>
@@ -229,11 +222,10 @@
 
 						<button
 							v-else
-							class="btn btn-light btn-block share-margin"
+							class="btn btn-light btn-block"
+							v-on:click="getSharedLink"
 						>
-							<div class="share-btn" v-on:click="getSharedLink">
-								Generate Share Link
-							</div>
+							<span class="share-btn">Generate Share Link</span>
 						</button>
 
 						<div
@@ -273,7 +265,7 @@ export default {
 	computed: {
 		file() {
 			return this.$store.state.files.files.find(
-				(file) => file.Key === this.filePath.split("/").slice(-1)[0]
+				file => file.Key === this.filePath.split("/").slice(-1)[0]
 			);
 		},
 		filePath() {
@@ -282,7 +274,7 @@ export default {
 		size() {
 			return prettyBytes(
 				this.$store.state.files.files.find(
-					(file) => file.Key === this.file.Key
+					file => file.Key === this.file.Key
 				).Size
 			);
 		},
@@ -313,7 +305,7 @@ export default {
 				this.filePath
 			);
 
-			await new Promise((resolve) => {
+			await new Promise(resolve => {
 				const preload = new Image();
 				preload.onload = resolve;
 				preload.src = objectMapUrl;
