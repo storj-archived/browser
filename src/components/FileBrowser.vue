@@ -46,11 +46,7 @@ tbody {
 .div-responsive {
 	min-height: 400px;
 }
-.back-route {
-	padding-right: 100%;
-	padding-top: 20px;
-	padding-bottom: 15px;
-}
+
 .back-route td {
 	border-top: none;
 }
@@ -198,15 +194,15 @@ tbody {
 								</tr>
 
 								<tr v-if="path.length > 0">
-									<router-link to="../" class="back-route">
+									<div class="back-route" @dblclick="exit">
 										<td class="px-3">
 											<a
 												href="javascript:null"
-												v-on:click="back"
+												@dblclick="back"
 												>..</a
 											>
 										</td>
-									</router-link>
+									</div>
 								</tr>
 
 								<tr
@@ -316,8 +312,8 @@ import FileShareModal from "./FileShareModal";
 
 // Computed property creators
 
-const fromFilesStore = (prop) =>
-	function () {
+const fromFilesStore = prop =>
+	function() {
 		return this.$store.state.files[prop];
 	};
 
@@ -339,13 +335,12 @@ export default {
 			const noForwardSlashes = this.createFolderInput.indexOf("/") === -1;
 
 			const nameIsNotOnlyPeriods =
-				[...this.createFolderInput.trim()].filter(
-					(char) => char === "."
-				).length !== this.createFolderInput.trim().length;
+				[...this.createFolderInput.trim()].filter(char => char === ".")
+					.length !== this.createFolderInput.trim().length;
 
 			const notDuplicate =
 				this.files.filter(
-					(file) => file.Key === this.createFolderInput.trim()
+					file => file.Key === this.createFolderInput.trim()
 				).length === 0;
 
 			return (
@@ -365,11 +360,11 @@ export default {
 		},
 
 		singleFiles() {
-			return this.files.filter((f) => f.type === "file");
+			return this.files.filter(f => f.type === "file");
 		},
 
 		folders() {
-			return this.files.filter((f) => f.type === "folder");
+			return this.files.filter(f => f.type === "folder");
 		},
 
 		routePath() {
@@ -388,6 +383,9 @@ export default {
 		}
 	},
 	methods: {
+		exit() {
+			this.$router.push("../");
+		},
 		closeModalDropdown() {
 			if (this.$store.state.files.modalPath) {
 				this.$store.commit("files/closeModal");
