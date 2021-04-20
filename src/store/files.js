@@ -302,7 +302,8 @@ export default {
 					});
 
 					const upload = state.s3.upload({
-						...params
+						...params,
+						partSize: 64 * 1024 * 1024
 					});
 
 					upload.minPartSize = 1024 * 1024 * 60;
