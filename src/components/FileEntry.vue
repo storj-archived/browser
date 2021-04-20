@@ -68,7 +68,7 @@ a {
 		scope="row"
 		v-bind:class="{ 'selected-row': isFileSelected() }"
 		v-on:click="selectFile"
-		@dblclick="folderDoubleClick"
+		@dblclick="dbClickItem"
 	>
 		<td class="w-50" data-ls-disabled>
 			<span v-if="file.type === 'folder'">
@@ -447,9 +447,11 @@ export default {
 		openModal() {
 			this.$store.commit("files/openModal", this.path + this.file.Key);
 		},
-		folderDoubleClick() {
+		dbClickItem() {
 			if (this.file.type === "folder") {
 				this.$router.push(this.link);
+			} else if (this.file.type === "file") {
+				this.openModal();
 			}
 		},
 
