@@ -460,6 +460,7 @@ export default {
 				(file) => file === this.file
 			);
 		},
+
 		fileClick(event) {
 			event.stopPropagation();
 			this.$store.dispatch("files/updateCreateFolderInputShow", false);
