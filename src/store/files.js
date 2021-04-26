@@ -31,24 +31,16 @@ export default {
 	},
 	getters: {
 		sortedFiles: (state) => {
-			// default sort case
-			const sortByHeading = (a, b) =>
-				a[state.headingSorted] - b[state.headingSorted];
-
 			// key-specific sort cases
 			const fns = {
 				date: (a, b) =>
 					new Date(a.LastModified) - new Date(b.LastModified),
-				name: (a, b) => a.Key.localeCompare(b.Key)
+				name: (a, b) => a.Key.localeCompare(b.Key),
+				size: (a, b) => a.Size - b.Size
 			};
 
 			// sort by appropriate function
-			const sortedFiles = R.sort(
-				state.headingSorted in fns
-					? fns[state.headingSorted]
-					: sortByHeading,
-				state.files
-			);
+			const sortedFiles = R.sort(fns[state.headingSorted], state.files);
 
 			// reverse if descending order
 			const orderedFiles =

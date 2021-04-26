@@ -96,14 +96,7 @@
 }
 
 .share-btn {
-	border: 0.1rem solid #007bff;
-	border-radius: 5px;
 	color: #007bff;
-}
-
-.download-btn {
-	font-weight: bolder;
-	font-size: 0.8rem;
 }
 
 /* .btn-copy {
@@ -182,7 +175,7 @@
 						></audio>
 
 						<button
-							class="btn btn-primary btn-lg btn-block mb-3 download-btn"
+							class="btn btn-primary btn-lg btn-block mb-3"
 							download
 							v-on:click="download"
 						>
@@ -229,11 +222,10 @@
 
 						<button
 							v-else
-							class="btn btn-light btn-block share-margin"
+							class="btn btn-light btn-block"
+							v-on:click="getSharedLink"
 						>
-							<div class="share-btn" v-on:click="getSharedLink">
-								Generate Share Link
-							</div>
+							<span class="share-btn">Generate Share Link</span>
 						</button>
 
 						<div
