@@ -303,6 +303,7 @@ export default {
 
 					const upload = state.s3.upload({
 						...params,
+					}, {
 						partSize: 64 * 1024 * 1024
 					});
 
