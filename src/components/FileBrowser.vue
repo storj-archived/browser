@@ -203,7 +203,7 @@ tbody {
 
 								<tr
 									v-if="
-										this.$store.state.files
+										$store.state.files
 											.createFolderInputShow === true
 									"
 								>
@@ -290,10 +290,10 @@ tbody {
 				</div>
 			</div>
 			<file-modal
-				v-if="this.$store.state.files.modalPath !== null"
+				v-if="$store.state.files.modalPath !== null"
 			></file-modal>
 			<file-share-modal
-				v-if="this.$store.state.files.fileShareModal"
+				v-if="$store.state.files.fileShareModal"
 			></file-share-modal>
 		</div>
 	</div>
