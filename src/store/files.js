@@ -301,11 +301,14 @@ export default {
 						progress: 0
 					});
 
-					const upload = state.s3.upload({
-						...params,
-					}, {
-						partSize: 64 * 1024 * 1024
-					});
+					const upload = state.s3.upload(
+						{
+							...params
+						},
+						{
+							partSize: 64 * 1024 * 1024
+						}
+					);
 
 					upload.minPartSize = 1024 * 1024 * 60;
 
