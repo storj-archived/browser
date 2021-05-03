@@ -185,7 +185,12 @@ tbody {
 									</td>
 									<td></td>
 									<td>
-										<button class="btn btn-danger" v-on:click="cancelUpload(file)">Cancel</button>
+										<button
+											class="btn btn-danger"
+											v-on:click="cancelUpload(file)"
+										>
+											Cancel
+										</button>
 									</td>
 								</tr>
 
