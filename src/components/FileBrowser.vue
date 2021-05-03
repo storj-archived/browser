@@ -378,7 +378,11 @@ export default {
 		},
 
 		routePath() {
-			return this.$route.params.pathMatch;
+			let pathMatch = this.$route.params.pathMatch;
+			pathMatch = Array.isArray(pathMatch)
+				? pathMatch.join("/") + "/"
+				: pathMatch;
+			return pathMatch;
 		},
 
 		displayUpload() {

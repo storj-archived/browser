@@ -434,12 +434,13 @@ export default {
 			return this.$store.state.files.openedDropdown === this.file.Key;
 		},
 		link() {
-			return (
-				this.$store.state.files.browserRoot +
-				this.$store.state.files.path +
-				this.file.Key +
-				"/"
-			);
+			const browserRoot = this.$store.state.files.browserRoot;
+			const pathAndKey = this.$store.state.files.path + this.file.Key;
+			const url =
+				pathAndKey.length > 0
+					? browserRoot + pathAndKey + "/"
+					: browserRoot;
+			return url;
 		}
 	},
 
