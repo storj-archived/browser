@@ -288,11 +288,6 @@ export default {
 						Body: file
 					};
 
-					commit("pushUpload", {
-						...params,
-						progress: 0
-					});
-
 					const upload = state.s3.upload(
 						{
 							...params
@@ -304,6 +299,12 @@ export default {
 
 					upload.minPartSize = 1024 * 1024 * 60;
 
+					commit("pushUpload", {
+						...params,
+						upload,
+						progress: 0
+					});
+
 					upload.on("httpUploadProgress", (progress) => {
 						commit("setProgress", {
 							Key: params.Key,
@@ -313,7 +314,12 @@ export default {
 						});
 					});
 
-					await upload.promise();
+					try {
+						await upload.promise();
+					} catch (e) {
+						// An error is raised if the upload is aborted by the user
+						// console.log(e);
+					}
 
 					await dispatch("list");
 
@@ -471,6 +477,11 @@ export default {
 
 		updateCreateFolderInputShow({ commit }, value) {
 			commit("setCreateFolderInputShow", value);
+		},
+
+		cancelUpload({ commit }, file) {
+			file.upload.abort();
+			commit("finishUpload", file.Key);
 		}
 	}
 };

@@ -185,14 +185,7 @@ tbody {
 									</td>
 									<td></td>
 									<td>
-										<div
-											class="spinner-border"
-											role="status"
-										>
-											<span class="sr-only"
-												>Loading...</span
-											>
-										</div>
+										<button class="btn btn-danger" v-on:click="cancelUpload(file)">Cancel</button>
 									</td>
 								</tr>
 
@@ -431,6 +424,10 @@ export default {
 		async upload(e) {
 			await this.$store.dispatch("files/upload", e);
 			e.target.value = "";
+		},
+
+		cancelUpload(file) {
+			this.$store.dispatch("files/cancelUpload", file);
 		},
 
 		async list(path) {
