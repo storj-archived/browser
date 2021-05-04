@@ -187,7 +187,7 @@ tbody {
 									<td>
 										<button
 											class="btn btn-danger"
-											v-on:click="cancelUpload(file)"
+											v-on:click="cancelUpload(file.Key)"
 										>
 											Cancel
 										</button>
@@ -431,8 +431,8 @@ export default {
 			e.target.value = "";
 		},
 
-		cancelUpload(file) {
-			this.$store.dispatch("files/cancelUpload", file);
+		cancelUpload(fileName) {
+			this.$store.dispatch("files/cancelUpload", fileName);
 		},
 
 		async list(path) {

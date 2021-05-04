@@ -479,9 +479,15 @@ export default {
 			commit("setCreateFolderInputShow", value);
 		},
 
-		cancelUpload({ commit }, file) {
-			file.upload.abort();
-			commit("finishUpload", file.Key);
+		cancelUpload({ commit, state }, key) {
+			const file = state.uploading.find((file) => file.Key === key);
+
+			if (typeof file === "object") {
+				file.upload.abort();
+				commit("finishUpload", key);
+			} else {
+				throw new Error("File", { key }, "not found");
+			}
 		}
 	}
 };
