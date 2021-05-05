@@ -13,6 +13,7 @@ export default {
 		bucket: "",
 		browserRoot: "/",
 		files: [],
+		uploadStarted: false,
 		uploading: [],
 		preventRefresh: false,
 		selectedFile: null,
@@ -188,6 +189,10 @@ export default {
 
 		closeFileShareModal(state) {
 			state.fileShareModal = null;
+		},
+
+		setUploadStarted(state, value) {
+			state.uploadStarted = value;
 		}
 	},
 	actions: {
@@ -259,83 +264,98 @@ export default {
 				? e.dataTransfer.files
 				: e.target.files;
 
-			await Promise.all(
-				[...files].map(async (file) => {
-					// Handle duplicate file names
-					const fileNames = state.files.map((file) => file.Key);
-					let count = 0;
-					let fileName = file.name;
+			// add files to the `uploading` queue
+			[...files].forEach((file) => {
+				// Handle duplicate file names
+				const fileNames = state.files.map((file) => file.Key);
+				let count = 0;
+				let fileName = file.name;
 
-					while (fileNames.includes(fileName)) {
-						count += 1;
+				while (fileNames.includes(fileName)) {
+					count += 1;
 
-						if (count > 1) {
-							fileName = fileName.replace(
-								/\((\d+)\)(.*)/,
-								`(${count})$2`
-							);
-						} else {
-							fileName = fileName.replace(
-								/([^.]*)(.*)/,
-								`$1 (${count})$2`
-							);
-						}
+					if (count > 1) {
+						fileName = fileName.replace(
+							/\((\d+)\)(.*)/,
+							`(${count})$2`
+						);
+					} else {
+						fileName = fileName.replace(
+							/([^.]*)(.*)/,
+							`$1 (${count})$2`
+						);
 					}
+				}
+				//
 
-					const params = {
-						Bucket: state.bucket,
-						Key: state.path + fileName,
-						Body: file
-					};
+				const params = {
+					Bucket: state.bucket,
+					Key: state.path + fileName,
+					Body: file
+				};
 
-					const upload = state.s3.upload(
-						{
-							...params
-						},
-						{
-							partSize: 64 * 1024 * 1024
-						}
-					);
+				const upload = state.s3.upload(
+					{
+						...params
+					},
+					{
+						partSize: 64 * 1024 * 1024
+					}
+				);
 
-					upload.minPartSize = 1024 * 1024 * 60;
+				upload.minPartSize = 1024 * 1024 * 60;
 
-					commit("pushUpload", {
-						...params,
-						upload,
-						progress: 0
+				upload.on("httpUploadProgress", (progress) => {
+					commit("setProgress", {
+						Key: params.Key,
+						progress: Math.round(
+							(progress.loaded / progress.total) * 100
+						)
 					});
+				});
 
-					upload.on("httpUploadProgress", (progress) => {
-						commit("setProgress", {
-							Key: params.Key,
-							progress: Math.round(
-								(progress.loaded / progress.total) * 100
-							)
-						});
-					});
+				commit("pushUpload", {
+					...params,
+					upload,
+					progress: 0
+				});
+			});
 
-					try {
-						await upload.promise();
-					} catch (e) {
-						// An error is raised if the upload is aborted by the user
-						// console.log(e);
-					}
+			// if `upload` has already been called once it'll handle all files that have been added to the `uploading` queue in the meantime, and all future `upload` calls during an already ongoing upload should not handle the actual uploading of the files, they should only add them to the `uploading` queue and exit
+			if (state.uploadStarted) {
+				return;
+			}
 
-					await dispatch("list");
+			commit("setUploadStarted", true);
 
-					const uploadedFiles = state.files.filter(
-						(file) => file.type === "file"
-					);
+			// this while loop will ensure that all files in the `uploading` queue are uploaded one by one
+			while (state.uploading.length > 0) {
+				const file = state.uploading[0];
 
-					if (uploadedFiles.length === 1) {
-						const [{ Key }] = uploadedFiles;
+				try {
+					await file.upload.promise();
+				} catch (e) {
+					// An error is raised if the upload is aborted by the user
+					// console.log(e);
+				}
 
-						commit("openModal", state.path + Key);
-					}
+				await dispatch("list");
 
-					commit("finishUpload", params.Key);
-				})
-			);
+				const uploadedFiles = state.files.filter(
+					(file) => file.type === "file"
+				);
+
+				if (uploadedFiles.length === 1) {
+					const [{ Key }] = uploadedFiles;
+
+					commit("openModal", state.path + Key);
+				}
+
+				commit("finishUpload", file.Key);
+			}
+
+			// `uploadStarted` is set to false so that the next call to `upload` knows that it needs to handle the actual uploading of the file(s) in addition to adding them to the `uploading` queue
+			commit("setUploadStarted", false);
 		},
 
 		async createFolder({ state, dispatch }, name) {
@@ -483,7 +503,11 @@ export default {
 			const file = state.uploading.find((file) => file.Key === key);
 
 			if (typeof file === "object") {
-				file.upload.abort();
+				// if the file has already started uploading, then abort
+				if (file.progress > 0) {
+					file.upload.abort();
+				}
+
 				commit("finishUpload", key);
 			} else {
 				throw new Error("File", { key }, "not found");
