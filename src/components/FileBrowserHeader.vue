@@ -270,7 +270,14 @@ export default {
 		showDateArrow: showArrow("date"),
 
 		filesToDelete() {
-			return (!!this.$store.state.files.selectedAnchorFile || !!(this.$store.state.files.unselectedAnchorFile && (this.$store.state.files.selectedFiles.length > 0 || this.$store.state.files.shiftSelectedFiles.length > 0)));
+			return (
+				!!this.$store.state.files.selectedAnchorFile ||
+				!!(
+					this.$store.state.files.unselectedAnchorFile &&
+					(this.$store.state.files.selectedFiles.length > 0 ||
+						this.$store.state.files.shiftSelectedFiles.length > 0)
+				)
+			);
 		},
 
 		displayDropdown() {

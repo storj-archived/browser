@@ -492,14 +492,13 @@ export default {
 				...this.$store.state.files.shiftSelectedFiles
 			];
 
-			const selectedAnchorFile = this.$store.state.files.selectedAnchorFile;
-			const shiftSelectedFiles = this.$store.state.files.shiftSelectedFiles;
+			const selectedAnchorFile = this.$store.state.files
+				.selectedAnchorFile;
+			const shiftSelectedFiles = this.$store.state.files
+				.shiftSelectedFiles;
 			const selectedFiles = this.$store.state.files.selectedFiles;
 
-			if (
-				command &&
-				this.file === selectedAnchorFile
-			) {
+			if (command && this.file === selectedAnchorFile) {
 				/* if it's [CMD + click] and the file selected is the actual selectedAnchorFile, then unselect the file but store it under unselectedAnchorFile in case the user decides to do a [shift + click] right after this action. */
 
 				this.$store.commit("files/setUnselectedAnchorFile", this.file);
@@ -517,23 +516,16 @@ export default {
 				this.$store.dispatch(
 					"files/updateShiftSelectedFiles",
 					shiftSelectedFiles.filter(
-					(fileSelected) => fileSelected !== this.file
-				));
+						(fileSelected) => fileSelected !== this.file
+					)
+				);
 			} else if (command && selectedAnchorFile) {
 				/* if it's [CMD + click] and there is already a selectedAnchorFile, then add the selectedAnchorFile and shiftSelectedFiles into the array of selectedFiles, set selectedAnchorFile to the file that was clicked, set unselectedAnchorFile to null, and set shiftSelectedFiles to an empty array. */
 
-				const filesSelected = [
-					...selectedFiles
-				];
+				const filesSelected = [...selectedFiles];
 
-				if (
-					!filesSelected.includes(
-						selectedAnchorFile
-					)
-				) {
-					filesSelected.push(
-						selectedAnchorFile
-					);
+				if (!filesSelected.includes(selectedAnchorFile)) {
+					filesSelected.push(selectedAnchorFile);
 				}
 
 				this.$store.dispatch("files/updateSelectedFiles", [
