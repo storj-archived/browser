@@ -13,7 +13,7 @@ export default {
 		bucket: "",
 		browserRoot: "/",
 		files: [],
-		uploadStarted: false,
+		uploadChain: Promise.resolve(),
 		uploading: [],
 		preventRefresh: false,
 		selectedFile: null,
@@ -191,8 +191,8 @@ export default {
 			state.fileShareModal = null;
 		},
 
-		setUploadStarted(state, value) {
-			state.uploadStarted = value;
+		addUploadToChain(state, fn) {
+			state.uploadChain = state.uploadChain.then(fn);
 		}
 	},
 	actions: {
@@ -264,8 +264,7 @@ export default {
 				? e.dataTransfer.files
 				: e.target.files;
 
-			// add files to the `uploading` queue
-			[...files].forEach((file) => {
+			for(const file of files) {
 				// Handle duplicate file names
 				const fileNames = state.files.map((file) => file.Key);
 				let count = 0;
@@ -319,43 +318,30 @@ export default {
 					upload,
 					progress: 0
 				});
-			});
 
-			// if `upload` has already been called once it'll handle all files that have been added to the `uploading` queue in the meantime, and all future `upload` calls during an already ongoing upload should not handle the actual uploading of the files, they should only add them to the `uploading` queue and exit
-			if (state.uploadStarted) {
-				return;
+				commit("addUploadToChain", async () => {
+					try {
+						await upload.promise();
+					} catch (e) {
+						// An error is raised if the upload is aborted by the user
+						console.log(e);
+					}
+
+					await dispatch("list");
+
+					const uploadedFiles = state.files.filter(
+						(file) => file.type === "file"
+					);
+
+					if (uploadedFiles.length === 1) {
+						const [{ Key }] = uploadedFiles;
+
+						commit("openModal", params.Key);
+					}
+
+					commit("finishUpload", params.Key);
+				});
 			}
-
-			commit("setUploadStarted", true);
-
-			// this while loop will ensure that all files in the `uploading` queue are uploaded one by one
-			while (state.uploading.length > 0) {
-				const file = state.uploading[0];
-
-				try {
-					await file.upload.promise();
-				} catch (e) {
-					// An error is raised if the upload is aborted by the user
-					// console.log(e);
-				}
-
-				await dispatch("list");
-
-				const uploadedFiles = state.files.filter(
-					(file) => file.type === "file"
-				);
-
-				if (uploadedFiles.length === 1) {
-					const [{ Key }] = uploadedFiles;
-
-					commit("openModal", state.path + Key);
-				}
-
-				commit("finishUpload", file.Key);
-			}
-
-			// `uploadStarted` is set to false so that the next call to `upload` knows that it needs to handle the actual uploading of the file(s) in addition to adding them to the `uploading` queue
-			commit("setUploadStarted", false);
 		},
 
 		async createFolder({ state, dispatch }, name) {
