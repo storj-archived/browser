@@ -425,7 +425,7 @@ export default {
 				: this.file.Key;
 		},
 		size() {
-			return prettyBytes(this.file.Size);
+			return prettyBytes(this.file.Size).toUpperCase();
 		},
 		uploadDate() {
 			return this.file.LastModified.toLocaleString().split(",")[0];
