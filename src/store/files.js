@@ -91,7 +91,8 @@ export default {
 				secretAccessKey: secretKey,
 				endpoint,
 				s3ForcePathStyle: true,
-				signatureVersion: "v4"
+				signatureVersion: "v4",
+				httpOptions: { timeout: 0 }
 			};
 
 			state.s3 = new S3(s3Config);
