@@ -13,6 +13,7 @@ export default {
 		bucket: "",
 		browserRoot: "/",
 		files: [],
+		uploadChain: Promise.resolve(),
 		uploading: [],
 		preventRefresh: false,
 		selectedFile: null,
@@ -188,6 +189,10 @@ export default {
 
 		closeFileShareModal(state) {
 			state.fileShareModal = null;
+		},
+
+		addUploadToChain(state, fn) {
+			state.uploadChain = state.uploadChain.then(fn);
 		}
 	},
 	actions: {
@@ -259,66 +264,69 @@ export default {
 				? e.dataTransfer.files
 				: e.target.files;
 
-			await Promise.all(
-				[...files].map(async (file) => {
-					// Handle duplicate file names
-					const fileNames = state.files.map((file) => file.Key);
-					let count = 0;
-					let fileName = file.name;
+			const fileNames = state.files.map((file) => file.Key);
 
-					while (fileNames.includes(fileName)) {
-						count += 1;
+			for(const file of files) {
+				// Handle duplicate file names
+				
+				let fileName = file.name;
 
-						if (count > 1) {
-							fileName = fileName.replace(
-								/\((\d+)\)(.*)/,
-								`(${count})$2`
-							);
-						} else {
-							fileName = fileName.replace(
-								/([^.]*)(.*)/,
-								`$1 (${count})$2`
-							);
-						}
+				for(let count = 1; fileNames.includes(fileName); count++) {
+					if (count > 1) {
+						fileName = fileName.replace(
+							/\((\d+)\)(.*)/,
+							`(${count})$2`
+						);
+					} else {
+						fileName = fileName.replace(
+							/([^.]*)(.*)/,
+							`$1 (${count})$2`
+						);
 					}
+				}
 
-					const params = {
-						Bucket: state.bucket,
-						Key: state.path + fileName,
-						Body: file
-					};
 
-					const upload = state.s3.upload(
-						{
-							...params
-						},
-						{
-							partSize: 64 * 1024 * 1024
-						}
-					);
+				const params = {
+					Bucket: state.bucket,
+					Key: state.path + fileName,
+					Body: file
+				};
 
-					upload.minPartSize = 1024 * 1024 * 60;
+				const upload = state.s3.upload(
+					{
+						...params
+					},
+					{
+						partSize: 64 * 1024 * 1024
+					}
+				);
 
-					commit("pushUpload", {
-						...params,
-						upload,
-						progress: 0
+				upload.on("httpUploadProgress", (progress) => {
+					commit("setProgress", {
+						Key: params.Key,
+						progress: Math.round(
+							(progress.loaded / progress.total) * 100
+						)
 					});
+				});
 
-					upload.on("httpUploadProgress", (progress) => {
-						commit("setProgress", {
-							Key: params.Key,
-							progress: Math.round(
-								(progress.loaded / progress.total) * 100
-							)
-						});
-					});
+				commit("pushUpload", {
+					...params,
+					upload,
+					progress: 0
+				});
 
+				commit("addUploadToChain", async () => {
+					if(state.uploading.findIndex(file => file.Key === params.Key) === -1) {
+						// upload cancelled or removed
+						return -1;
+					}
+				
 					try {
 						await upload.promise();
 					} catch (e) {
 						// An error is raised if the upload is aborted by the user
-						// console.log(e);
+						console.log(e);
 					}
 
 					await dispatch("list");
@@ -330,12 +338,12 @@ export default {
 					if (uploadedFiles.length === 1) {
 						const [{ Key }] = uploadedFiles;
 
-						commit("openModal", state.path + Key);
+						commit("openModal", params.Key);
 					}
 
 					commit("finishUpload", params.Key);
-				})
-			);
+				});
+			}
 		},
 
 		async createFolder({ state, dispatch }, name) {
@@ -483,7 +491,11 @@ export default {
 			const file = state.uploading.find((file) => file.Key === key);
 
 			if (typeof file === "object") {
-				file.upload.abort();
+				// if the file has already started uploading, then abort
+				if (file.progress > 0) {
+					file.upload.abort();
+				}
+
 				commit("finishUpload", key);
 			} else {
 				throw new Error("File", { key }, "not found");
