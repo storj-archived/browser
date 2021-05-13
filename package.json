@@ -10,16 +10,16 @@
 	},
 	"dependencies": {
 		"@rollup/plugin-buble": "^0.21.3",
-		"@rollup/plugin-commonjs": "^18.1.0",
+		"@rollup/plugin-commonjs": "^19.0.0",
 		"@rollup/plugin-node-resolve": "^13.0.0",
-		"@vue/cli-plugin-babel": "~4.5.12",
-		"@vue/cli-plugin-router": "~4.5.12",
-		"@vue/cli-plugin-vuex": "~4.5.12",
-		"@vue/cli-service": "~4.5.12",
+		"@vue/cli-plugin-babel": "~4.5.13",
+		"@vue/cli-plugin-router": "~4.5.13",
+		"@vue/cli-plugin-vuex": "~4.5.13",
+		"@vue/cli-service": "~4.5.13",
 		"@vue/compiler-sfc": "^3.0.11",
 		"@vue/composition-api": "*",
-		"aws-sdk": "^2.900.0",
-		"core-js": "^3.11.2",
+		"aws-sdk": "^2.904.0",
+		"core-js": "^3.12.1",
 		"pretty-bytes": "^5.6.0",
 		"ramda": "^0.27.1",
 		"rollup": "^2.47.0",
@@ -40,6 +40,6 @@
 		"not dead"
 	],
 	"devDependencies": {
-		"prettier": "^2.2.1"
+		"prettier": "^2.3.0"
 	}
 }
