@@ -264,15 +264,14 @@ export default {
 				? e.dataTransfer.files
 				: e.target.files;
 
+			const fileNames = state.files.map((file) => file.Key);
+
 			for(const file of files) {
 				// Handle duplicate file names
-				const fileNames = state.files.map((file) => file.Key);
-				let count = 0;
+				
 				let fileName = file.name;
 
-				while (fileNames.includes(fileName)) {
-					count += 1;
-
+				for(let count = 1; fileNames.includes(fileName); count++) {
 					if (count > 1) {
 						fileName = fileName.replace(
 							/\((\d+)\)(.*)/,
@@ -285,7 +284,7 @@ export default {
 						);
 					}
 				}
-				//
+
 
 				const params = {
 					Bucket: state.bucket,
@@ -301,8 +300,6 @@ export default {
 						partSize: 64 * 1024 * 1024
 					}
 				);
-
-				upload.minPartSize = 1024 * 1024 * 60;
 
 				upload.on("httpUploadProgress", (progress) => {
 					commit("setProgress", {
@@ -320,6 +317,11 @@ export default {
 				});
 
 				commit("addUploadToChain", async () => {
+					if(state.uploading.findIndex(file => file.Key === params.Key) === -1) {
+						// upload cancelled or removed
+						return -1;
+					}
+				
 					try {
 						await upload.promise();
 					} catch (e) {
