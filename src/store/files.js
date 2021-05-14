@@ -91,7 +91,9 @@ export default {
 				secretAccessKey: secretKey,
 				endpoint,
 				s3ForcePathStyle: true,
-				signatureVersion: "v4"
+				signatureVersion: "v4",
+				connectTimeout: 0,
+				httpOptions: { timeout: 0 }
 			};
 
 			state.s3 = new S3(s3Config);
@@ -146,8 +148,9 @@ export default {
 		},
 
 		setProgress(state, { Key, progress }) {
-			state.uploading.find((file) => file.Key === Key).progress =
-				progress;
+			state.uploading.find(
+				(file) => file.Key === Key
+			).progress = progress;
 		},
 
 		finishUpload(state, Key) {
