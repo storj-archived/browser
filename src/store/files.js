@@ -266,12 +266,12 @@ export default {
 
 			const fileNames = state.files.map((file) => file.Key);
 
-			for(const file of files) {
+			for (const file of files) {
 				// Handle duplicate file names
-				
+
 				let fileName = file.name;
 
-				for(let count = 1; fileNames.includes(fileName); count++) {
+				for (let count = 1; fileNames.includes(fileName); count++) {
 					if (count > 1) {
 						fileName = fileName.replace(
 							/\((\d+)\)(.*)/,
@@ -284,7 +284,6 @@ export default {
 						);
 					}
 				}
-
 
 				const params = {
 					Bucket: state.bucket,
@@ -317,11 +316,15 @@ export default {
 				});
 
 				commit("addUploadToChain", async () => {
-					if(state.uploading.findIndex(file => file.Key === params.Key) === -1) {
+					if (
+						state.uploading.findIndex(
+							(file) => file.Key === params.Key
+						) === -1
+					) {
 						// upload cancelled or removed
 						return -1;
 					}
-				
+
 					try {
 						await upload.promise();
 					} catch (e) {
