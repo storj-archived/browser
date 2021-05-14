@@ -146,9 +146,8 @@ export default {
 		},
 
 		setProgress(state, { Key, progress }) {
-			state.uploading.find(
-				(file) => file.Key === Key
-			).progress = progress;
+			state.uploading.find((file) => file.Key === Key).progress =
+				progress;
 		},
 
 		finishUpload(state, Key) {
