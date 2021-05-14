@@ -6,11 +6,7 @@
 
 ## Development
 
-```
-git clone git@github.com:storj/browser.git
-git clone git@github.com:storj/browser-demo.git
-cd ../browser/ && npm run install && cd ../browser-demo && rm -rf node_modules/browser && npm install && npm run serve; cd ../browser;
-```
+Use [Iris](https://github.com/storjrd/iris).
 
 ## Integration
 
