@@ -22,7 +22,7 @@
 		"core-js": "^3.12.1",
 		"pretty-bytes": "^5.6.0",
 		"ramda": "^0.27.1",
-		"rollup": "^2.47.0",
+		"rollup": "^2.50.0",
 		"rollup-plugin-css-only": "^3.1.0",
 		"rollup-plugin-peer-deps-external": "^2.2.4",
 		"rollup-plugin-terser": "^7.0.2",
