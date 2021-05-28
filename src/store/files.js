@@ -1,9 +1,11 @@
-import S3 from "aws-sdk/clients/s3";
-import * as R from "ramda";
 
-const listCache = new Map();
+ S3  "aws-sdk/clients/s3";
+ * R "ramda";
 
-export default {
+
+ listCache  Map();
+
+ default {
 	namespaced: true,
 	state: {
 		s3: null,
@@ -33,11 +35,11 @@ export default {
 	getters: {
 		sortedFiles: (state) => {
 			// key-specific sort cases
-			const fns = {
-				date: (a, b) =>
-					new Date(a.LastModified) - new Date(b.LastModified),
-				name: (a, b) => a.Key.localeCompare(b.Key),
-				size: (a, b) => a.Size - b.Size
+			            
+                                    (a, b) 
+					  Date(a.LastModified) - new Date(b.LastModified),
+				    (a, b)  a.Key.localeCompare(b.Key),
+				    (a, b)  a.Size - b.Size
 			};
 
 			// sort by appropriate function
@@ -53,11 +55,11 @@ export default {
 				...orderedFiles.filter((file) => file.type === "file")
 			];
 
-			return groupedFiles;
+			 groupedFiles;
 		},
 
 		preSignedUrl: (state) => (url) => {
-			return state.s3.getSignedUrl("getObject", {
+			 state.s3.getSignedUrl("getObject", {
 				Bucket: state.bucket,
 				Key: url
 			});
@@ -86,7 +88,7 @@ export default {
 					)
 			}
 		) {
-			const s3Config = {
+			 s3Config = {
 				accessKeyId: accessKey,
 				secretAccessKey: secretKey,
 				endpoint,
@@ -198,15 +200,15 @@ export default {
 		}
 	},
 	actions: {
-		async list({ commit, state }, path = state.path) {
-			if (listCache.has(path) === true) {
+		 list({ commit, state }, path = state.path) {
+			 (listCache.has(path) === true) {
 				commit("updateFiles", {
 					path,
 					files: listCache.get(path)
 				});
 			}
 
-			const response = await state.s3
+			 response = await state.s3
 				.listObjects({
 					Bucket: state.bucket,
 					Delimiter: "/",
@@ -214,28 +216,28 @@ export default {
 				})
 				.promise();
 
-			const { Contents, CommonPrefixes } = response;
+			 { Contents, CommonPrefixes } = response;
 
 			Contents.sort((a, b) =>
 				a.LastModified < b.LastModified ? -1 : -1
 			);
 
-			const prefixToFolder = ({ Prefix }) => ({
+			 prefixToFolder = ({ Prefix }) => ({
 				Key: Prefix.slice(path.length, -1),
 				LastModified: new Date(0),
 				type: "folder"
 			});
 
-			const makeFileRelative = (file) => ({
+			 makeFileRelative = (file) => ({
 				...file,
 				Key: file.Key.slice(path.length),
 				type: "file"
 			});
 
-			const isFileVisible = (file) =>
+			 isFileVisible = (file) =>
 				file.Key.length > 0 && file.Key !== ".file_placeholder";
 
-			const files = [
+			 files = [
 				...CommonPrefixes.map(prefixToFolder),
 				...Contents.map(makeFileRelative).filter(isFileVisible)
 			];
@@ -247,9 +249,9 @@ export default {
 			});
 		},
 
-		async back({ state, dispatch }) {
-			const getParentDirectory = (path) => {
-				let i = path.length - 2;
+		 back({ state, dispatch }) {
+			 getParentDirectory = (path) => {
+			 i  path.length - 2;
 
 				while (path[i - 1] !== "/" && i > 0) {
 					i--;
@@ -261,25 +263,25 @@ export default {
 			dispatch("list", getParentDirectory(state.path));
 		},
 
-		async upload({ commit, state, dispatch }, e) {
-			const files = e.dataTransfer
+		 upload({ commit, state, dispatch }, e) {
+			 files = e.dataTransfer
 				? e.dataTransfer.files
 				: e.target.files;
 
-			const fileNames = state.files.map((file) => file.Key);
+			 fileNames = state.files.map((file) => file.Key);
 
-			for (const file of files) {
+			 (const file of files) {
 				// Handle duplicate file names
 
-				let fileName = file.name;
+				 fileName = file.name;
 
-				for (let count = 1; fileNames.includes(fileName); count++) {
-					if (count > 1) {
+				 (let count = 1; fileNames.includes(fileName); count++) {
+					 (count > 1) {
 						fileName = fileName.replace(
 							/\((\d+)\)(.*)/,
 							`(${count})$2`
 						);
-					} else {
+					}  {
 						fileName = fileName.replace(
 							/([^.]*)(.*)/,
 							`$1 (${count})$2`
@@ -287,13 +289,13 @@ export default {
 					}
 				}
 
-				const params = {
+				 params = {
 					Bucket: state.bucket,
 					Key: state.path + fileName,
 					Body: file
 				};
 
-				const upload = state.s3.upload(
+				 upload = state.s3.upload(
 					{
 						...params
 					},
@@ -318,13 +320,13 @@ export default {
 				});
 
 				commit("addUploadToChain", async () => {
-					if (
+					(
 						state.uploading.findIndex(
 							(file) => file.Key === params.Key
 						) === -1
 					) {
 						// upload cancelled or removed
-						return -1;
+						 -1;
 					}
 
 					try {
@@ -334,14 +336,14 @@ export default {
 						console.log(e);
 					}
 
-					await dispatch("list");
+					 dispatch("list");
 
-					const uploadedFiles = state.files.filter(
+					 uploadedFiles = state.files.filter(
 						(file) => file.type === "file"
 					);
 
 					if (uploadedFiles.length === 1) {
-						const [{ Key }] = uploadedFiles;
+						 [{ Key }] = uploadedFiles;
 
 						commit("openModal", params.Key);
 					}
@@ -351,8 +353,8 @@ export default {
 			}
 		},
 
-		async createFolder({ state, dispatch }, name) {
-			await state.s3
+		 createFolder({ state, dispatch }, name) {
+			 state.s3
 				.putObject({
 					Bucket: state.bucket,
 					Key: state.path + name + "/.file_placeholder"
@@ -362,23 +364,23 @@ export default {
 			dispatch("list");
 		},
 
-		async delete({ commit, dispatch, state }, { path, file, folder }) {
-			await state.s3
+		 delete({ commit, dispatch, state }, { path, file, folder }) {
+			 state.s3
 				.deleteObject({
 					Bucket: state.bucket,
 					Key: path + file.Key
 				})
 				.promise();
 
-			if (!folder) {
-				await dispatch("list");
+			 (!folder) {
+				 dispatch("list");
 				commit("removeFileToBeDeleted", file);
 			}
 		},
 
-		async deleteFolder({ commit, dispatch, state }, { file, path }) {
-			async function recurse(filePath) {
-				const { Contents, CommonPrefixes } = await state.s3
+		 deleteFolder({ commit, dispatch, state }, { file, path }) {
+			  recurse(filePath) {
+				 { Contents, CommonPrefixes } = await state.s3
 					.listObjects({
 						Bucket: state.bucket,
 						Delimiter: "/",
@@ -386,11 +388,11 @@ export default {
 					})
 					.promise();
 
-				async function thread() {
-					while (Contents.length) {
-						const file = Contents.pop();
+				 function thread() {
+					 (Contents.length) {
+						 file = Contents.pop();
 
-						await dispatch("delete", {
+						 dispatch("delete", {
 							path: "",
 							file,
 							folder: true
@@ -398,22 +400,22 @@ export default {
 					}
 				}
 
-				await Promise.all([thread(), thread(), thread()]);
+				 Promise.all([thread(), thread(), thread()]);
 
-				for (const { Prefix } of CommonPrefixes) {
-					await recurse(Prefix);
+				  ( { Prefix } of CommonPrefixes) {
+					 recurse(Prefix);
 				}
 			}
 
-			await recurse(path.length > 0 ? path + file.Key : file.Key + "/");
+			 recurse(path.length > 0 ? path + file.Key : file.Key + "/");
 
 			commit("removeFileToBeDeleted", file);
 			await dispatch("list");
 			dispatch("updatePreventRefresh", false);
 		},
 
-		async deleteSelected({ dispatch, commit, state }) {
-			const filesToDelete = [
+		         deleteSelected({ dispatch, commit, state }) {
+			 filesToDelete = [
 				state.selectedFile,
 				...state.shiftSelectedFiles
 			];
@@ -421,12 +423,12 @@ export default {
 			commit("setPreventRefresh", true);
 			commit("setFilesToBeDeleted", filesToDelete);
 
-			await Promise.all(
+			 Promise.all(
 				filesToDelete.map(async (file) => {
-					if (file.type === "file")
-						await dispatch("delete", { file, path: state.path });
-					else
-						await dispatch("deleteFolder", {
+					 (file.type === "file")
+						 dispatch("delete", { file, path: state.path });
+					
+						 dispatch("deleteFolder", {
 							file,
 							path: state.path
 						});
@@ -436,14 +438,14 @@ export default {
 			commit("setPreventRefresh", false);
 		},
 
-		async download({ state }, file) {
-			const url = state.s3.getSignedUrl("getObject", {
+		 download({ state }, file) {
+			 url = state.s3.getSignedUrl("getObject", {
 				Bucket: state.bucket,
 				Key: state.path + file.Key
 			});
 
-			const downloadURL = function (data, fileName) {
-				var a;
+			 downloadURL = function (data, fileName) {
+				a;
 				a = document.createElement("a");
 				a.href = data;
 				a.download = fileName;
@@ -481,7 +483,7 @@ export default {
 		},
 
 		openDropdown({ commit, dispatch }, id) {
-			if (id !== "FileBrowser") {
+			(id !== "FileBrowser") {
 				dispatch("clearAllSelectedFiles");
 			}
 
@@ -493,16 +495,16 @@ export default {
 		},
 
 		cancelUpload({ commit, state }, key) {
-			const file = state.uploading.find((file) => file.Key === key);
+			 file = state.uploading.find((file) => file.Key === key);
 
-			if (typeof file === "object") {
+			( file === "object") {
 				// if the file has already started uploading, then abort
-				if (file.progress > 0) {
+				 (file.progress > 0) {
 					file.upload.abort();
 				}
 
 				commit("finishUpload", key);
-			} else {
+			}  {
 				throw new Error("File", { key }, "not found");
 			}
 		}
