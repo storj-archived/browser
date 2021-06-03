@@ -15,8 +15,9 @@ export default {
 		files: [],
 		uploadChain: Promise.resolve(),
 		uploading: [],
-		preventRefresh: false,
-		selectedFile: null,
+		selectedAnchorFile: null,
+		unselectedAnchorFile: null,
+		selectedFiles: [],
 		shiftSelectedFiles: [],
 		filesToBeDeleted: [],
 		getSharedLink: null,
@@ -111,13 +112,16 @@ export default {
 			state.files = files;
 		},
 
-		setPreventRefresh(state, flag) {
-			state.preventRefresh = flag;
+		setSelectedFiles(state, files) {
+			state.selectedFiles = files;
 		},
 
-		setSelectedFile(state, file) {
-			state.selectedFile = file;
-			state.shiftSelectedFiles = [];
+		setSelectedAnchorFile(state, file) {
+			state.selectedAnchorFile = file;
+		},
+
+		setUnselectedAnchorFile(state, file) {
+			state.unselectedAnchorFile = file;
 		},
 
 		setFilesToBeDeleted(state, files) {
@@ -135,8 +139,10 @@ export default {
 		},
 
 		removeAllSelectedFiles(state) {
-			state.selectedFile = null;
+			state.selectedAnchorFile = null;
+			state.unselectedAnchorFile = null;
 			state.shiftSelectedFiles = [];
+			state.selectedFiles = [];
 		},
 
 		setShiftSelectedFiles(state, files) {
@@ -409,31 +415,36 @@ export default {
 
 			commit("removeFileToBeDeleted", file);
 			await dispatch("list");
-			dispatch("updatePreventRefresh", false);
 		},
 
-		async deleteSelected({ dispatch, commit, state }) {
+		async deleteSelected({ rootState, state, dispatch, commit }) {
 			const filesToDelete = [
-				state.selectedFile,
+				...state.selectedFiles,
 				...state.shiftSelectedFiles
 			];
 
-			commit("setPreventRefresh", true);
+			if (state.selectedAnchorFile) {
+				filesToDelete.push(state.selectedAnchorFile);
+			}
+
 			commit("setFilesToBeDeleted", filesToDelete);
 
 			await Promise.all(
 				filesToDelete.map(async (file) => {
 					if (file.type === "file")
-						await dispatch("delete", { file, path: state.path });
+						await dispatch("delete", {
+							file,
+							path: rootState.files.path
+						});
 					else
 						await dispatch("deleteFolder", {
 							file,
-							path: state.path
+							path: rootState.files.path
 						});
 				})
 			);
 
-			commit("setPreventRefresh", false);
+			dispatch("clearAllSelectedFiles");
 		},
 
 		async download({ state }, file) {
@@ -456,12 +467,8 @@ export default {
 			downloadURL(url, file.Key);
 		},
 
-		updatePreventRefresh({ commit }, flag) {
-			commit("setPreventRefresh", flag);
-		},
-
-		updateSelectedFile({ commit }, file) {
-			commit("setSelectedFile", file);
+		updateSelectedFiles({ commit }, files) {
+			commit("setSelectedFiles", [...files]);
 		},
 
 		updateShiftSelectedFiles({ commit }, files) {

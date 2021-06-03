@@ -460,7 +460,10 @@ export default {
 		},
 		isFileSelected() {
 			return (
-				this.$store.state.files.selectedFile === this.file ||
+				this.$store.state.files.selectedAnchorFile === this.file ||
+				this.$store.state.files.selectedFiles.find(
+					(file) => file === this.file
+				) ||
 				this.$store.state.files.shiftSelectedFiles.find(
 					(file) => file === this.file
 				)
@@ -469,30 +472,120 @@ export default {
 		selectFile(event) {
 			event.stopPropagation();
 
-			// close the openDropdown
-			if (this.$store.state.files.openedDropdown) {
-				this.$store.dispatch("files/openDropdown", null);
+			if (this.$store.state.openedDropdown) {
+				this.$store.dispatch("openDropdown", null);
 			}
 
-			// if shift key was held
 			if (event.shiftKey) {
 				this.setShiftSelectedFiles();
-
-				// if it was only a click
+			} else if (event.metaKey || event.ctrlKey) {
+				this.setSelectedFile(true);
 			} else {
-				this.$store.dispatch("files/updateSelectedFile", this.file);
+				this.setSelectedFile(false);
+			}
+		},
+		setSelectedFile(command) {
+			/* this function is responsible for selecting and unselecting a file on file click or [CMD + click] AKA command. */
+
+			const files = [
+				...this.$store.state.files.selectedFiles,
+				...this.$store.state.files.shiftSelectedFiles
+			];
+
+			const selectedAnchorFile = this.$store.state.files
+				.selectedAnchorFile;
+			const shiftSelectedFiles = this.$store.state.files
+				.shiftSelectedFiles;
+			const selectedFiles = this.$store.state.files.selectedFiles;
+
+			if (command && this.file === selectedAnchorFile) {
+				/* if it's [CMD + click] and the file selected is the actual selectedAnchorFile, then unselect the file but store it under unselectedAnchorFile in case the user decides to do a [shift + click] right after this action. */
+
+				this.$store.commit("files/setUnselectedAnchorFile", this.file);
+				this.$store.commit("files/setSelectedAnchorFile", null);
+			} else if (command && files.includes(this.file)) {
+				/* if it's [CMD + click] and the file selected is a file that has already been selected in selectedFiles and shiftSelectedFiles, then unselect it by filtering it out. */
+
+				this.$store.dispatch(
+					"files/updateSelectedFiles",
+					selectedFiles.filter(
+						(fileSelected) => fileSelected !== this.file
+					)
+				);
+
+				this.$store.dispatch(
+					"files/updateShiftSelectedFiles",
+					shiftSelectedFiles.filter(
+						(fileSelected) => fileSelected !== this.file
+					)
+				);
+			} else if (command && selectedAnchorFile) {
+				/* if it's [CMD + click] and there is already a selectedAnchorFile, then add the selectedAnchorFile and shiftSelectedFiles into the array of selectedFiles, set selectedAnchorFile to the file that was clicked, set unselectedAnchorFile to null, and set shiftSelectedFiles to an empty array. */
+
+				const filesSelected = [...selectedFiles];
+
+				if (!filesSelected.includes(selectedAnchorFile)) {
+					filesSelected.push(selectedAnchorFile);
+				}
+
+				this.$store.dispatch("files/updateSelectedFiles", [
+					...filesSelected,
+					...shiftSelectedFiles.filter(
+						(file) => !filesSelected.includes(file)
+					)
+				]);
+
+				this.$store.commit("files/setSelectedAnchorFile", this.file);
+				this.$store.commit("files/setUnselectedAnchorFile", null);
+				this.$store.dispatch("files/updateShiftSelectedFiles", []);
+			} else if (command) {
+				/* if it's [CMD + click] and it has not met any of the above conditions, then set selectedAnchorFile to file and set unselectedAnchorfile to null, update the selectedFiles, and update the shiftSelectedFiles */
+
+				this.$store.commit("files/setSelectedAnchorFile", this.file);
+				this.$store.commit("files/setUnselectedAnchorFile", null);
+
+				this.$store.dispatch("files/updateSelectedFiles", [
+					...selectedFiles,
+					...shiftSelectedFiles
+				]);
+
+				this.$store.dispatch("files/updateShiftSelectedFiles", []);
+			} else {
+				/* if it's just a file click without any modifier, then set selectedAnchorFile to the file that was clicked, set shiftSelectedFiles and selectedFiles to an empty array. */
+
+				this.$store.commit("files/setSelectedAnchorFile", this.file);
+				this.$store.dispatch("files/updateShiftSelectedFiles", []);
+				this.$store.dispatch("files/updateSelectedFiles", []);
 			}
 		},
 		setShiftSelectedFiles() {
-			const files = this.$store.getters["files/sortedFiles"];
-			const selectedFile = this.$store.state.files.selectedFile;
+			/* this function is responsible for selecting all files from selectedAnchorFile to the file that was selected with [shift + click] */
 
-			if (!selectedFile) {
-				this.$store.dispatch("files/updateSelectedFile", this.file);
+			const files = this.$store.getters["files/sortedFiles"];
+			const unselectedAnchorFile = this.$store.state.files
+				.unselectedAnchorFile;
+
+			if (unselectedAnchorFile) {
+				/* if there is an unselectedAnchorFile, meaning that in the previous action the user unselected the anchor file but is now chosing to do a [shift + click] on another file, then reset the selectedAnchorFile, the achor file, to unselectedAnchorFile. */
+
+				this.$store.commit(
+					"files/setSelectedAnchorFile",
+					unselectedAnchorFile
+				);
+				this.$store.commit("files/setUnselectedAnchorFile", null);
+			}
+
+			const selectedAnchorFile = this.$store.state.files
+				.selectedAnchorFile;
+
+			if (!selectedAnchorFile) {
+				this.$store.commit("files/setSelectedAnchorFile", this.file);
 				return;
 			}
 
-			const anchorIdx = files.findIndex((file) => file === selectedFile);
+			const anchorIdx = files.findIndex(
+				(file) => file === selectedAnchorFile
+			);
 			const shiftIdx = files.findIndex((file) => file === this.file);
 
 			const start = Math.min(anchorIdx, shiftIdx);
@@ -500,7 +593,14 @@ export default {
 
 			this.$store.dispatch(
 				"files/updateShiftSelectedFiles",
-				files.slice(start, end)
+				files
+					.slice(start, end)
+					.filter(
+						(file) =>
+							!this.$store.state.files.selectedFiles.includes(
+								file
+							) && file !== selectedAnchorFile
+					)
 			);
 		},
 		async share(event) {
@@ -539,7 +639,6 @@ export default {
 		async finalDelete(event) {
 			event.stopPropagation();
 			this.$store.dispatch("files/openDropdown", null);
-			this.$store.dispatch("files/updatePreventRefresh", true);
 			this.$store.dispatch("files/addFileToBeDeleted", this.file);
 
 			const params = {
@@ -555,7 +654,6 @@ export default {
 
 			// refresh the files displayed
 			await this.$store.dispatch("files/list");
-			this.$store.dispatch("files/updatePreventRefresh", false);
 			this.$store.dispatch("files/removeFileFromToBeDeleted", this.file);
 			this.deleteConfirmation = false;
 		},
