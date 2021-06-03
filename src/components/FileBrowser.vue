@@ -53,6 +53,12 @@ tbody {
 	border-color: #fe5d5d !important;
 	outline: none !important;
 }
+.back-route {
+	padding-right: 100%;
+}
+.back-route td {
+	border-top: none;
+}
 </style>
 
 <template>
@@ -195,15 +201,15 @@ tbody {
 								</tr>
 
 								<tr v-if="path.length > 0">
-									<td class="px-3">
-										<router-link to="../">
+									<router-link to="../" class="back-route">
+										<td class="px-3">
 											<a
 												href="javascript:null"
 												v-on:click="back"
 												>..</a
 											>
-										</router-link>
-									</td>
+										</td>
+									</router-link>
 								</tr>
 
 								<tr
