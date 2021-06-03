@@ -141,7 +141,7 @@ tbody {
 					</div>
 
 					<div>
-						<table class="table table-hover">
+						<table class="table">
 							<file-browser-header></file-browser-header>
 
 							<tbody>
@@ -409,7 +409,7 @@ export default {
 			}
 
 			if (this.$store.state.files.selectedFile) {
-				this.$store.dispatch("files/updateSelectedFile", null);
+				this.$store.dispatch("files/clearAllSelectedFiles");
 			}
 		},
 
