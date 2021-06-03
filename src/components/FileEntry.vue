@@ -68,6 +68,7 @@ a {
 		scope="row"
 		v-bind:class="{ 'selected-row': isFileSelected() }"
 		v-on:click="selectFile"
+		v-bind:title="file.Key"
 	>
 		<td class="w-50" data-ls-disabled>
 			<span v-if="file.type === 'folder'">
@@ -451,7 +452,7 @@ export default {
 
 		loadingSpinner() {
 			return !!this.$store.state.files.filesToBeDeleted.find(
-				(file) => file === this.file
+				file => file === this.file
 			);
 		},
 		fileClick(event) {
@@ -465,7 +466,7 @@ export default {
 					(file) => file === this.file
 				) ||
 				this.$store.state.files.shiftSelectedFiles.find(
-					(file) => file === this.file
+					file => file === this.file
 				)
 			);
 		},
