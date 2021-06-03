@@ -452,7 +452,7 @@ export default {
 
 		loadingSpinner() {
 			return !!this.$store.state.files.filesToBeDeleted.find(
-				file => file === this.file
+				(file) => file === this.file
 			);
 		},
 		fileClick(event) {
@@ -466,7 +466,7 @@ export default {
 					(file) => file === this.file
 				) ||
 				this.$store.state.files.shiftSelectedFiles.find(
-					file => file === this.file
+					(file) => file === this.file
 				)
 			);
 		},
@@ -493,10 +493,10 @@ export default {
 				...this.$store.state.files.shiftSelectedFiles
 			];
 
-			const selectedAnchorFile = this.$store.state.files
-				.selectedAnchorFile;
-			const shiftSelectedFiles = this.$store.state.files
-				.shiftSelectedFiles;
+			const selectedAnchorFile =
+				this.$store.state.files.selectedAnchorFile;
+			const shiftSelectedFiles =
+				this.$store.state.files.shiftSelectedFiles;
 			const selectedFiles = this.$store.state.files.selectedFiles;
 
 			if (command && this.file === selectedAnchorFile) {
@@ -563,8 +563,8 @@ export default {
 			/* this function is responsible for selecting all files from selectedAnchorFile to the file that was selected with [shift + click] */
 
 			const files = this.$store.getters["files/sortedFiles"];
-			const unselectedAnchorFile = this.$store.state.files
-				.unselectedAnchorFile;
+			const unselectedAnchorFile =
+				this.$store.state.files.unselectedAnchorFile;
 
 			if (unselectedAnchorFile) {
 				/* if there is an unselectedAnchorFile, meaning that in the previous action the user unselected the anchor file but is now chosing to do a [shift + click] on another file, then reset the selectedAnchorFile, the achor file, to unselectedAnchorFile. */
@@ -576,8 +576,8 @@ export default {
 				this.$store.commit("files/setUnselectedAnchorFile", null);
 			}
 
-			const selectedAnchorFile = this.$store.state.files
-				.selectedAnchorFile;
+			const selectedAnchorFile =
+				this.$store.state.files.selectedAnchorFile;
 
 			if (!selectedAnchorFile) {
 				this.$store.commit("files/setSelectedAnchorFile", this.file);
