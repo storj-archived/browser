@@ -2,7 +2,7 @@
 .modal.right .modal-dialog {
 	position: fixed;
 	margin: auto;
-	width: 350px;
+	width: 400px;
 	height: 100%;
 	-webkit-transform: translate3d(0%, 0, 0);
 	-ms-transform: translate3d(0%, 0, 0);
@@ -21,7 +21,7 @@
 
 /*Right*/
 .modal.right.fade .modal-dialog {
-	right: -350px;
+	right: -400px;
 	-webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
 	-moz-transition: opacity 0.3s linear, right 0.3s ease-out;
 	-o-transition: opacity 0.3s linear, right 0.3s ease-out;
@@ -65,13 +65,9 @@
 
 .file-path {
 	display: inline-block;
-	font-weight: bold;
-	max-width: 80%;
-	position: relative;
-	top: 5px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  font-weight: bold;
+  max-width: 100%;
+  position: relative;
 }
 
 .preview {
@@ -97,14 +93,12 @@
 
 .share-btn {
 	color: #007bff;
+	font-weight: 700;
 }
 
-/* .btn-copy {
-  position: absolute;
-  bottom: 5px;
-  right: 20px;
-  color: #0068DC;
-} */
+.btn-copy {
+	font-weight: 700;
+}
 </style>
 
 <template>
@@ -135,7 +129,7 @@
 							</svg>
 						</div>
 						<div class="mb-2">
-							<svg
+							<!-- <svg
 								width="1.5em"
 								height="1.5em"
 								viewBox="0 0 16 16"
@@ -149,7 +143,7 @@
 								<path
 									d="M9.5 3V0L14 4.5h-3A1.5 1.5 0 0 1 9.5 3z"
 								/>
-							</svg>
+							</svg> -->
 							<span class="file-path">{{ filePath }}</span>
 						</div>
 						<p class="size mb-3">{{ size }}</p>
@@ -175,7 +169,7 @@
 						></audio>
 
 						<button
-							class="btn btn-primary btn-lg btn-block mb-3"
+							class="btn btn-primary btn-block mb-3 mt-3"
 							download
 							v-on:click="download"
 						>
