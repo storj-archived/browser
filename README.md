@@ -1,5 +1,7 @@
 # storj/browser
 
+[![prettier](https://github.com/storj/browser/actions/workflows/prettier.yml/badge.svg)](https://github.com/storj/browser/actions/workflows/prettier.yml)
+
 > A Vue component for managing files on Storj, via [gateway-mt](https://github.com/storj/gateway-mt).
 
 ![screenshot](./screenshot.png)
