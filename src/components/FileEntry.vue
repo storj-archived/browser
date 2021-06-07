@@ -16,8 +16,7 @@ a {
 }
 
 .table-hover tbody tr:hover {
-	background-color: #f4f5f7;
-	cursor: pointer;
+	background-color: #f9f9f9;
 }
 
 .selected-row {
@@ -61,6 +60,17 @@ a {
 .bi-trash {
 	cursor: pointer;
 }
+.file-name {
+	margin-left: 5px;
+	cursor: pointer;
+	color: #000;
+}
+.file-name:hover {
+	color: #376FFF;
+}
+.folder-name:hover {
+	color: #376FFF;
+}
 </style>
 
 <template>
@@ -71,7 +81,7 @@ a {
 		v-bind:title="file.Key"
 	>
 		<td class="w-50" data-ls-disabled>
-			<span v-if="file.type === 'folder'">
+			<span v-if="file.type === 'folder'" class="folder-name">
 				<svg
 					width="1.5em"
 					height="1.5em"
@@ -91,19 +101,19 @@ a {
 
 				<span v-on:click="fileClick">
 					<router-link v-bind:to="link">
-						<a href="javascript:null" style="margin-left: 5px">
+						<a href="javascript:null" class="file-name">
 							{{ filename }}
 						</a>
 					</router-link>
 				</span>
 			</span>
 
-			<span v-else>
+			<span v-else v-on:click="openModal" class="file-name">
 				<svg
 					width="1.5em"
 					height="1.5em"
 					viewBox="0 0 16 16"
-					class="bi bi-file-earmark ml-2 mr-1"
+					class="bi bi-file-earmark ml-1 mr-1 mb-1"
 					fill="currentColor"
 					xmlns="http://www.w3.org/2000/svg"
 				>
@@ -281,7 +291,6 @@ a {
 										height="1.5em"
 										viewBox="0 0 16 16"
 										class="bi bi-x mr-1"
-										fill="green"
 										xmlns="http://www.w3.org/2000/svg"
 									>
 										<path
@@ -390,7 +399,6 @@ a {
 										height="1.5em"
 										viewBox="0 0 16 16"
 										class="bi bi-x mr-1"
-										fill="green"
 										xmlns="http://www.w3.org/2000/svg"
 									>
 										<path
