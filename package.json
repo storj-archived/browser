@@ -29,7 +29,7 @@
 		"rollup-plugin-vue": "^6.0.0",
 		"rollup-plugin-vue2": "^0.8.1",
 		"vue": "^2.6.13",
-		"vue-promised": "^2.0.3",
+		"vue-promised": "^2.1.0",
 		"vue-router": "^3.2.0",
 		"vue-template-compiler": "^2.6.13",
 		"vuex": "^3.4.0"
