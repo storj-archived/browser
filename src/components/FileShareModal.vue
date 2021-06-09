@@ -19,10 +19,6 @@
 	padding-right: 30%;
 }
 
-.share-btn {
-	background-color: #f5f5f5 !important;
-}
-
 .closex {
 	cursor: pointer;
 }
