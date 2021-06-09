@@ -21,7 +21,6 @@ a {
 	cursor: pointer;
 	color: #768394;
 }
-
 </style>
 
 <template>

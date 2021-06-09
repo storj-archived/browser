@@ -65,9 +65,9 @@
 
 .file-path {
 	display: inline-block;
-  font-weight: bold;
-  max-width: 100%;
-  position: relative;
+	font-weight: bold;
+	max-width: 100%;
+	position: relative;
 }
 
 .preview {
@@ -92,10 +92,10 @@
 }
 
 .btn {
-  line-height: 2.4;
+	line-height: 2.4;
 }
 .btn-primary {
-  background: #376fff;
+	background: #376fff;
 	border-color: #376fff;
 }
 .btn-light {
