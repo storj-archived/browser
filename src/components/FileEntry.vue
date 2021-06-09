@@ -68,8 +68,14 @@ a {
 .file-name:hover {
 	color: #376FFF;
 }
+.file-name:hover svg path {
+	fill: #376FFF;
+}
 .folder-name:hover {
 	color: #376FFF;
+}
+.folder-name:hover svg path {
+	fill: #376FFF;
 }
 </style>
 
@@ -78,25 +84,11 @@ a {
 		scope="row"
 		v-bind:class="{ 'selected-row': isFileSelected() }"
 		v-on:click="selectFile"
-		v-bind:title="file.Key"
 	>
 		<td class="w-50" data-ls-disabled>
 			<span v-if="file.type === 'folder'" class="folder-name">
-				<svg
-					width="1.5em"
-					height="1.5em"
-					viewBox="0 0 16 16"
-					class="bi bi-folder ml-2 mr-1"
-					fill="currentColor"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"
-					/>
-					<path
-						fill-rule="evenodd"
-						d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"
-					/>
+				<svg class="ml-2 mr-1" width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M0 2.57143C0 1.15127 1.15127 0 2.57143 0H9C9.71008 0 10.2857 0.575634 10.2857 1.28571C10.2857 1.99579 10.8613 2.57143 11.5714 2.57143H18C19.4202 2.57143 20.5714 3.7227 20.5714 5.14286V15.4286C20.5714 16.8487 19.4202 18 18 18H2.57143C1.15127 18 0 16.8487 0 15.4286V2.57143Z" fill="#768394"/>
 				</svg>
 
 				<span v-on:click="fileClick">
@@ -114,7 +106,7 @@ a {
 					height="1.5em"
 					viewBox="0 0 16 16"
 					class="bi bi-file-earmark ml-1 mr-1 mb-1"
-					fill="currentColor"
+					fill="#768394"
 					xmlns="http://www.w3.org/2000/svg"
 				>
 					<path
