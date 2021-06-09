@@ -12,6 +12,15 @@ th {
 	color: #768394;
 	position: absolute;
 }
+
+a {
+	cursor: pointer;
+}
+
+.table-heading {
+	cursor: pointer;
+	color: #768394;
+}
 </style>
 
 <template>
