@@ -91,13 +91,16 @@
 	font-weight: lighter;
 }
 
-.share-btn {
-	color: #007bff;
-	font-weight: 700;
+.btn {
+  line-height: 2.4;
 }
-
-.btn-copy {
-	font-weight: 700;
+.btn-primary {
+  background: #376fff;
+	border-color: #376fff;
+}
+.btn-light {
+	background: #e6e9ef;
+	border-color: #e6e9ef;
 }
 </style>
 
