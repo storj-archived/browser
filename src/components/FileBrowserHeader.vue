@@ -19,6 +19,7 @@ a {
 
 .table-heading {
 	cursor: pointer;
+	color: #768394;
 }
 
 </style>
