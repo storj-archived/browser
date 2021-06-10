@@ -82,7 +82,7 @@ a {
 <template>
 	<tr
 		scope="row"
-		v-bind:class="{ 'selected-row': isFileSelected() }"
+		v-bind:class="{ 'selected-row': isFileSelected }"
 		v-on:click="selectFile"
 	>
 		<td class="w-50" data-ls-disabled>
@@ -129,16 +129,16 @@ a {
 			</span>
 		</td>
 		<td class="w-25">
-			<span v-if="file.type === 'file'">{{ size }}</span>
+			<span v-if="isFile">{{ size }}</span>
 		</td>
 		<td>
-			<span v-if="file.type === 'file'">{{ uploadDate }}</span>
+			<span v-if="isFile">{{ uploadDate }}</span>
 		</td>
 		<td class="text-right">
-			<div v-if="file.type === 'file'" class="d-inline-flex">
+			<div v-if="isFile" class="d-inline-flex">
 				<div class="dropleft">
 					<div
-						v-if="loadingSpinner()"
+						v-if="isLoading"
 						class="spinner-border"
 						role="status"
 					></div>
@@ -311,7 +311,7 @@ a {
 			<div v-else class="d-inline-flex">
 				<div class="dropleft">
 					<div
-						v-if="loadingSpinner()"
+						v-if="isLoading"
 						class="spinner-border"
 						role="status"
 					></div>
@@ -452,22 +452,6 @@ export default {
 					? browserRoot + pathAndKey + "/"
 					: browserRoot;
 			return url;
-		}
-	},
-
-	methods: {
-		openModal() {
-			this.$store.commit("files/openModal", this.path + this.file.Key);
-		},
-
-		loadingSpinner() {
-			return !!this.$store.state.files.filesToBeDeleted.find(
-				(file) => file === this.file
-			);
-		},
-		fileClick(event) {
-			event.stopPropagation();
-			this.$store.dispatch("files/updateCreateFolderInputShow", false);
 		},
 		isFileSelected() {
 			return (
@@ -479,6 +463,26 @@ export default {
 					(file) => file === this.file
 				)
 			);
+		},
+
+		isFile() {
+			return this.file.type === 'file';
+		},
+
+		isLoading() {
+			return !!this.$store.state.files.filesToBeDeleted.find(
+				(file) => file === this.file
+			);
+		},
+	},
+
+	methods: {
+		openModal() {
+			this.$store.commit("files/openModal", this.path + this.file.Key);
+		},
+		fileClick(event) {
+			event.stopPropagation();
+			this.$store.dispatch("files/updateCreateFolderInputShow", false);
 		},
 		selectFile(event) {
 			event.stopPropagation();

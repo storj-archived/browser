@@ -144,8 +144,7 @@
 							</tr>
 
 							<tr
-								v-if="
-									"
+								v-if="showCreateFolderInput"
 								class="new-folder-row"
 							>
 								<td span="3">
