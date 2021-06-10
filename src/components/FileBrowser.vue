@@ -1,93 +1,3 @@
-<style scoped>
-@import "../scoped-bootstrap.css";
-
-.file-browser {
-	min-height: 500px;
-
-	user-select: none;
-	-moz-user-select: none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
-	-o-user-select: none;
-}
-f tbody {
-	user-select: none;
-}
-
-.table-heading {
-	color: #768394;
-	border-top: 0;
-	border-bottom: 1px solid #dee2e6;
-	padding-left: 0;
-	cursor: pointer;
-}
-
-.path {
-	font-size: 18px;
-	font-weight: 700;
-}
-
-.upload-help {
-	font-size: 1.75rem;
-	text-align: center;
-	margin-top: 1.5rem;
-	color: #93a1ae;
-	border: 2px dashed #bec4cd;
-	border-radius: 10px;
-	padding: 80px 20px;
-	background: #fafafb;
-	cursor: pointer;
-}
-
-.metric {
-	color: #444;
-}
-
-.div-responsive {
-	min-height: 400px;
-}
-
-.folder-input:focus {
-	color: #fe5d5d;
-	box-shadow: 0 0 0 0.2rem rgba(254, 93, 93, 0.5) !important;
-	border-color: #fe5d5d !important;
-	outline: none !important;
-}
-
-.new-folder-row:hover {
-	background: #fff;
-}
-
-.btn {
-	line-height: 2.4;
-}
-.btn-primary {
-	background: #376fff;
-	border-color: #376fff;
-}
-.btn-primary:hover {
-	background: #0047ff;
-	border-color: #0047ff;
-}
-.btn-light {
-	background: #e6e9ef;
-	border-color: #e6e9ef;
-}
-.btn-primary.disabled,
-.btn-primary:disabled {
-	color: #fff;
-	background-color: #001030;
-	border-color: #001030;
-}
-.input-folder {
-	height: 43px;
-}
-.drop-files-text {
-	font-weight: bold;
-	font-size: 18px;
-}
-</style>
-
 <template>
 	<div class="row" v-on:click="closeModalDropdown">
 		<div class="col-sm-12">
@@ -235,9 +145,7 @@ f tbody {
 
 							<tr
 								v-if="
-									$store.state.files.createFolderInputShow ===
-									true
-								"
+									"
 								class="new-folder-row"
 							>
 								<td span="3">
@@ -462,12 +370,15 @@ f tbody {
 					</p>
 				</div>
 			</div>
+
 			<file-modal
-				v-if="$store.state.files.modalPath !== null"
+				v-if="showFileModal"
 			></file-modal>
+
 			<file-share-modal
-				v-if="$store.state.files.fileShareModal"
+				v-if="showFileShareModal"
 			></file-share-modal>
+
 		</div>
 	</div>
 </template>
@@ -547,6 +458,18 @@ export default {
 
 		displayUpload() {
 			return this.fetchingFilesSpinner === false;
+		},
+
+		showCreateFolderInput() {
+			return this.$store.state.files.createFolderInputShow === true;
+		},
+
+		showFileModal() {
+			return this.$store.state.files.modalPath !== null;
+		},
+
+		showFileShareModal() {
+			return this.$store.state.files.fileShareModal;
 		}
 	},
 	watch: {
@@ -678,3 +601,93 @@ export default {
 	}
 };
 </script>
+
+<style scoped>
+@import "../scoped-bootstrap.css";
+
+.file-browser {
+	min-height: 500px;
+
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+}
+f tbody {
+	user-select: none;
+}
+
+.table-heading {
+	color: #768394;
+	border-top: 0;
+	border-bottom: 1px solid #dee2e6;
+	padding-left: 0;
+	cursor: pointer;
+}
+
+.path {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.upload-help {
+	font-size: 1.75rem;
+	text-align: center;
+	margin-top: 1.5rem;
+	color: #93a1ae;
+	border: 2px dashed #bec4cd;
+	border-radius: 10px;
+	padding: 80px 20px;
+	background: #fafafb;
+	cursor: pointer;
+}
+
+.metric {
+	color: #444;
+}
+
+.div-responsive {
+	min-height: 400px;
+}
+
+.folder-input:focus {
+	color: #fe5d5d;
+	box-shadow: 0 0 0 0.2rem rgba(254, 93, 93, 0.5) !important;
+	border-color: #fe5d5d !important;
+	outline: none !important;
+}
+
+.new-folder-row:hover {
+	background: #fff;
+}
+
+.btn {
+	line-height: 2.4;
+}
+.btn-primary {
+	background: #376fff;
+	border-color: #376fff;
+}
+.btn-primary:hover {
+	background: #0047ff;
+	border-color: #0047ff;
+}
+.btn-light {
+	background: #e6e9ef;
+	border-color: #e6e9ef;
+}
+.btn-primary.disabled,
+.btn-primary:disabled {
+	color: #fff;
+	background-color: #001030;
+	border-color: #001030;
+}
+.input-folder {
+	height: 43px;
+}
+.drop-files-text {
+	font-weight: bold;
+	font-size: 18px;
+}
+</style>
