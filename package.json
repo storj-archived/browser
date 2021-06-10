@@ -16,7 +16,7 @@
 		"@vue/cli-plugin-router": "~4.5.13",
 		"@vue/cli-plugin-vuex": "~4.5.13",
 		"@vue/cli-service": "~4.5.13",
-		"@vue/compiler-sfc": "^3.0.11",
+		"@vue/compiler-sfc": "^3.1.1",
 		"@vue/composition-api": "*",
 		"aws-sdk": "^2.925.0",
 		"core-js": "^3.14.0",
