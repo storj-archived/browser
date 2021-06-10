@@ -370,14 +370,9 @@
 				</div>
 			</div>
 
-			<file-modal
-				v-if="showFileModal"
-			></file-modal>
+			<file-modal v-if="showFileModal"></file-modal>
 
-			<file-share-modal
-				v-if="showFileShareModal"
-			></file-share-modal>
-
+			<file-share-modal v-if="showFileShareModal"></file-share-modal>
 		</div>
 	</div>
 </template>

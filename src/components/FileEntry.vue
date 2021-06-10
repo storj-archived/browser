@@ -466,14 +466,14 @@ export default {
 		},
 
 		isFile() {
-			return this.file.type === 'file';
+			return this.file.type === "file";
 		},
 
 		isLoading() {
 			return !!this.$store.state.files.filesToBeDeleted.find(
 				(file) => file === this.file
 			);
-		},
+		}
 	},
 
 	methods: {
