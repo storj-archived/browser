@@ -12,7 +12,7 @@ a {
 .table th {
 	padding: 16px 16px 16px 0 !important;
 	white-space: nowrap;
-	vertical-align: middle;
+	vertical-align: middle !important;
 }
 
 .table-hover tbody tr:hover {
