@@ -80,7 +80,7 @@ export default {
 						setTimeout(
 							() =>
 								resolve(
-									"https://link.staging.tardigradeshare.io/s/jvgmjntaucpfedohxn3ogdrsfcfa/homepage/TardigradeExplainerVideo.m4v?map=1"
+									"https://link.us1.storjshare.io/s/jx7t2i4lky36b3pomls6upakdzba/filebrowser%2Fsto-1.jpeg?map=1"
 								),
 							1000
 						)

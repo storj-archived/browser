@@ -12,7 +12,7 @@ a {
 .table th {
 	padding: 16px 16px 16px 0 !important;
 	white-space: nowrap;
-	vertical-align: middle;
+	vertical-align: middle !important;
 }
 
 .table-hover tbody tr:hover {
@@ -458,6 +458,7 @@ export default {
 	methods: {
 		openModal() {
 			this.$store.commit("files/openModal", this.path + this.file.Key);
+			this.$store.dispatch("files/openDropdown", null);
 		},
 
 		loadingSpinner() {
@@ -484,7 +485,7 @@ export default {
 			event.stopPropagation();
 
 			if (this.$store.state.openedDropdown) {
-				this.$store.dispatch("openDropdown", null);
+				this.$store.dispatch("files/openDropdown", null);
 			}
 
 			if (event.shiftKey) {

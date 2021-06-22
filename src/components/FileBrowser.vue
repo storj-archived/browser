@@ -760,7 +760,7 @@ export default {
 				this.$store.dispatch("files/openDropdown", null);
 			}
 
-			if (this.$store.state.files.selectedFile) {
+			if (this.$store.state.files.selectedAnchorFile) {
 				this.$store.dispatch("files/clearAllSelectedFiles");
 			}
 		},
