@@ -236,7 +236,7 @@ f tbody {
 							<tr
 								v-if="
 									$store.state.files.createFolderInputShow ===
-									true
+										true
 								"
 								class="new-folder-row"
 							>
@@ -565,7 +565,7 @@ export default {
 			}
 
 			if (this.$store.state.files.openedDropdown) {
-				this.$store.dispatch("files/openDropdown", null);
+				this.$store.dispatch("files/closeDropdown");
 			}
 
 			if (this.$store.state.files.selectedAnchorFile) {
@@ -602,18 +602,18 @@ export default {
 		},
 
 		async go(path) {
-			await this.$store.dispatch("files/openDropdown", null);
+			await this.$store.dispatch("files/closeDropdown");
 			await this.list(this.path + path);
 		},
 
 		async back() {
 			this.$store.dispatch("files/updateCreateFolderInputShow", false);
-			await this.$store.dispatch("files/openDropdown", null);
+			await this.$store.dispatch("files/closeDropdown";
 		},
 
 		async goToRoutePath() {
 			if (typeof this.routePath === "string") {
-				await this.$store.dispatch("files/openDropdown", null);
+				await this.$store.dispatch("files/closeDropdown");
 				await this.list(this.routePath);
 			}
 		},
