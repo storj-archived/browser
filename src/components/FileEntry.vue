@@ -82,7 +82,7 @@ a {
 <template>
 	<tr
 		scope="row"
-		v-bind:class="{ 'selected-row': isFileSelected() }"
+		v-bind:class="{ 'selected-row': isFileSelected }"
 		v-on:click="selectFile"
 	>
 		<td class="w-50" data-ls-disabled>
@@ -425,8 +425,7 @@ import prettyBytes from "pretty-bytes";
 export default {
 	props: ["path", "file"],
 	data: () => ({
-		deleteConfirmation: false,
-		isSelected: false
+		deleteConfirmation: false
 	}),
 
 	computed: {
@@ -452,6 +451,17 @@ export default {
 					? browserRoot + pathAndKey + "/"
 					: browserRoot;
 			return url;
+		},
+		isFileSelected() {
+			return (
+				this.$store.state.files.selectedAnchorFile === this.file ||
+				this.$store.state.files.selectedFiles.find(
+					file => file === this.file
+				) ||
+				this.$store.state.files.shiftSelectedFiles.find(
+					file => file === this.file
+				)
+			);
 		}
 	},
 
@@ -470,21 +480,10 @@ export default {
 			event.stopPropagation();
 			this.$store.dispatch("files/updateCreateFolderInputShow", false);
 		},
-		isFileSelected() {
-			return (
-				this.$store.state.files.selectedAnchorFile === this.file ||
-				this.$store.state.files.selectedFiles.find(
-					file => file === this.file
-				) ||
-				this.$store.state.files.shiftSelectedFiles.find(
-					file => file === this.file
-				)
-			);
-		},
 		selectFile(event) {
 			event.stopPropagation();
 
-			if (this.$store.state.openedDropdown) {
+			if (this.$store.state.files.openedDropdown) {
 				this.$store.dispatch("files/closeDropdown");
 			}
 
