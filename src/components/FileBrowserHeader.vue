@@ -235,30 +235,30 @@ a {
 <script>
 // Computed property creators
 
-const isDesc = heading =>
-	function() {
+const isDesc = (heading) =>
+	function () {
 		return this.headingSorted === heading && this.orderBy === "desc";
 	};
 
-const showArrow = heading =>
-	function() {
+const showArrow = (heading) =>
+	function () {
 		return this.headingSorted === heading || this.hover === heading;
 	};
 
-const fromFilesStore = prop =>
-	function() {
+const fromFilesStore = (prop) =>
+	function () {
 		return this.$store.state.files[prop];
 	};
 
 // Method creators
 
-const mouseOver = heading =>
-	function() {
+const mouseOver = (heading) =>
+	function () {
 		this.hover = heading;
 	};
 
-const sortBy = heading =>
-	function() {
+const sortBy = (heading) =>
+	function () {
 		this.$store.commit("files/sort", heading);
 	};
 
