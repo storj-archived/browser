@@ -82,7 +82,7 @@
 								name="copy"
 								class="btn btn-outline-primary btn-copy"
 							>
-								{{ this.copyText }}
+								{{ copyText }}
 							</button>
 						</div>
 
