@@ -104,7 +104,7 @@ f tbody {
 </style>
 
 <template>
-	<div class="row" v-on:click="closeModalDropdown">
+	<div class="row" v-on:click="closeAllInteractions">
 		<div class="col-sm-12">
 			<div
 				class="div-responsive"
@@ -747,22 +747,8 @@ export default {
 		}
 	},
 	methods: {
-		closeModalDropdown() {
-			if (this.$store.state.files.modalPath) {
-				this.$store.commit("files/closeModal");
-			}
-
-			if (this.$store.state.files.fileShareModal) {
-				this.$store.commit("files/closeFileShareModal");
-			}
-
-			if (this.$store.state.files.openedDropdown) {
-				this.$store.dispatch("files/openDropdown", null);
-			}
-
-			if (this.$store.state.files.selectedAnchorFile) {
-				this.$store.dispatch("files/clearAllSelectedFiles");
-			}
+		closeAllInteractions() {
+			this.$store.dispatch("files/closeAllInteractions");
 		},
 
 		toggleFolderCreationInput() {
