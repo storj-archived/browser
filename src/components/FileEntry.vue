@@ -82,11 +82,11 @@ a {
 <template>
 	<tr
 		scope="row"
-		v-bind:class="{ 'selected-row': isFileSelected() }"
+		v-bind:class="{ 'selected-row': isFileSelected }"
 		v-on:click="selectFile"
 	>
 		<td class="w-50" data-ls-disabled>
-			<span v-if="file.type === 'folder'" class="folder-name">
+			<span v-if="fileTypeIsFolder" class="folder-name">
 				<svg
 					class="ml-2 mr-1"
 					width="21"
@@ -129,13 +129,13 @@ a {
 			</span>
 		</td>
 		<td class="w-25">
-			<span v-if="file.type === 'file'">{{ size }}</span>
+			<span v-if="fileTypeIsFile">{{ size }}</span>
 		</td>
 		<td>
-			<span v-if="file.type === 'file'">{{ uploadDate }}</span>
+			<span v-if="fileTypeIsFile">{{ uploadDate }}</span>
 		</td>
 		<td class="text-right">
-			<div v-if="file.type === 'file'" class="d-inline-flex">
+			<div v-if="fileTypeIsFile" class="d-inline-flex">
 				<div class="dropleft">
 					<div
 						v-if="loadingSpinner()"
@@ -452,6 +452,23 @@ export default {
 					? browserRoot + pathAndKey + "/"
 					: browserRoot;
 			return url;
+		},
+		isFileSelected() {
+			return (
+				this.$store.state.files.selectedAnchorFile === this.file ||
+				this.$store.state.files.selectedFiles.find(
+					(file) => file === this.file
+				) ||
+				this.$store.state.files.shiftSelectedFiles.find(
+					(file) => file === this.file
+				)
+			);
+		},
+		fileTypeIsFolder() {
+			return this.file.type === "folder";
+		},
+		fileTypeIsFile() {
+			return this.file.type === "file";
 		}
 	},
 
@@ -469,17 +486,6 @@ export default {
 		fileClick(event) {
 			event.stopPropagation();
 			this.$store.dispatch("files/updateCreateFolderInputShow", false);
-		},
-		isFileSelected() {
-			return (
-				this.$store.state.files.selectedAnchorFile === this.file ||
-				this.$store.state.files.selectedFiles.find(
-					(file) => file === this.file
-				) ||
-				this.$store.state.files.shiftSelectedFiles.find(
-					(file) => file === this.file
-				)
-			);
 		},
 		selectFile(event) {
 			event.stopPropagation();
