@@ -482,16 +482,23 @@ export default {
 			commit("removeFileToBeDeleted", file);
 		},
 
-		clearAllSelectedFiles({ commit }) {
-			commit("removeAllSelectedFiles");
+		clearAllSelectedFiles({ commit, state }) {
+			if (state.selectedAnchorFile || state.unselectedAnchorFile) {
+				commit("removeAllSelectedFiles");
+			}
 		},
 
 		openDropdown({ commit, dispatch }, id) {
-			if (id !== "FileBrowser") {
-				dispatch("clearAllSelectedFiles");
-			}
-
+			dispatch("clearAllSelectedFiles");
 			commit("setOpenedDropdown", id);
+		},
+
+		closeDropdown({ commit }) {
+			commit("setOpenedDropdown", null);
+		},
+
+		openFileBrowserDropdown({ commit }) {
+			commit("setOpenedDropdown", "FileBrowser");
 		},
 
 		updateCreateFolderInputShow({ commit }, value) {
