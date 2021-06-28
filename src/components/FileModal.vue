@@ -422,10 +422,7 @@
 										></div>
 									</div>
 
-									<div
-										class="mt-5"
-										v-if="objectMapUrl !== null"
-									>
+									<div class="mt-5" v-if="objectMapUrlExists">
 										<div class="storage-nodes">
 											Nodes storing this file
 										</div>
@@ -501,6 +498,9 @@ export default {
 				this.previewIsVideo,
 				this.previewIsAudio
 			].every((value) => !!value === false);
+		},
+		objectMapUrlExists() {
+			return this.objectMapUrl !== null;
 		}
 	},
 	methods: {

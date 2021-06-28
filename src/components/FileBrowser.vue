@@ -115,7 +115,7 @@ f tbody {
 				<div
 					v-if="dragging"
 					class="dropzone"
-					v-on:click="dragging = false"
+					v-on:click="turnDraggingToFalse"
 				>
 					<input
 						ref="fileInput"
@@ -282,8 +282,8 @@ f tbody {
 
 					<div
 						style="width: 100%; height: 100%; position: fixed"
-						@drop.prevent.stop="dragging = false"
-						@dragleave.prevent.stop="dragging = false"
+						@drop.prevent.stop="turnDraggingToFalse"
+						@dragleave.prevent.stop="turnDraggingToFalse"
 						@drop="upload"
 					></div>
 				</div>
@@ -411,7 +411,7 @@ f tbody {
 								<td></td>
 							</tr>
 
-							<tr v-if="path.length > 0">
+							<tr v-if="pathExists">
 								<td class="px-3">
 									<router-link to="../">
 										<a
@@ -425,19 +425,14 @@ f tbody {
 							</tr>
 
 							<tr
-								v-if="
-									$store.state.files.createFolderInputShow ===
-									true
-								"
+								v-if="createFolderInputShow"
 								class="new-folder-row"
 							>
 								<td span="3">
 									<input
 										class="form-control input-folder"
 										v-bind:class="{
-											'folder-input':
-												createFolderInput.length > 0 &&
-												!createFolderEnabled
+											'folder-input': invalidInputDisplay
 										}"
 										type="text"
 										placeholder="Name of the folder"
@@ -653,12 +648,8 @@ f tbody {
 					</p>
 				</div>
 			</div>
-			<file-modal
-				v-if="$store.state.files.modalPath !== null"
-			></file-modal>
-			<file-share-modal
-				v-if="$store.state.files.fileShareModal"
-			></file-share-modal>
+			<file-modal v-if="modalPath"></file-modal>
+			<file-share-modal v-if="fileShareModal"></file-share-modal>
 		</div>
 	</div>
 </template>
@@ -688,6 +679,28 @@ export default {
 	computed: {
 		path: fromFilesStore("path"),
 		filesUploading: fromFilesStore("uploading"),
+
+		pathExists() {
+			return this.path.length > 0;
+		},
+
+		createFolderInputShow() {
+			return this.$store.state.files.createFolderInputShow;
+		},
+
+		invalidInputDisplay() {
+			return (
+				this.createFolderInput.length > 0 && !this.createFolderEnabled
+			);
+		},
+
+		modalPath() {
+			return this.$store.state.files.modalPath;
+		},
+
+		fileShareModal() {
+			return this.$store.state.files.fileShareModal;
+		},
 
 		createFolderEnabled() {
 			const charsOtherThanSpaceExist =
@@ -747,14 +760,32 @@ export default {
 		}
 	},
 	methods: {
-		closeAllInteractions() {
-			this.$store.dispatch("files/closeAllInteractions");
+		turnDraggingToFalse() {
+			this.dragging = false;
+		},
+
+		closeModalDropdown() {
+			if (this.$store.state.files.modalPath) {
+				this.$store.commit("files/closeModal");
+			}
+
+			if (this.$store.state.files.fileShareModal) {
+				this.$store.commit("files/closeFileShareModal");
+			}
+
+			if (this.$store.state.files.openedDropdown) {
+				this.$store.dispatch("files/openDropdown", null);
+			}
+
+			if (this.$store.state.files.selectedAnchorFile) {
+				this.$store.dispatch("files/clearAllSelectedFiles");
+			}
 		},
 
 		toggleFolderCreationInput() {
 			this.$store.dispatch(
 				"files/updateCreateFolderInputShow",
-				!this.$store.state.files.createFolderInputShow
+				!this.createFolderInputShow
 			);
 		},
 

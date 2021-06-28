@@ -86,7 +86,7 @@ a {
 		v-on:click="selectFile"
 	>
 		<td class="w-50" data-ls-disabled>
-			<span v-if="file.type === 'folder'" class="folder-name">
+			<span v-if="fileTypeIsFolder" class="folder-name">
 				<svg
 					class="ml-2 mr-1"
 					width="21"
@@ -129,13 +129,13 @@ a {
 			</span>
 		</td>
 		<td class="w-25">
-			<span v-if="file.type === 'file'">{{ size }}</span>
+			<span v-if="fileTypeIsFile">{{ size }}</span>
 		</td>
 		<td>
-			<span v-if="file.type === 'file'">{{ uploadDate }}</span>
+			<span v-if="fileTypeIsFile">{{ uploadDate }}</span>
 		</td>
 		<td class="text-right">
-			<div v-if="file.type === 'file'" class="d-inline-flex">
+			<div v-if="fileTypeIsFile" class="d-inline-flex">
 				<div class="dropleft">
 					<div
 						v-if="loadingSpinner()"
@@ -462,6 +462,12 @@ export default {
 					(file) => file === this.file
 				)
 			);
+		},
+		fileTypeIsFolder() {
+			return this.file.type === "folder";
+		},
+		fileTypeIsFile() {
+			return this.file.type === "file";
 		}
 	},
 
