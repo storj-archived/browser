@@ -482,16 +482,23 @@ export default {
 			commit("removeFileToBeDeleted", file);
 		},
 
-		clearAllSelectedFiles({ commit }) {
-			commit("removeAllSelectedFiles");
+		clearAllSelectedFiles({ commit, state }) {
+			if (state.selectedAnchorFile || state.unselectedAnchorFile) {
+				commit("removeAllSelectedFiles");
+			}
 		},
 
 		openDropdown({ commit, dispatch }, id) {
-			if (id !== "FileBrowser") {
-				dispatch("clearAllSelectedFiles");
-			}
-
+			dispatch("clearAllSelectedFiles");
 			commit("setOpenedDropdown", id);
+		},
+
+		closeDropdown({ commit }) {
+			commit("setOpenedDropdown", null);
+		},
+
+		openFileBrowserDropdown({ commit }) {
+			commit("setOpenedDropdown", "FileBrowser");
 		},
 
 		updateCreateFolderInputShow({ commit }, value) {
@@ -510,6 +517,24 @@ export default {
 				commit("finishUpload", key);
 			} else {
 				throw new Error("File", { key }, "not found");
+			}
+		},
+
+		closeAllInteractions({ commit, state, dispatch }) {
+			if (state.modalPath) {
+				commit("closeModal");
+			}
+
+			if (state.fileShareModal) {
+				commit("closeFileShareModal");
+			}
+
+			if (state.openedDropdown) {
+				dispatch("closeDropdown");
+			}
+
+			if (state.selectedAnchorFile) {
+				dispatch("clearAllSelectedFiles");
 			}
 		}
 	}

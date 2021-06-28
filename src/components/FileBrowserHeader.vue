@@ -308,16 +308,16 @@ export default {
 
 		deleteSelectedDropdown(event) {
 			event.stopPropagation();
-			this.$store.dispatch("files/openDropdown", "FileBrowser");
+			this.$store.dispatch("files/openFileBrowserDropdown");
 		},
 
 		confirmDeleteSelection() {
 			this.$store.dispatch("files/deleteSelected");
-			this.$store.dispatch("files/openDropdown", null);
+			this.$store.dispatch("files/closeDropdown");
 		},
 
 		cancelDeleteSelection() {
-			this.$store.dispatch("files/openDropdown", null);
+			this.$store.dispatch("files/closeDropdown");
 		}
 	}
 };

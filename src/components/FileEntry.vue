@@ -425,8 +425,7 @@ import prettyBytes from "pretty-bytes";
 export default {
 	props: ["path", "file"],
 	data: () => ({
-		deleteConfirmation: false,
-		isSelected: false
+		deleteConfirmation: false
 	}),
 
 	computed: {
@@ -475,7 +474,7 @@ export default {
 	methods: {
 		openModal() {
 			this.$store.commit("files/openModal", this.path + this.file.Key);
-			this.$store.dispatch("files/openDropdown", null);
+			this.$store.dispatch("files/closeDropdown");
 		},
 
 		loadingSpinner() {
@@ -490,8 +489,8 @@ export default {
 		selectFile(event) {
 			event.stopPropagation();
 
-			if (this.$store.state.openedDropdown) {
-				this.$store.dispatch("files/openDropdown", null);
+			if (this.$store.state.files.openedDropdown) {
+				this.$store.dispatch("files/closeDropdown");
 			}
 
 			if (event.shiftKey) {
@@ -624,7 +623,7 @@ export default {
 		async share(event) {
 			event.stopPropagation();
 
-			this.$store.dispatch("files/openDropdown", null);
+			this.$store.dispatch("files/closeDropdown");
 
 			this.$store.commit(
 				"files/setFileShareModal",
@@ -635,7 +634,7 @@ export default {
 			event.stopPropagation();
 
 			if (this.$store.state.files.openedDropdown === this.file.Key) {
-				this.$store.dispatch("files/openDropdown", null);
+				this.$store.dispatch("files/closeDropdown");
 			} else {
 				this.$store.dispatch("files/openDropdown", this.file.Key);
 			}
@@ -647,7 +646,7 @@ export default {
 			event.stopPropagation();
 
 			this.$store.dispatch("files/download", this.file);
-			this.$store.dispatch("files/openDropdown", null);
+			this.$store.dispatch("files/closeDropdown");
 			this.deleteConfirmation = false;
 		},
 		confirmDeletion(event) {
@@ -656,7 +655,7 @@ export default {
 		},
 		async finalDelete(event) {
 			event.stopPropagation();
-			this.$store.dispatch("files/openDropdown", null);
+			this.$store.dispatch("files/closeDropdown");
 			this.$store.dispatch("files/addFileToBeDeleted", this.file);
 
 			const params = {
@@ -677,7 +676,7 @@ export default {
 		},
 		cancelDeletion(event) {
 			event.stopPropagation();
-			this.$store.dispatch("files/openDropdown", null);
+			this.$store.dispatch("files/closeDropdown");
 			this.deleteConfirmation = false;
 		}
 	}

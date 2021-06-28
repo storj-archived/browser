@@ -104,7 +104,7 @@ f tbody {
 </style>
 
 <template>
-	<div class="row" v-on:click="closeModalDropdown">
+	<div class="row" v-on:click="closeAllInteractions">
 		<div class="col-sm-12">
 			<div
 				class="div-responsive"
@@ -811,18 +811,18 @@ export default {
 		},
 
 		async go(path) {
-			await this.$store.dispatch("files/openDropdown", null);
+			await this.$store.dispatch("files/closeDropdown");
 			await this.list(this.path + path);
 		},
 
 		async back() {
 			this.$store.dispatch("files/updateCreateFolderInputShow", false);
-			await this.$store.dispatch("files/openDropdown", null);
+			await this.$store.dispatch("files/closeDropdown");
 		},
 
 		async goToRoutePath() {
 			if (typeof this.routePath === "string") {
-				await this.$store.dispatch("files/openDropdown", null);
+				await this.$store.dispatch("files/closeDropdown");
 				await this.list(this.routePath);
 			}
 		},
