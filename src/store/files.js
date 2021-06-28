@@ -518,6 +518,24 @@ export default {
 			} else {
 				throw new Error("File", { key }, "not found");
 			}
+		},
+
+		closeAllInteractions({ commit, state, dispatch }) {
+			if (state.modalPath) {
+				commit("closeModal");
+			}
+
+			if (state.fileShareModal) {
+				commit("closeFileShareModal");
+			}
+
+			if (state.openedDropdown) {
+				dispatch("closeDropdown");
+			}
+
+			if (state.selectedAnchorFile) {
+				dispatch("clearAllSelectedFiles");
+			}
 		}
 	}
 };
