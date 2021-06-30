@@ -348,7 +348,9 @@ export default {
 					if (uploadedFiles.length === 1) {
 						const [{ Key }] = uploadedFiles;
 
-						commit("openModal", params.Key);
+						if(state.openModalOnFirstUpload === true) {
+							commit("openModal", params.Key);
+						}
 					}
 
 					commit("finishUpload", params.Key);
