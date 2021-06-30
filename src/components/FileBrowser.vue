@@ -751,7 +751,9 @@ export default {
 		},
 
 		displayUpload() {
-			return this.fetchingFilesSpinner === false;
+			return (
+				this.fetchingFilesSpinner === false && this.files.length === 0
+			);
 		}
 	},
 	watch: {
