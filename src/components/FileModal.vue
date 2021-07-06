@@ -84,6 +84,13 @@
 .text-lighter {
 	color: #768394;
 }
+
+.btn-copy-link {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	font-size: 14px;
+	padding: 0 16px;
+}
 </style>
 
 <template>
@@ -132,7 +139,7 @@
 										></audio>
 
 										<svg
-											v-if="isPlaceHolderDisplayable"
+											v-else
 											width="300"
 											height="172"
 											viewBox="0 0 300 172"
@@ -359,24 +366,28 @@
 										class="input-group mt-4"
 									>
 										<input
-											class="form-control form-control-lg"
+											class="form-control"
 											type="url"
 											id="url"
 											v-bind:value="objectLink"
 											aria-describedby="generateShareLink"
 											readonly
 										/>
-										<button
-											v-on:click="copy"
-											id="generateShareLink"
-											type="button"
-											name="copy"
-											class="
-												btn btn-outline-primary btn-copy
-											"
-										>
-											{{ copyText }}
-										</button>
+										<div class="input-group-append">
+											<button
+												v-on:click="copy"
+												type="button"
+												name="copy"
+												class="
+													btn
+													btn-outline-secondary
+													btn-copy-link
+												"
+												id="generateShareLink"
+											>
+												{{ this.copyText }}
+											</button>
+										</div>
 									</div>
 
 									<button
@@ -422,7 +433,10 @@
 										></div>
 									</div>
 
-									<div class="mt-5" v-if="objectMapUrlExists">
+									<div
+										class="mt-5"
+										v-if="objectMapUrl !== null"
+									>
 										<div class="storage-nodes">
 											Nodes storing this file
 										</div>
