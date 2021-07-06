@@ -578,7 +578,7 @@
 										"
 										id="btn-copy-link"
 									>
-										{{ this.copyText }}
+										{{ copyText }}
 									</button>
 								</div>
 							</div>
