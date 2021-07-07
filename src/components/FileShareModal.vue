@@ -246,11 +246,7 @@
 								<!-- Sharingbutton Reddit -->
 								<a
 									class="resp-sharing-button__link"
-									v-bind:href="
-										'https://reddit.com/submit/?url=' +
-										objectLink +
-										'&amp;resubmit=true&amp;title=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage'
-									"
+									v-bind:href="redditLink"
 									target="_blank"
 									rel="noopener"
 									aria-label="Reddit"
@@ -285,10 +281,7 @@
 								<!-- Sharingbutton Facebook -->
 								<a
 									class="resp-sharing-button__link"
-									v-bind:href="
-										'https://facebook.com/sharer/sharer.php?u=' +
-										objectLink
-									"
+									v-bind:href="facebookLink"
 									target="_blank"
 									rel="noopener"
 									aria-label="Facebook"
@@ -323,10 +316,7 @@
 								<!-- Sharingbutton Twitter -->
 								<a
 									class="resp-sharing-button__link"
-									v-bind:href="
-										'https://twitter.com/intent/tweet/?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;url=' +
-										objectLink
-									"
+									v-bind:href="twitterLink"
 									target="_blank"
 									rel="noopener"
 									aria-label="Twitter"
@@ -361,11 +351,7 @@
 								<!-- Sharingbutton Hacker News -->
 								<a
 									class="resp-sharing-button__link"
-									v-bind:href="
-										'https://news.ycombinator.com/submitlink?u=' +
-										objectLink +
-										'&amp;t=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage'
-									"
+									v-bind:href="ycombinatorLink"
 									target="_blank"
 									rel="noopener"
 									aria-label="Hacker News"
@@ -401,12 +387,7 @@
 								<!-- Sharingbutton LinkedIn -->
 								<a
 									class="resp-sharing-button__link"
-									v-bind:href="
-										'https://www.linkedin.com/shareArticle?mini=true&amp;url=' +
-										objectLink +
-										'&amp;title=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;summary=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;source=' +
-										objectLink
-									"
+									v-bind:href="linkedinLink"
 									target="_blank"
 									rel="noopener"
 									aria-label="LinkedIn"
@@ -441,10 +422,7 @@
 								<!-- Sharingbutton Telegram -->
 								<a
 									class="resp-sharing-button__link"
-									v-bind:href="
-										'https://telegram.me/share/url?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;url=' +
-										objectLink
-									"
+									v-bind:href="telegramLink"
 									target="_blank"
 									rel="noopener"
 									aria-label="Telegram"
@@ -479,10 +457,7 @@
 								<!-- Sharingbutton WhatsApp -->
 								<a
 									class="resp-sharing-button__link"
-									v-bind:href="
-										'whatsapp://send?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage%20' +
-										objectLink
-									"
+									v-bind:href="whatsappLink"
 									target="_blank"
 									rel="noopener"
 									aria-label="WhatsApp"
@@ -517,10 +492,7 @@
 								<!-- Sharingbutton E-Mail -->
 								<a
 									class="resp-sharing-button__link"
-									v-bind:href="
-										'mailto:?subject=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;body=' +
-										objectLink
-									"
+									v-bind:href="emailLink"
 									target="_self"
 									rel="noopener"
 									aria-label="E-Mail"
@@ -611,6 +583,39 @@ export default {
 	computed: {
 		filePath() {
 			return this.$store.state.files.fileShareModal;
+		},
+		redditLink() {
+			return ('https://reddit.com/submit/?url=' +
+				this.objectLink +
+				'&amp;resubmit=true&amp;title=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage');
+		},
+		facebookLink() {
+			return ('https://facebook.com/sharer/sharer.php?u=' +
+				this.objectLink);
+		},
+		twitterLink() {
+			return ('https://twitter.com/intent/tweet/?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;url=' +
+				this.objectLink);
+		},
+		ycombinatorLink() {
+			return ('https://news.ycombinator.com/submitlink?u=' +
+										this.objectLink +
+										'&amp;t=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage');
+		},
+		linkedinLink() {
+			return ('https://www.linkedin.com/shareArticle?mini=true&amp;url=' +
+										this.objectLink +
+										'&amp;title=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;summary=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;source=' +
+										this.objectLink);
+		},
+		telegramLink() {
+			return ('https://telegram.me/share/url?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;url=' + this.objectLink);
+		},
+		whatsappLink() {
+			return ('whatsapp://send?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage%20' + this.objectLink);
+		},
+		emailLink() {
+			return ('mailto:?subject=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;body=' + this.objectLink);
 		}
 	},
 	methods: {
