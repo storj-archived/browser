@@ -585,37 +585,55 @@ export default {
 			return this.$store.state.files.fileShareModal;
 		},
 		redditLink() {
-			return ('https://reddit.com/submit/?url=' +
+			return (
+				"https://reddit.com/submit/?url=" +
 				this.objectLink +
-				'&amp;resubmit=true&amp;title=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage');
+				"&amp;resubmit=true&amp;title=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage"
+			);
 		},
 		facebookLink() {
-			return ('https://facebook.com/sharer/sharer.php?u=' +
-				this.objectLink);
+			return (
+				"https://facebook.com/sharer/sharer.php?u=" + this.objectLink
+			);
 		},
 		twitterLink() {
-			return ('https://twitter.com/intent/tweet/?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;url=' +
-				this.objectLink);
+			return (
+				"https://twitter.com/intent/tweet/?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;url=" +
+				this.objectLink
+			);
 		},
 		ycombinatorLink() {
-			return ('https://news.ycombinator.com/submitlink?u=' +
-										this.objectLink +
-										'&amp;t=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage');
+			return (
+				"https://news.ycombinator.com/submitlink?u=" +
+				this.objectLink +
+				"&amp;t=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage"
+			);
 		},
 		linkedinLink() {
-			return ('https://www.linkedin.com/shareArticle?mini=true&amp;url=' +
-										this.objectLink +
-										'&amp;title=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;summary=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;source=' +
-										this.objectLink);
+			return (
+				"https://www.linkedin.com/shareArticle?mini=true&amp;url=" +
+				this.objectLink +
+				"&amp;title=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;summary=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;source=" +
+				this.objectLink
+			);
 		},
 		telegramLink() {
-			return ('https://telegram.me/share/url?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;url=' + this.objectLink);
+			return (
+				"https://telegram.me/share/url?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;url=" +
+				this.objectLink
+			);
 		},
 		whatsappLink() {
-			return ('whatsapp://send?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage%20' + this.objectLink);
+			return (
+				"whatsapp://send?text=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage%20" +
+				this.objectLink
+			);
 		},
 		emailLink() {
-			return ('mailto:?subject=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;body=' + this.objectLink);
+			return (
+				"mailto:?subject=Shared%20using%20Storj%20Decentralized%20Cloud%20Storage&amp;body=" +
+				this.objectLink
+			);
 		}
 	},
 	methods: {
