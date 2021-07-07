@@ -229,6 +229,7 @@
 					<div class="modal-header border-0">
 						<h5 class="modal-title pt-2">Share</h5>
 						<button
+							v-on:click="close"
 							type="button"
 							class="close"
 							data-dismiss="modal"
@@ -606,7 +607,7 @@ export default {
 	name: "FileShareModal",
 	data: () => ({
 		objectLink: null,
-		copyText: "Copy"
+		copyText: "Copy Link"
 	}),
 	computed: {
 		filePath() {
@@ -614,11 +615,6 @@ export default {
 		}
 	},
 	methods: {
-		async getSharedLink() {
-			this.objectLink = await this.$store.state.files.getSharedLink(
-				this.filePath
-			);
-		},
 		async copy() {
 			await navigator.clipboard.writeText(this.objectLink);
 			this.copyText = "Copied!";
@@ -634,6 +630,11 @@ export default {
 				e.stopPropagation();
 			}
 		}
+	},
+	async created() {
+		this.objectLink = await this.$store.state.files.getSharedLink(
+			this.filePath
+		);
 	}
 };
 </script>
