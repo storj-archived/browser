@@ -116,6 +116,7 @@
 											file-preview-wrapper
 											d-flex
 											align-items-center
+											justify-content-center
 										"
 									>
 										<img
@@ -139,7 +140,7 @@
 										></audio>
 
 										<svg
-											v-else
+											v-if="placeHolderDisplayable"
 											width="300"
 											height="172"
 											viewBox="0 0 300 172"
@@ -504,7 +505,7 @@ export default {
 		previewIsAudio() {
 			return ["mp3", "wav", "ogg"].includes(this.extension);
 		},
-		isPlaceHolderDisplayable() {
+		placeHolderDisplayable() {
 			return [
 				this.previewIsImage,
 				this.previewIsVideo,
