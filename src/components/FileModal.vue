@@ -148,8 +148,6 @@
 											class="
 												preview-placeholder
 												img-fluid
-												px-5
-												pb-5
 											"
 										>
 											<path
@@ -385,7 +383,7 @@
 												"
 												id="generateShareLink"
 											>
-												{{ this.copyText }}
+												{{ copyText }}
 											</button>
 										</div>
 									</div>
