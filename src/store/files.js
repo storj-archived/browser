@@ -267,13 +267,49 @@ export default {
 		},
 
 		async upload({ commit, state, dispatch }, e) {
-			const files = e.dataTransfer
-				? e.dataTransfer.files
-				: e.target.files;
+			const traverseFileTree = (item) => {
+				if (item.isFile) {
+					// Get file
+					const file = new Promise((resolve, reject) => item.file(resolve, reject));
+					return [file];
+				} else if (item.isDirectory) {
+					const files = [];
+					// Get folder contents
+					const dirReader = item.createReader();
+					dirReader.readEntries((entries) => {
+						for (const entry of entries) {
+							files.push(...traverseFileTree(entry, files));
+						}
+					});
 
+					return files;
+				}
+
+				throw new Error("Item is not directory or file");
+			}
+
+			let files = [];
+			const items = e.dataTransfer ? e.dataTransfer.items : e.target.files;
+			console.log('items', items);
+
+			if (!(items instanceof FileList)) {
+				console.log('nestedArray')
+				const nestedArray = Array.from(items).map((item) =>
+					item.webkitGetAsEntry() || item.getAsEntry()
+				).map((entry) => traverseFileTree(entry));
+
+				console.log("files in 301", files)
+				files = await Promise.all([].concat(...nestedArray));
+				console.log("files in 302", files)
+			} else {
+				files = items;
+			}
+
+			console.log('files', files);
 			const fileNames = state.files.map((file) => file.Key);
 
 			for (const file of files) {
+				console.log('File prior to upload', file);
 				// Handle duplicate file names
 
 				let fileName = file.name;
