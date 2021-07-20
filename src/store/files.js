@@ -267,51 +267,37 @@ export default {
 		},
 
 		async upload({ commit, state, dispatch }, e) {
-			const traverseFileTree = async (item) => {
-				if (item.isFile) {
-					// Get file
-					const file = await new Promise((resolve, reject) => item.file(resolve, reject));
-					return [file];
-				} else if (item.isDirectory) {
-					const files = [];
-					// Get folder contents
-					const dirReader = item.createReader();
-					await new Promise((resolve) => {
-						dirReader.readEntries(async (entries) => {
-							for (const entry of entries) {
-								files.push(... await traverseFileTree(entry));
-							}
-							resolve();
-						});
-					});
-
-					return files;
-				}
-
-				throw new Error("Item is not directory or file");
-			}
-
-			let files = [];
 			const items = e.dataTransfer ? e.dataTransfer.items : e.target.files;
+			async function *traverse(item, path = "") {	
+				if (item.isFile) {
+					const file = await new Promise(item.file.bind(item));
+				
+					yield { path, file };
+				} else if (item.isDirectory) {
+					const dirReader = item.createReader();
+					
+					const entries = await new Promise(dirReader.readEntries.bind(dirReader));
 
-			if (!(items instanceof FileList)) {
-				const nestedArray = Array.from(items)
-					.map((item) =>
-						item.webkitGetAsEntry() || item.getAsEntry())
-					.map(traverseFileTree);
-
-				files = [].concat(... await Promise.all(nestedArray));
-			} else {
-				files = items;
+					for(const entry of entries) {
+						yield *traverse(entry, path + item.name + "/");
+					}
+				} else if (typeof item.length === "number") {
+					for(const i of item) {
+						yield *traverse(i);
+					}
+				} else {
+					throw new Error("Item is not directory or file");
+				}
 			}
 
+			console.log({ items });
+
+			const iterator = items instanceof FileList
+				? [...items]
+				: [...items].map(item => item.webkitGetAsEntry() || item.getAsEntry());
 			const fileNames = state.files.map((file) => file.Key);
 
-			for (const file of files) {
-				// Handle duplicate file names
-
-				let fileName = file.name;
-
+			function getUniqueFileName(fileName) {
 				for (let count = 1; fileNames.includes(fileName); count++) {
 					if (count > 1) {
 						fileName = fileName.replace(
@@ -326,6 +312,12 @@ export default {
 					}
 				}
 
+				return fileName;
+			}
+
+			for await (const { path, file } of traverse(iterator)) {
+				let fileName = getUniqueFileName(path + file.name);
+
 				const params = {
 					Bucket: state.bucket,
 					Key: state.path + fileName,
@@ -333,12 +325,8 @@ export default {
 				};
 
 				const upload = state.s3.upload(
-					{
-						...params
-					},
-					{
-						partSize: 64 * 1024 * 1024
-					}
+					{ ...params },
+					{ partSize: 64 * 1024 * 1024 }
 				);
 
 				upload.on("httpUploadProgress", (progress) => {
@@ -390,6 +378,7 @@ export default {
 					commit("finishUpload", params.Key);
 				});
 			}
+
 		},
 
 		async createFolder({ state, dispatch }, name) {
