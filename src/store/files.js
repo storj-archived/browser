@@ -268,14 +268,15 @@ export default {
 
 		async upload({ commit, state, dispatch }, e) {
 			const items = e.dataTransfer ? e.dataTransfer.items : e.target.files;
-			async function *traverse(item, path = "") {	
+			async function *traverse(item, path = "") {
 				if (item.isFile) {
 					const file = await new Promise(item.file.bind(item));
-				
 					yield { path, file };
+				} else if (item instanceof File) {
+					yield { path: item.webkitRelativePath, file: item };
 				} else if (item.isDirectory) {
 					const dirReader = item.createReader();
-					
+
 					const entries = await new Promise(dirReader.readEntries.bind(dirReader));
 
 					for(const entry of entries) {
@@ -289,8 +290,6 @@ export default {
 					throw new Error("Item is not directory or file");
 				}
 			}
-
-			console.log({ items });
 
 			const iterator = items instanceof FileList
 				? [...items]
@@ -316,7 +315,11 @@ export default {
 			}
 
 			for await (const { path, file } of traverse(iterator)) {
-				let fileName = getUniqueFileName(path + file.name);
+				const directories = path.split("/");
+				const uniqueFirstDirectory = getUniqueFileName(directories[0]);
+				directories[0] = uniqueFirstDirectory;
+
+				let fileName = getUniqueFileName(directories.join("/") + file.name);
 
 				const params = {
 					Bucket: state.bucket,
