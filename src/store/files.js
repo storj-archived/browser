@@ -267,8 +267,10 @@ export default {
 		},
 
 		async upload({ commit, state, dispatch }, e) {
-			const items = e.dataTransfer ? e.dataTransfer.items : e.target.files;
-			async function *traverse(item, path = "") {
+			const items = e.dataTransfer
+				? e.dataTransfer.items
+				: e.target.files;
+			async function* traverse(item, path = "") {
 				if (item.isFile) {
 					const file = await new Promise(item.file.bind(item));
 					yield { path, file };
@@ -277,23 +279,29 @@ export default {
 				} else if (item.isDirectory) {
 					const dirReader = item.createReader();
 
-					const entries = await new Promise(dirReader.readEntries.bind(dirReader));
+					const entries = await new Promise(
+						dirReader.readEntries.bind(dirReader)
+					);
 
-					for(const entry of entries) {
-						yield *traverse(entry, path + item.name + "/");
+					for (const entry of entries) {
+						yield* traverse(entry, path + item.name + "/");
 					}
 				} else if (typeof item.length === "number") {
-					for(const i of item) {
-						yield *traverse(i);
+					for (const i of item) {
+						yield* traverse(i);
 					}
 				} else {
 					throw new Error("Item is not directory or file");
 				}
 			}
 
-			const iterator = items instanceof FileList
-				? [...items]
-				: [...items].map(item => item.webkitGetAsEntry() || item.getAsEntry());
+			const iterator =
+				items instanceof FileList
+					? [...items]
+					: [...items].map(
+							(item) =>
+								item.webkitGetAsEntry() || item.getAsEntry()
+					  );
 			const fileNames = state.files.map((file) => file.Key);
 
 			function getUniqueFileName(fileName) {
@@ -319,7 +327,9 @@ export default {
 				const uniqueFirstDirectory = getUniqueFileName(directories[0]);
 				directories[0] = uniqueFirstDirectory;
 
-				let fileName = getUniqueFileName(directories.join("/") + file.name);
+				let fileName = getUniqueFileName(
+					directories.join("/") + file.name
+				);
 
 				const params = {
 					Bucket: state.bucket,
@@ -381,7 +391,6 @@ export default {
 					commit("finishUpload", params.Key);
 				});
 			}
-
 		},
 
 		async createFolder({ state, dispatch }, name) {

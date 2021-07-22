@@ -7,7 +7,6 @@
 				@drop.prevent="upload"
 				@dragover.prevent
 			>
-
 				<div class="row mb-2 d-flex justify-content-end">
 					<div class="col-sm-12 col-md-4 col-lg-3 mb-3">
 						<button
@@ -171,7 +170,10 @@
 							<tr v-if="filesUploadingLength">
 								<div class="files-uploading-count my-3">
 									<div class="px-2">
-										{{ formattedFilesWaitingToBeUploaded }} waiting to be uploaded...
+										{{
+											formattedFilesWaitingToBeUploaded
+										}}
+										waiting to be uploaded...
 									</div>
 								</div>
 							</tr>
