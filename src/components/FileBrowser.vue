@@ -170,9 +170,7 @@
 							<tr v-if="filesUploadingLength">
 								<div class="files-uploading-count my-3">
 									<div class="px-2">
-										{{
-											formattedFilesWaitingToBeUploaded
-										}}
+										{{ formattedFilesWaitingToBeUploaded }}
 										waiting to be uploaded...
 									</div>
 								</div>
