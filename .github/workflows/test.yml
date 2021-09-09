@@ -1,4 +1,4 @@
-name: prettier
+name: test
 
 on: [push, pull_request]
 
@@ -15,3 +15,4 @@ jobs:
                 path: "ui/browser"
             - run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
             - run: IRIS_EMAIL="${{ secrets.IRIS_EMAIL }}" IRIS_PASSWORD="${{ secrets.IRIS_PASSWORD }}" just test
+
