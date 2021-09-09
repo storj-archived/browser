@@ -1,0 +1,16 @@
+name: prettier
+
+on: [push, pull_request]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                repository: "storjrd/iris"
+            - uses: actions/checkout@v2
+              with:
+                path: "iris/ui/browser"
+            - run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
+            - run: IRIS_EMAIL="${{ secrets.IRIS_EMAIL }}" IRIS_PASSWORD="${{ secrets.IRIS_PASSWORD }}" just test
