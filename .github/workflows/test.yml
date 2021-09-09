@@ -9,9 +9,9 @@ jobs:
             - uses: actions/checkout@v2
               with:
                 repository: "storjrd/iris"
-                path: "/"
+                path: ""
             - uses: actions/checkout@v2
               with:
-                path: "/ui/browser"
+                path: "ui/browser"
             - run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
             - run: IRIS_EMAIL="${{ secrets.IRIS_EMAIL }}" IRIS_PASSWORD="${{ secrets.IRIS_PASSWORD }}" just test
