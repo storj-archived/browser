@@ -418,6 +418,7 @@ f tbody {
 											href="javascript:null"
 											v-on:click="back"
 											class="px-2 font-weight-bold"
+											id="navigate-back"
 											>..</a
 										>
 									</router-link>
