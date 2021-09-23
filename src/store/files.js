@@ -267,17 +267,44 @@ export default {
 		},
 
 		async upload({ commit, state, dispatch }, e) {
-			const files = e.dataTransfer
-				? e.dataTransfer.files
+			const items = e.dataTransfer
+				? e.dataTransfer.items
 				: e.target.files;
+			async function* traverse(item, path = "") {
+				if (item.isFile) {
+					const file = await new Promise(item.file.bind(item));
+					yield { path, file };
+				} else if (item instanceof File) {
+					yield { path: item.webkitRelativePath, file: item };
+				} else if (item.isDirectory) {
+					const dirReader = item.createReader();
 
+					const entries = await new Promise(
+						dirReader.readEntries.bind(dirReader)
+					);
+
+					for (const entry of entries) {
+						yield* traverse(entry, path + item.name + "/");
+					}
+				} else if (typeof item.length === "number") {
+					for (const i of item) {
+						yield* traverse(i);
+					}
+				} else {
+					throw new Error("Item is not directory or file");
+				}
+			}
+
+			const iterator =
+				items instanceof FileList
+					? [...items]
+					: [...items].map(
+							(item) =>
+								item.webkitGetAsEntry() || item.getAsEntry()
+					  );
 			const fileNames = state.files.map((file) => file.Key);
 
-			for (const file of files) {
-				// Handle duplicate file names
-
-				let fileName = file.name;
-
+			function getUniqueFileName(fileName) {
 				for (let count = 1; fileNames.includes(fileName); count++) {
 					if (count > 1) {
 						fileName = fileName.replace(
@@ -292,6 +319,18 @@ export default {
 					}
 				}
 
+				return fileName;
+			}
+
+			for await (const { path, file } of traverse(iterator)) {
+				const directories = path.split("/");
+				const uniqueFirstDirectory = getUniqueFileName(directories[0]);
+				directories[0] = uniqueFirstDirectory;
+
+				let fileName = getUniqueFileName(
+					directories.join("/") + file.name
+				);
+
 				const params = {
 					Bucket: state.bucket,
 					Key: state.path + fileName,
@@ -299,12 +338,8 @@ export default {
 				};
 
 				const upload = state.s3.upload(
-					{
-						...params
-					},
-					{
-						partSize: 64 * 1024 * 1024
-					}
+					{ ...params },
+					{ partSize: 64 * 1024 * 1024 }
 				);
 
 				upload.on("httpUploadProgress", (progress) => {
