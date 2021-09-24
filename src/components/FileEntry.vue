@@ -138,10 +138,10 @@ a {
 			</span>
 		</td>
 		<td class="w-25">
-			<span v-if="fileTypeIsFile">{{ size }}</span>
+			<span v-if="fileTypeIsFile" aria-roledescription=file-size>{{ size }}</span>
 		</td>
 		<td>
-			<span v-if="fileTypeIsFile">{{ uploadDate }}</span>
+			<span v-if="fileTypeIsFile" aria-roledescription=file-upload-date>{{ uploadDate }}</span>
 		</td>
 		<td class="text-right">
 			<div v-if="fileTypeIsFile" class="d-inline-flex">
