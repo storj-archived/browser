@@ -103,14 +103,14 @@ a {
 
 				<span v-on:click="fileClick">
 					<router-link v-bind:to="link">
-						<a href="javascript:null" class="file-name">
+						<a href="javascript:null" class="file-name" aria-roledescription="folder">
 							{{ filename }}
 						</a>
 					</router-link>
 				</span>
 			</span>
 
-			<span v-else v-on:click="openModal" class="file-name">
+			<span v-else v-on:click="openModal" class="file-name" aria-roledescription="file">
 				<svg
 					width="1.5em"
 					height="1.5em"
