@@ -157,6 +157,7 @@ a {
 						type="button"
 						aria-haspopup="true"
 						aria-expanded="false"
+						aria-roledescription="dropdown"
 						v-on:click="toggleDropdown"
 					>
 						<svg
@@ -330,6 +331,7 @@ a {
 						type="button"
 						aria-haspopup="true"
 						aria-expanded="false"
+						aria-roledescription="dropdown"
 						v-on:click="toggleDropdown"
 					>
 						<svg
