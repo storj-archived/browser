@@ -153,6 +153,7 @@ a {
 				<div class="dropleft">
 					<a
 						class="d-flex justify-content-end"
+						id="header-delete"
 						v-if="filesToDelete"
 						v-on:click="deleteSelectedDropdown"
 					>

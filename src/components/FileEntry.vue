@@ -103,14 +103,23 @@ a {
 
 				<span v-on:click="fileClick">
 					<router-link v-bind:to="link">
-						<a href="javascript:null" class="file-name">
+						<a
+							href="javascript:null"
+							class="file-name"
+							aria-roledescription="folder"
+						>
 							{{ filename }}
 						</a>
 					</router-link>
 				</span>
 			</span>
 
-			<span v-else v-on:click="openModal" class="file-name">
+			<span
+				v-else
+				v-on:click="openModal"
+				class="file-name"
+				aria-roledescription="file"
+			>
 				<svg
 					width="1.5em"
 					height="1.5em"
@@ -129,10 +138,10 @@ a {
 			</span>
 		</td>
 		<td class="w-25">
-			<span v-if="fileTypeIsFile">{{ size }}</span>
+			<span v-if="fileTypeIsFile" aria-roledescription=file-size>{{ size }}</span>
 		</td>
 		<td>
-			<span v-if="fileTypeIsFile">{{ uploadDate }}</span>
+			<span v-if="fileTypeIsFile" aria-roledescription=file-upload-date>{{ uploadDate }}</span>
 		</td>
 		<td class="text-right">
 			<div v-if="fileTypeIsFile" class="d-inline-flex">
@@ -148,6 +157,7 @@ a {
 						type="button"
 						aria-haspopup="true"
 						aria-expanded="false"
+						aria-roledescription="dropdown"
 						v-on:click="toggleDropdown"
 					>
 						<svg
@@ -321,6 +331,7 @@ a {
 						type="button"
 						aria-haspopup="true"
 						aria-expanded="false"
+						aria-roledescription="dropdown"
 						v-on:click="toggleDropdown"
 					>
 						<svg

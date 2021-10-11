@@ -123,6 +123,7 @@
 											class="preview img-fluid"
 											v-if="previewIsImage"
 											v-bind:src="preSignedUrl"
+											aria-roledescription="image-preview"
 										/>
 
 										<video
@@ -130,6 +131,7 @@
 											controls
 											v-if="previewIsVideo"
 											v-bind:src="preSignedUrl"
+											aria-roledescription="video-preview"
 										></video>
 
 										<audio
@@ -137,6 +139,7 @@
 											controls
 											v-if="previewIsAudio"
 											v-bind:src="preSignedUrl"
+											aria-roledescription="audio-preview"
 										></audio>
 
 										<svg
@@ -150,6 +153,7 @@
 												preview-placeholder
 												img-fluid
 											"
+											aria-roledescription="preview-placeholder"
 										>
 											<path
 												d="M188.5 140C218.047 140 242 116.047 242 86.5C242 56.9528 218.047 33 188.5 33C158.953 33 135 56.9528 135 86.5C135 116.047 158.953 140 188.5 140Z"
@@ -304,6 +308,7 @@
 											fill="#6e6e6e"
 											class="bi bi-x mt-4 closex"
 											viewBox="0 0 16 16"
+											id="close-modal"
 										>
 											<path
 												d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"

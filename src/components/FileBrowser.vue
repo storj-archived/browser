@@ -42,6 +42,7 @@
 						<input
 							ref="fileInput"
 							type="file"
+							aria-roledescription="file-upload"
 							hidden
 							multiple
 							v-on:change="upload"
@@ -75,6 +76,7 @@
 						<input
 							ref="folderInput"
 							type="file"
+							aria-roledescription="folder-upload"
 							hidden
 							webkitdirectory
 							mozdirectory
@@ -123,7 +125,7 @@
 								v-bind:key="file.ETag"
 								scope="row"
 							>
-								<td class="upload-text">
+								<td class="upload-text" aria-roledescription="file-uploading">
 									<span>
 										<svg
 											width="21"
@@ -143,7 +145,7 @@
 										{{ filename(file) }}
 									</span>
 								</td>
-								<td>
+								<td aria-roledescription=progress-bar>
 									<div class="progress">
 										<div
 											class="progress-bar"
@@ -169,7 +171,7 @@
 
 							<tr v-if="filesUploadingLength">
 								<div class="files-uploading-count my-3">
-									<div class="px-2">
+									<div class="px-2" aria-roledescription=files-uploading-count>
 										{{ formattedFilesWaitingToBeUploaded }}
 										waiting to be uploaded...
 									</div>
@@ -183,6 +185,7 @@
 											href="javascript:null"
 											v-on:click="back"
 											class="px-2 font-weight-bold"
+											id="navigate-back"
 											>..</a
 										>
 									</router-link>
