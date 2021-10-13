@@ -125,7 +125,10 @@
 								v-bind:key="file.ETag"
 								scope="row"
 							>
-								<td class="upload-text" aria-roledescription="file-uploading">
+								<td
+									class="upload-text"
+									aria-roledescription="file-uploading"
+								>
 									<span>
 										<svg
 											width="21"
@@ -145,7 +148,7 @@
 										{{ filename(file) }}
 									</span>
 								</td>
-								<td aria-roledescription=progress-bar>
+								<td aria-roledescription="progress-bar">
 									<div class="progress">
 										<div
 											class="progress-bar"
@@ -171,7 +174,10 @@
 
 							<tr v-if="filesUploadingLength">
 								<div class="files-uploading-count my-3">
-									<div class="px-2" aria-roledescription=files-uploading-count>
+									<div
+										class="px-2"
+										aria-roledescription="files-uploading-count"
+									>
 										{{ formattedFilesWaitingToBeUploaded }}
 										waiting to be uploaded...
 									</div>

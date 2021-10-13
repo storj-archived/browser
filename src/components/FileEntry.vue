@@ -138,10 +138,16 @@ a {
 			</span>
 		</td>
 		<td class="w-25">
-			<span v-if="fileTypeIsFile" aria-roledescription=file-size>{{ size }}</span>
+			<span v-if="fileTypeIsFile" aria-roledescription="file-size">{{
+				size
+			}}</span>
 		</td>
 		<td>
-			<span v-if="fileTypeIsFile" aria-roledescription=file-upload-date>{{ uploadDate }}</span>
+			<span
+				v-if="fileTypeIsFile"
+				aria-roledescription="file-upload-date"
+				>{{ uploadDate }}</span
+			>
 		</td>
 		<td class="text-right">
 			<div v-if="fileTypeIsFile" class="d-inline-flex">
@@ -483,7 +489,8 @@ export default {
 	},
 
 	methods: {
-		openModal() {
+		openModal(event) {
+			event.stopPropagation();
 			this.$store.commit("files/openModal", this.path + this.file.Key);
 			this.$store.dispatch("files/closeDropdown");
 		},
