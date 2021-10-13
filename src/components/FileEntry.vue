@@ -489,7 +489,8 @@ export default {
 	},
 
 	methods: {
-		openModal() {
+		openModal(event) {
+			event.stopPropagation();
 			this.$store.commit("files/openModal", this.path + this.file.Key);
 			this.$store.dispatch("files/closeDropdown");
 		},
