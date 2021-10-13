@@ -235,7 +235,11 @@
 							data-dismiss="modal"
 							aria-label="Close"
 						>
-							<span aria-hidden="true" aria-roledescription="close-share-modal">&times;</span>
+							<span
+								aria-hidden="true"
+								aria-roledescription="close-share-modal"
+								>&times;</span
+							>
 						</button>
 					</div>
 					<div class="modal-body pt-0 text-left">
